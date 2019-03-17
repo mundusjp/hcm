@@ -1,7 +1,7 @@
 <div class="slim-header">
   <div class="container">
     <div class="slim-header-left">
-      <h2 class="slim-logo"><a href="/" style="color:#ff6600;">Shopee<span></span></a></h2>
+      <h2 class="slim-logo"><a href="/" style="color:#ff6600;">PT. IKT<span></span></a></h2>
 
       <!-- <div class="search-box">
         <input type="text" class="form-control" placeholder="Search">

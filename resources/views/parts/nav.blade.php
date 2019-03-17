@@ -10,7 +10,7 @@
       <li class="nav-item with-sub">
         <a class="nav-link" href="/Uploads">
           <i class="icon ion-archive"></i>
-          <span>Upload</span>
+          <span>Goalsetting</span>
         </a>
         <div class="sub-item">
           <ul>
@@ -23,7 +23,7 @@
       <li class="nav-item">
         <a class="nav-link" href="Config">
           <i class="icon ion-ios-gear"></i>
-          <span>Config</span>
+          <span>Logbook</span>
         </a>
       </li>
     </ul>
