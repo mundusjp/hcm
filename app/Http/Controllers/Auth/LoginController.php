@@ -19,6 +19,9 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+    public function nipp(){
+      return 'nipp'
+    }
 
     /**
      * Where to redirect users after login.
