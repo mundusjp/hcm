@@ -6,7 +6,7 @@
 <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
 <meta name="author" content="ThemePixels">
 
-<title>Shopee Fraudcheck System</title>
+<title>Goalsetting PT Indonesia Kendaraan Terminal</title>
 
 <!-- vendor css -->
 <link href="{{ asset('lib/font-awesome/css/font-awesome.css') }}" rel="stylesheet" type="text/css" >

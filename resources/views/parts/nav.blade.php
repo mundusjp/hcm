@@ -2,9 +2,9 @@
   <div class="container">
     <ul class="nav">
       <li class="nav-item">
-        <a class="nav-link" href="Dashboard">
+        <a class="nav-link" href="home">
           <i class="icon ion-home"></i>
-          <span>Dashboard</span>
+          <span>Home</span>
         </a>
       </li>
       <li class="nav-item with-sub">
@@ -14,9 +14,9 @@
         </a>
         <div class="sub-item">
           <ul>
-            <li><a href="Install">Install</a></li>
-            <li><a href="Orderplaced">Orderplaced</a></li>
-            <li><a href="Validation">Validation</a></li>
+            <li><a href="perusahaan">Perusahaan</a></li>
+            <li><a href="direksi">Direksi</a></li>
+            <li><a href="supervisor">Supervisor</a></li>
           </ul>
         </div><!-- dropdown-menu -->
       </li>

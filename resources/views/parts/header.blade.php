@@ -17,7 +17,7 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right">
           <nav class="nav">
-            <a href="#" class="nav-link"><i class="icon ion-ios-gear"></i> Account Settings</a>
+            <a href="#" class="nav-link"><i class="icon ion-ios-gear"></i> Profil</a>
             <form id="logout" action="{{route('logout')}}" method="post">
               @csrf
               <a href="javascript:;" onclick="document.getElementById('logout').submit();" class="nav-link"><i class="icon ion-forward"></i> Sign Out</a>
