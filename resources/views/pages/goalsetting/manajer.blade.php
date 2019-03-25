@@ -10,7 +10,7 @@
                 <li class="breadcrumb-item"><a href="#">Forms</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Form Layouts</li>
               </ol>
-              <h6 class="slim-pagetitle">Program Kerja Direksi</h6>
+              <h6 class="slim-pagetitle">Program Vice President</h6>
             </div><!-- slim-pageheader -->
             <div class="section-wrapper">
               @if (session('success'))
@@ -28,53 +28,12 @@
                 <strong> {{ session('failed')}} </strong>
               </div><!-- alert -->
               @endif
-              <label class="section-title">Silahkan masukkan Program Kerja Direksi</label>
-              @if($divisi == "Utama")
-              <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
-              <p class="mg-b-20 mg-sm-b-40">Menggunakan form berikut</p>
-              @else
-              <p class="mg-b-20 mg-sm-b-40">Berikut adalah Program Kerja Direktur Utama</p>
-              @endif
-              <label class="section-title">Program Direktur Utama</label>
-              <table class="table table-orange">
-                <thead>
-                <tr>
-                  <td>No</td>
-                  <td>Program Kerja</td>
-                  <td>Mulai</td>
-                  <td>Berakhir</td>
-                  @if($divisi == "Utama")
-                  <td>Action</td>
-                  @endif
-                </tr>
-                </thead>
-                <tbody>
-
-                  <?php $i=0;?>
-                  @foreach($program_direksi_utama as $program)
-                  <?php $i++;?>
-                  <tr>
-                  <th scope="row">{{$i}}</th>
-                  <td style="width:500px">{{$program->program_kerja}}</td>
-                  <td style="width:150px">{{$program->mulai}}</td>
-                  <td style="width:150px">{{$program->berakhir}}</td>
-                  @if($divisi == "Utama")
-                  <form id="hapus" action="{{route('direksi-delete')}}" method="post">
-                    <input class="form-control" type="text" name="id['{{$i}}']" style="display:none;" value="{{$program->id}}">
-                  @csrf
-                  <td><a href="" class="text-success">Ubah</a><br><a class="tx-danger" href="javascript:;" onclick="document.getElementById('hapus').submit();">Hapus</a></td>
-                  @endif
-                </form>
-                </tr>
-                @endforeach
-              </table>
-              @if($divisi != "Utama")
+              <label class="section-title">Program Direktur {{$divisi}}</label>
               <br>
               <hr>
-              <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
-              <label class="section-title">Program Direktur {{$divisi}}</label>
-              @endif
-              <div class="modal fade" id="tambahdireksi" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
+              <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahmanajer">Tambahkan </button>
+              <label class="section-title">Program Anda Sebagai Vice President {{$divisi}}</label>
+              <div class="modal fade" id="tambahmanajer" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -87,7 +46,7 @@
                         <div class="form-group">
                           <div class="row">
                             <div class="col-12">
-                              <form id="tambahdireksi" action="{{route('direksi-insert')}}" method="post">
+                              <form id="tambahmanajer" action="{{route('direksi-insert')}}" method="post">
                               {{ csrf_field() }}
                               <label class="section-title">Tambahkan Program Kerja Direktur {{$divisi}}</label>
                               <p class="mg-b-20 mg-sm-b-40">Untuk tahun {{date('Y')}}</p>
@@ -101,7 +60,7 @@
                                   </div><!-- col-6 -->
                                   <div class="col-lg-3">
                                     <div class="form-group">
-                                      <label class="form-control-label">Divisi: <span class="tx-danger">*</span></label>
+                                      <label class="form-control-label">Sub-Divisi: <span class="tx-danger">*</span></label>
                                       <input class="form-control" type="text" readonly name="divisi" value="{{$divisi}}">
                                     </div>
                                   </div><!-- col-3 -->

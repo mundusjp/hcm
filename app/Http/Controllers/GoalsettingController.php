@@ -23,7 +23,8 @@ class GoalsettingController extends Controller
   public function index_perusahaan(){
     $visi_perusahaan = Perusahaan::where('misi',null)->get();
     $misi_perusahaan = Perusahaan::where('visi',null)->get();
-    return view('pages.goalsetting.perusahaan',compact('visi_perusahaan','misi_perusahaan'));
+    $divisi = Auth::user()->divisi;
+    return view('pages.goalsetting.perusahaan',compact('visi_perusahaan','misi_perusahaan','divisi'));
   }
 
   public function insert_visi_perusahaan(Request $request){
@@ -67,6 +68,7 @@ class GoalsettingController extends Controller
     $nipp = Auth::user()->nipp;
     $nama = Auth::user()->nama;
     $divisi = Auth::user()->divisi;
+    $kelas_jabatan = Auth::user()->kelas_jabatan;
     $direksi = Direksi::where('nipp',$nipp)->get();
     $program_direksi_utama = Direksi::where('divisi','Utama')->get();
     return view('pages.goalsetting.direksi',compact('nipp','nama','divisi','direksi','program_direksi_utama'));
@@ -100,6 +102,32 @@ class GoalsettingController extends Controller
     return redirect('direksi')->with('success', 'Program Direksi Berhasil Dihapus!');
   }
 
+  // -------------------------------------------------------------------------------
+    //SUPERVISOR//
+    public function index_manajer(){
+      $nama = Auth::user()->nama;
+      $nipp = Auth::user()->nipp;
+      $divisi = Auth::user()->divisi;
+      $kelas_jabatan = Auth::user()->kelas_jabatan;
+      $jabatan = Auth::user()->jabatan;
+      return view('pages.goalsetting.manajer',compact('divisi','jabatan','nama','nipp','kelas_jabatan'));
+    }
+
+    public function insert_misi_manajer(){
+      return view('pages.goalsetting.manajer');
+    }
+
+    public function edit_misi_manajer(){
+      return view('pages.goalsetting.manajer');
+    }
+
+    public function update_misi_manajer(){
+      return view('pages.goalsetting.manajer');
+    }
+
+    public function delete_misi_manajer(){
+      return view('pages.goalsetting.manajer');
+    }
 
 // -------------------------------------------------------------------------------
   //SUPERVISOR//

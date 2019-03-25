@@ -8,7 +8,7 @@
         </a>
       </li>
       <li class="nav-item with-sub">
-        <a class="nav-link" href="/Uploads">
+        <a class="nav-link" href="">
           <i class="icon ion-archive"></i>
           <span>Goalsetting</span>
         </a>
@@ -16,6 +16,7 @@
           <ul>
             <li><a href="perusahaan">Perusahaan</a></li>
             <li><a href="direksi">Direksi</a></li>
+            <li><a href="manajer">Vice President</a><li>
             <li><a href="supervisor">Supervisor</a></li>
           </ul>
         </div><!-- dropdown-menu -->

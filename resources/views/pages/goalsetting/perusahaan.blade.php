@@ -7,8 +7,8 @@
             <div class="slim-pageheader">
               <ol class="breadcrumb slim-breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Form Layouts</li>
+                <li class="breadcrumb-item"><a href="#">Goalsettings</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Visi Misi Perusahaan</li>
               </ol>
               <h6 class="slim-pagetitle">Form Layouts</h6>
             </div><!-- slim-pageheader -->
@@ -31,8 +31,13 @@
               <div class="row">
                 <div class="col-6">
                   <label class="section-title">Visi Perusahaan</label>
+                  @if($divisi == "Utama" || $divisi == "Superadmin")
                   <button type="button"class="btn btn-outline-warning float-right" data-toggle="modal" data-target="#tambahvisi">Tambahkan </button>
                   <p class="mg-b-20 mg-sm-b-40">Silahkan menambahkan visi dari perusahaan.</p>
+                  @else
+                  <p class="mg-b-20 mg-sm-b-40">Berikut adalah visi dari perusahaan.</p>
+                  @endif
+
                   @if(!empty($visi_perusahaan))
                   <div class="table-responsive">
 
@@ -68,8 +73,12 @@
                 </div><!-- col-6 -->
                 <div class="col-6">
                   <label class="section-title">Misi Perusahaan</label>
+                  @if($divisi == "Utama" || $divisi == "Superadmin")
                   <button type="button"class="btn btn-outline-warning float-right" data-toggle="modal" data-target="#tambahmisi">Tambahkan </button>
                   <p class="mg-b-20 mg-sm-b-40">Silahkan menambahkan misi dari perusahaan.</p>
+                  @else
+                  <p class="mg-b-20 mg-sm-b-40">Berikut adalah misi dari perusahaan.</p>
+                  @endif
                   @if(!empty($misi_perusahaan))
                   <div class="table-responsive">
                     <table class="table table-hover mg-b-0">
