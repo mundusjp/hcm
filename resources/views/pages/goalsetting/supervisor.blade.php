@@ -31,6 +31,7 @@
               <label class="section-title">Program Vice President of {{$divisi}}</label>
               <br>
               <hr>
+
               <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
               <label class="section-title">Program Kerja Anda Sebagai {{$jabatan}} {{$divisi}}</label>
             </div><!-- section-wrapper -->
