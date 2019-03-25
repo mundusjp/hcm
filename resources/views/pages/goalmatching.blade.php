@@ -12,17 +12,28 @@
          <h6 class="slim-pagetitle">Dashboard</h6>
        </div><!-- slim-pageheader -->
        <div class="section-wrapper mg-t-20">
-         <label class="section-title">Task List</label>
+         <label class="section-title">Officer Anda</label>
+         <div class="form-group mg-b-10-force">
+           <label class="form-control-label">List Officer Anda:</label>
+           <select class="form-control select" name="media_source">
+             @foreach($officer as $row)
+             <?php
+               $officer = $row->nama;
+               echo "<option  value=\"{$officer}\">{$officer}</option>";
+              ?>
+             @endforeach
+           </select>
+         </div>
+         <br><hr>
+         <label class="section-title">Pertanyaan Mingguan</label>
 
-         <p class="mg-b-20 mg-sm-b-40">Berikut adalah pekerjaan yang harus dilakukan hari ini</p>
+         <p class="mg-b-20 mg-sm-b-40">Silahkan Isi Kuesioner di Bawah Ini</p>
              <table class="table table-orange">
                <thead>
                <tr>
-                 <td>ID</td>
-                 <td>Task</td>
-                 <td>Target</td>
-                 <td>Deadline</td>
-                 <td>Action</td>
+                 <td>No</td>
+                 <td>Pertanyaan</td>
+                 <td>Jawaban</td>
                </tr>
                </thead>
                <tbody>
@@ -30,26 +41,8 @@
                  <td>1</td>
                  <td>Rapat dengan dewan direksi</td>
                  <td>Mendapatkan approval project</td>
-                 <td>Hari ini, 18 Maret 2019</td>
-                 <td><a href="" class="text-success">Selesai</a>&nbsp;|&nbsp;<a href="" class="text-danger">Tunda</a></td>
-
              </table>
              <br>
-             <hr>
-             <label class="section-title">Daily Logbook</label>
-             <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahlogbook">Tambahkan </button>
-             <p class="mg-b-20 mg-sm-b-40">Tuliskan Pekerjaan Anda Hari Ini</p>
-
-             <table class="table table-orange">
-               <thead>
-               <tr>
-                 <td>ID</td>
-                 <td>Task</td>
-                 <td>Target</td>
-                 <td>Deadline</td>
-               </tr>
-               </thead>
-             </table>
                    <div class="modal fade" id="tambahlogbook" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
                      <div class="modal-dialog modal-lg">
                        <div class="modal-content">

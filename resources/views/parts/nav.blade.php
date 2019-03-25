@@ -21,9 +21,9 @@
         </div><!-- dropdown-menu -->
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="Config">
+        <a class="nav-link" href="goal-matching">
           <i class="icon ion-ios-gear"></i>
-          <span>Logbook</span>
+          <span>Goal Matching</span>
         </a>
       </li>
     </ul>

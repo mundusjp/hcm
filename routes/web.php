@@ -17,13 +17,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'DashboardController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('goal-matching','GoalsettingController@goal_matching')->name('goal-matching');
 // -------------------------------------------------------------------------------
 //                               CRUD GOALSETTING
 // -------------------------------------------------------------------------------
 //                                  PERUSAHAAN
 Route::get('perusahaan','GoalsettingController@index_perusahaan');
-Route::get('perusahaan-insert','GoalsettingController@insert_visi_perusahaan')->name('perusahaan-insert');
+Route::post('perusahaan-insert','GoalsettingController@insert_visi_perusahaan')->name('perusahaan-insert');
 Route::post('perusahaan-edit','GoalsettingController@edit_visi_perusahaan')->name('perusahaan-edit');
 Route::post('perusahaan-update','GoalsettingController@update_visi_perusahaan')->name('perusahaan-update');
 Route::post('perusahaan-delete','GoalsettingController@delete_visi_perusahaan')->name('perusahaan-delete');

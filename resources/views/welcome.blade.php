@@ -1,100 +1,58 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Meta -->
+    <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
+    <meta name="author" content="ThemePixels">
 
-        <title>Laravel</title>
+    <title>Shopee Fraudcheck System</title>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+    <!-- vendor css -->
+    <link href="{{ asset('lib/font-awesome/css/font-awesome.css') }}" rel="stylesheet" type="text/css" >
+    <link href="{{ asset('lib/Ionicons/css/ionicons.css') }}" rel="stylesheet" type="text/css" >
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+    <!-- Slim CSS -->
+    <link href="{{ asset('css/slim.css') }}" rel="stylesheet" type="text/css" >
 
-            .full-height {
-                height: 100vh;
-            }
+  </head>
+  <body class="slim-landing">
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
+    <div class="slim-landing-header">
+      <div class="container">
+        <div class="slim-landing-header-left">
+          <h1>Indonesia Kendaraan Terminal</h1>
+          <p>Goalsetting Management System</p>
         </div>
-    </body>
+      </div><!-- container -->
+    </div><!-- slim-landing-header -->
+
+    <div class="slim-landing-headline">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <h1>Silahkan login melalui panel berikut.</h1>
+            <h5>Sistem ini masih dalam tahap pengembangan sehingga ada kemungkinan error yang tidak terduga</h5>
+          </div><!-- col-6 -->
+          <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+            <div class="signin-wrapper">
+              <div class="signin-box">
+                <h2 class="slim-logo"><a href="Dashboard" style="color:#ff6600;">PT IKT<span></span></a></h2>
+                <h2 class="signin-title-primary">Welcome back!</h2>
+                <h3 class="signin-title-secondary">Sign in to continue.</h3>
+                <form id="login" action="{{route('login')}}" method="get">
+                  <button type="submit" class="btn btn-primary btn-block btn-signin">Login</button>
+                </form>
+              </div><!-- signin-box -->
+          </div><!-- col-6 -->
+        </div><!-- row -->
+      </div><!-- container -->
+    </div><!--slim-landing-headline -->
+
+    <script type="text/javascript" src="{{ asset('lib/jquery/js/jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('lib/popper.js/js/popper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('lib/bootstrap/js/bootstrap.js') }}"></script>
+  </body>
 </html>

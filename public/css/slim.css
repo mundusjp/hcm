@@ -4054,6 +4054,7 @@ button.close {
 
 @media (min-width: 992px) {
   .modal-lg {
+    width:750px;
     max-width: 800px; } }
 
 .tooltip {
