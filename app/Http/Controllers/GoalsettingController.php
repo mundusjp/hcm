@@ -103,7 +103,7 @@ class GoalsettingController extends Controller
   }
 
   // -------------------------------------------------------------------------------
-    //SUPERVISOR//
+    //MANAJER//
     public function index_manajer(){
       $nama = Auth::user()->nama;
       $nipp = Auth::user()->nipp;
