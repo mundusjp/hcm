@@ -9,6 +9,7 @@ use App\Task;
 use App\User;
 use App\Logbook;
 use App\Divisi;
+use App\Manajer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,8 +24,9 @@ class GoalsettingController extends Controller
   public function index_perusahaan(){
     $visi_perusahaan = Perusahaan::where('misi',null)->get();
     $misi_perusahaan = Perusahaan::where('visi',null)->get();
+    $kelas_jabatan = Auth::user()->kelas_jabatan;
     $divisi = Auth::user()->divisi;
-    return view('pages.goalsetting.perusahaan',compact('visi_perusahaan','misi_perusahaan','divisi'));
+    return view('pages.goalsetting.perusahaan',compact('visi_perusahaan','misi_perusahaan','divisi','kelas_jabatan'));
   }
 
   public function insert_visi_perusahaan(Request $request){
@@ -68,10 +70,11 @@ class GoalsettingController extends Controller
     $nipp = Auth::user()->nipp;
     $nama = Auth::user()->nama;
     $divisi = Auth::user()->divisi;
+    $jabatan = Auth::user()->jabatan;
     $kelas_jabatan = Auth::user()->kelas_jabatan;
-    $direksi = Direksi::where('nipp',$nipp)->get();
+    $direksi = Direksi::where('divisi',$divisi)->get();
     $program_direksi_utama = Direksi::where('divisi','Utama')->get();
-    return view('pages.goalsetting.direksi',compact('nipp','nama','divisi','direksi','program_direksi_utama'));
+    return view('pages.goalsetting.direksi',compact('nipp','nama','divisi','direksi','program_direksi_utama','kelas_jabatan','jabatan'));
   }
 
   public function insert_misi_direksi(Request $request){
@@ -86,12 +89,20 @@ class GoalsettingController extends Controller
     return redirect('direksi');
   }
 
-  public function edit_misi_direksi(){
-    return view('pages.goalsetting.direksi');
+  public function edit_misi_direksi(Request $req){
+    $nipp = Auth::user()->nipp;
+    $program = Direksi::where('nipp',$nipp)->where('id',$req->id)->first();
+    return view('pages.goalsetting.ubah.direksi',compact('program'));
   }
 
-  public function update_misi_direksi(){
-    return view('pages.goalsetting.direksi');
+  public function update_misi_direksi(Request $req){
+    $nipp = Auth::user()->nipp;
+    Direksi::where('nipp',$nipp)->where('id',$req->id)->update([
+      'program_kerja'=>$req->proker,
+      'mulai'=>$req->from,
+      'berakhir'=>$req->to
+    ]);
+    return redirect('direksi')->with('success','Sukses mengubah Program Direksi!');
   }
 
   public function delete_misi_direksi(Request $request){
@@ -110,31 +121,56 @@ class GoalsettingController extends Controller
       $divisi = Auth::user()->divisi;
       $kelas_jabatan = Auth::user()->kelas_jabatan;
       $jabatan = Auth::user()->jabatan;
-      return view('pages.goalsetting.manajer',compact('divisi','jabatan','nama','nipp','kelas_jabatan'));
+      $now = Carbon::now();
+      $start = Carbon::now()->subDays(7);
+      $direksi = Direksi::where('divisi',$divisi)->get();
+      $proker = Manajer::where('nipp',$nipp)->get();
+      return view('pages.goalsetting.manajer',compact('divisi','jabatan','nama','nipp','kelas_jabatan','proker','now','direksi'));
     }
 
-    public function insert_misi_manajer(){
-      return view('pages.goalsetting.manajer');
+    public function insert_misi_manajer(Request $request){
+      $insert = new Manajer;
+      $insert->nipp = $request->nipp;
+      $insert->program_kerja = $request->proker;
+      $insert->divisi = $request->divisi;
+      $insert->mulai = $request->from;
+      $insert->berakhir = $request->to;
+      $insert->minggu_ke = $request->minggu;
+      $insert->save();
+      return redirect('manajer')->with('success', 'Program Vice President Berhasil Ditambahkan!');
     }
 
-    public function edit_misi_manajer(){
-      return view('pages.goalsetting.manajer');
+    public function edit_misi_manajer(Request $req){
+      $nipp = Auth::user()->nipp;
+      $program = Manajer::where('nipp',$nipp)->where('id',$req->id)->first();
+      return view('pages.goalsetting.ubah.manajer',compact('program'));
     }
 
-    public function update_misi_manajer(){
-      return view('pages.goalsetting.manajer');
+    public function update_misi_manajer(Request $req){
+      $nipp = Auth::user()->nipp;
+      Manajer::where('nipp',$nipp)->where('id',$req->id)->update([
+        'program_kerja'=>$req->proker,
+        'mulai'=>$req->from,
+        'berakhir'=>$req->to
+      ]);
+      return redirect('manajer')->with('success','Sukses mengubah Program Vice President!');
     }
 
-    public function delete_misi_manajer(){
-      return view('pages.goalsetting.manajer');
+    public function delete_misi_manajer(Request $req){
+      Manajer::where('id',$req->id)->delete();
+      return redirect('manajer')->with('success', 'Program Vice President Berhasil Dihapuskan!');
     }
 
 // -------------------------------------------------------------------------------
   //SUPERVISOR//
   public function index_supervisor(){
     $divisi = Auth::user()->divisi;
+    $kelas_jabatan = Auth::user()->kelas_jabatan;
     $jabatan = Auth::user()->jabatan;
-    return view('pages.goalsetting.supervisor',compact('divisi','jabatan'));
+    $nipp = Auth::user()->nipp;
+    $manajer = Manajer::where('divisi',$divisi)->get();
+    $tugas = Task::where('nipp',$nipp)->get();
+    return view('pages.goalsetting.supervisor',compact('divisi','jabatan','tugas','kelas_jabatan','manajer'));
   }
 
   public function insert_misi_supervisor(){

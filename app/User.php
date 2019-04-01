@@ -21,6 +21,8 @@ class User extends Authenticatable
         'email',
         'password',
         'jabatan',
+        'divisi',
+        'kelas_jataban',
         'golongan',
         'pendidikan',
         'sta_kel',

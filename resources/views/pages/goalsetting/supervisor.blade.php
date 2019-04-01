@@ -29,6 +29,28 @@
               </div><!-- alert -->
               @endif
               <label class="section-title">Program Vice President of {{$divisi}}</label>
+              <table class="table table-orange">
+                <thead>
+                <tr>
+                  <td>No</td>
+                  <td>Program Kerja</td>
+                  <td>Mulai</td>
+                  <td>Berakhir</td>
+                </tr>
+                </thead>
+                <tbody>
+
+                  <?php $i=0;?>
+                  @foreach($manajer as $program)
+                  <?php $i++;?>
+                  <tr>
+                  <th style="width:30px"scope="row">{{$i}}</th>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                  <td style="width:150px">{{$program->mulai}}</td>
+                  <td style="width:150px">{{$program->berakhir}}</td>
+                </tr>
+                @endforeach
+              </table>
               <br>
               <hr>
 

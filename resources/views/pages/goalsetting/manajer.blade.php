@@ -29,10 +29,80 @@
               </div><!-- alert -->
               @endif
               <label class="section-title">Program Direktur {{$divisi}}</label>
+              <table class="table table-orange">
+                <thead>
+                <tr>
+                  <td>No</td>
+                  <td>Program Kerja</td>
+                  @if(($kelas_jabatan <=5)||($jabatan == "Superadmin"))
+                  <td>Mulai</td>
+                  <td>Berakhir</td>
+                  @endif
+                </tr>
+                </thead>
+                <tbody>
+
+                  <?php $i=0;?>
+                  @foreach($direksi as $program)
+                  <?php $i++;?>
+                  <tr>
+                  <th style="width:30px"scope="row">{{$i}}</th>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                  @if(($kelas_jabatan <=5)||($jabatan == "Superadmin"))
+                  <td style="width:150px">{{$program->mulai}}</td>
+                  <td style="width:150px">{{$program->berakhir}}</td>
+                  @endif
+                    </form>
+                </tr>
+                @endforeach
+              </table>
               <br>
               <hr>
+              @if(($kelas_jabatan <=8)||($jabatan == "Superadmin"))
               <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahmanajer">Tambahkan </button>
               <label class="section-title">Program Anda Sebagai Vice President {{$divisi}}</label>
+              @else
+              <label class="section-title">Program Vice President {{$divisi}}</label>
+              @endif
+              <table class="table table-orange">
+                <thead>
+                <tr>
+                  <td>No</td>
+                  <td>Program Kerja</td>
+                  @if(($kelas_jabatan <=8)||($jabatan == "Superadmin"))
+                  <td>Mulai</td>
+                  <td>Berakhir</td>
+                  <td>Action</td>
+                  @endif
+                </tr>
+                </thead>
+                <tbody>
+
+                  <?php $i=0;?>
+                  @foreach($proker as $program)
+                  <?php $i++;?>
+                  <tr>
+                  <th style="width:30px" scope="row">{{$i}}</th>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                  @if(($kelas_jabatan <=8)||($jabatan == "Superadmin"))
+                  <td style="width:150px">{{$program->mulai}}</td>
+                  <td style="width:150px">{{$program->berakhir}}</td>
+                  <td>
+                    <form id="edit" action="{{route('manajer-edit')}}" method="post">
+                    @csrf
+                    <input class="form-control" type="text" name="id" style="display:none;" value="{{$program->id}}">
+                    <a href="javascript:;" onclick="document.getElementById('edit').submit();" class="text-success">Ubah</a><br>
+                    </form>
+                    <form id="hapus" action="{{route('manajer-delete')}}" method="post">
+                      <input class="form-control" type="text" name="id" style="display:none;" value="{{$program->id}}">
+                    @csrf
+                    <a class="tx-danger" href="javascript:;" onclick="document.getElementById('hapus').submit();">Hapus</a>
+                  </td>
+                  </form>
+                  @endif
+                </tr>
+                @endforeach
+              </table>
               <div class="modal fade" id="tambahmanajer" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
@@ -46,7 +116,7 @@
                         <div class="form-group">
                           <div class="row">
                             <div class="col-12">
-                              <form id="tambahmanajer" action="{{route('direksi-insert')}}" method="post">
+                              <form id="tambahmanajer" action="{{route('manajer-insert')}}" method="post">
                               {{ csrf_field() }}
                               <label class="section-title">Tambahkan Program Kerja Direktur {{$divisi}}</label>
                               <p class="mg-b-20 mg-sm-b-40">Untuk tahun {{date('Y')}}</p>
@@ -86,6 +156,12 @@
                                     <div class="form-group">
                                         <label for="to" class="form-control-label">Tanggal Berakhir <span class="tx-danger">*</span></label><br>
                                         <input required name="to" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd">
+                                    </div>
+                                  </div><!-- col-6 -->
+                                  <div class="col-lg-6" style="display:none;">
+                                    <div class="form-group">
+                                        <label for="to" class="form-control-label">Tanggal Berakhir <span class="tx-danger">*</span></label><br>
+                                        <textarea required name="minggu" class="form-control" value="{{$now->weekOfYear}}">{{$now->weekOfYear}}</textarea>
                                     </div>
                                   </div><!-- col-6 -->
                                 </div><!-- row -->

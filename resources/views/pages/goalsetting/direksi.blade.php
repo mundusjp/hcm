@@ -41,9 +41,9 @@
                 <tr>
                   <td>No</td>
                   <td>Program Kerja</td>
+                  @if($divisi == "Utama")
                   <td>Mulai</td>
                   <td>Berakhir</td>
-                  @if($divisi == "Utama")
                   <td>Action</td>
                   @endif
                 </tr>
@@ -54,11 +54,11 @@
                   @foreach($program_direksi_utama as $program)
                   <?php $i++;?>
                   <tr>
-                  <th scope="row">{{$i}}</th>
+                  <th style="width:30px"scope="row">{{$i}}</th>
                   <td style="width:500px">{{$program->program_kerja}}</td>
+                  @if($divisi == "Utama" && $kelas_jabatan <= 5)
                   <td style="width:150px">{{$program->mulai}}</td>
                   <td style="width:150px">{{$program->berakhir}}</td>
-                  @if($divisi == "Utama")
                   <form id="hapus" action="{{route('direksi-delete')}}" method="post">
                     <input class="form-control" type="text" name="id['{{$i}}']" style="display:none;" value="{{$program->id}}">
                   @csrf
@@ -69,10 +69,52 @@
                 @endforeach
               </table>
               @if($divisi != "Utama")
+              @if($kelas_jabatan <= 5 || $divisi == "Superadmin")
               <br>
               <hr>
               <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
+              @endif
               <label class="section-title">Program Direktur {{$divisi}}</label>
+
+              <table class="table table-orange">
+                <thead>
+                <tr>
+                  <td>No</td>
+                  <td>Program Kerja</td>
+                  @if($kelas_jabatan <= 5 || $jabatan == "Superadmin")
+                  <td>Mulai</td>
+                  <td>Berakhir</td>
+                  <td>Action</td>
+                  @endif
+                </tr>
+                </thead>
+                <tbody>
+
+                  <?php $i=0;?>
+                  @foreach($direksi as $program)
+                  <?php $i++;?>
+                  <tr>
+                  <th style="width:30px" scope="row">{{$i}}</th>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                  @if($kelas_jabatan <= 5 || $jabatan == "Superadmin")
+                  <td style="width:150px">{{$program->mulai}}</td>
+                  <td style="width:150px">{{$program->berakhir}}</td>
+                  <td>
+                    <form id="edit" action="{{route('direksi-edit')}}" method="post">
+                    @csrf
+                    <input class="form-control" type="text" name="id" style="display:none;" value="{{$program->id}}">
+                    <a href="javascript:;" onclick="document.getElementById('edit').submit();" class="text-success">Ubah</a><br>
+                    </form>
+                    <form id="hapus" action="{{route('direksi-delete')}}" method="post">
+                      <input class="form-control" type="text" name="id" style="display:none;" value="{{$program->id}}">
+                    @csrf
+                    <a class="tx-danger" href="javascript:;" onclick="document.getElementById('hapus').submit();">Hapus</a>
+                  </td>
+                    </form>
+                  @endif
+                </tr>
+                @endforeach
+              </table>
               @endif
               <div class="modal fade" id="tambahdireksi" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">

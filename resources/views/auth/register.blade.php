@@ -10,7 +10,19 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
+                        <div class="form-group row">
+                            <label for="nipp" class="col-md-4 col-form-label text-md-right">{{ __('NIPP') }}</label>
 
+                            <div class="col-md-6">
+                                <input id="nipp" type="text" class="form-control{{ $errors->has('nipp') ? ' is-invalid' : '' }}" name="nipp" value="{{ old('nipp') }}" required autofocus>
+
+                                @if ($errors->has('nipp'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('nipp') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label for="nama" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
@@ -24,7 +36,19 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="jabatan" class="col-md-4 col-form-label text-md-right">{{ __('Jabatan') }}</label>
 
+                            <div class="col-md-6">
+                                <input id="jabatan" type="text" class="form-control{{ $errors->has('jabatan') ? ' is-invalid' : '' }}" name="nipp" value="{{ old('jabatan') }}" required autofocus>
+
+                                @if ($errors->has('jabatan'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('jabatan') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 

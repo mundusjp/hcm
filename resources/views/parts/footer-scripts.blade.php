@@ -9,6 +9,14 @@
 <script type="text/javascript" src="{{ asset('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('lib/PapaParse/papaparse.min.js')}}"></script>
 <script>
+$('.ubahmanajer').click(function(){
+    //get cover id
+    var id=$(this).data('id');
+    //set href for cancel button
+    $('#ubahmanajer').attr('href','delete-cover.php?id='+id);
+})
+</script>
+<script>
     $(document).ready(function(){
         var $progressbar = $("#progressbar");
         $progressbar.show();

@@ -11,9 +11,9 @@ class Task extends Model
       'nipp',
       'officer_nipp',
       'program_kerja',
-      'target_proker'
+      'target_proker',
       'task',
-      'month',
+      'minggu_ke',
       'progress',
       'status_task'
   ];

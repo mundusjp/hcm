@@ -23,7 +23,7 @@
     <div class="slim-landing-header">
       <div class="container">
         <div class="slim-landing-header-left">
-          <h1>Indonesia Kendaraan Terminal</h1>
+          <h1>PT. Indonesia Kendaraan Terminal, Tbk.</h1>
           <p>Goalsetting Management System</p>
         </div>
       </div><!-- container -->
@@ -39,7 +39,7 @@
           <div class="col-lg-6 mg-t-20 mg-lg-t-0">
             <div class="signin-wrapper">
               <div class="signin-box">
-                <h2 class="slim-logo"><a href="Dashboard" style="color:#ff6600;">PT IKT<span></span></a></h2>
+                <img src="{{asset('/img/ikt-logo.png')}}">
                 <h2 class="signin-title-primary">Welcome back!</h2>
                 <h3 class="signin-title-secondary">Sign in to continue.</h3>
                 <form id="login" action="{{route('login')}}" method="get">

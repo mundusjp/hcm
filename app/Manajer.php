@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Manajer extends Model
 {
-  protected $table = 'direksi';
+  protected $table = 'manajer';
   protected $fillable = [
       'id',
       'program_kerja',
       'divisi',
       'mulai',
-      'berakhir'
+      'berakhir',
+      'minggu_ke'
   ];
 }

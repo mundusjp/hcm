@@ -46,22 +46,28 @@
                         <tr>
                           <th>No</th>
                           <th style="width:350px;">Visi</th>
+                          @if(($divisi == "Utama" && $kelas_jabatan <= 5) || $divisi == "Superadmin")
                           <th>Action</th>
+                          @endif
                         </tr>
                       </thead>
                       <tbody>
                         <?php $i = 0; ?>
                         @foreach($visi_perusahaan as $row)
                         <?php $i++; ?>
-                        <form id="visi" action="{{route('perusahaan-delete')}}" method="post">
-                          <textarea type="text" style="display:none;" name="id">{{$row->id}}</textarea>
-                        @csrf
+
                         <tr>
                           <th scope="row">{{$i}}</th>
                           <td>{{$row->visi}}</td>
+                          @if(($divisi == "Utama" && $kelas_jabatan <= 5) || $divisi == "Superadmin")
+                          <form id="visi" action="{{route('perusahaan-delete')}}" method="post">
+                            <textarea type="text" style="display:none;" name="id">{{$row->id}}</textarea>
+                          @csrf
                           <td ><a class="tx-success" href="#">Ubah</a><br><a class="tx-danger" href="javascript:;" onclick="document.getElementById('visi').submit();">Hapus</a></td>
+                          </form>
+                          @endif
                         </tr>
-                        </form>
+
                          @endforeach
                       </tbody>
                     </table>
@@ -86,7 +92,9 @@
                         <tr>
                           <th>No</th>
                           <th style="width:350px;">Misi</th>
+                          @if(($divisi == "Utama" && $kelas_jabatan <= 5) || $divisi == "Superadmin")
                           <th>Action</th>
+                          @endif
                         </tr>
                       </thead>
                       <tbody>
@@ -94,15 +102,19 @@
 
                         @foreach($misi_perusahaan as $row)
                         <?php $i++; ?>
-                        <form id="misi" action="{{route('perusahaan-delete')}}" method="post">
-                          <textarea type="text" style="display:none;" name="id">{{$row->id}}</textarea>
-                        @csrf
+
                         <tr>
                           <th scope="row">{{$i}}</th>
                           <td>{{$row->misi}}</td>
+                          @if(($divisi == "Utama" && $kelas_jabatan <= 5) || $divisi == "Superadmin")
+                          <form id="misi" action="{{route('perusahaan-delete')}}" method="post">
+                            <textarea type="text" style="display:none;" name="id">{{$row->id}}</textarea>
+                          @csrf
                           <td ><a class="tx-success" href="#">Ubah</a><br><a class="tx-danger" href="javascript:;" onclick="document.getElementById('misi').submit();">Hapus</a></td>
+                          </form>
+                          @endif
                         </tr>
-                        </form>
+
                          @endforeach
                       </tbody>
                     </table>
