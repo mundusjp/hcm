@@ -8,6 +8,8 @@
 <script type="text/javascript" src="{{ asset('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('lib/PapaParse/papaparse.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset('lib/select2/js/select2.full.min.js') }}"></script>
+
 <script>
 $('.ubahmanajer').click(function(){
     //get cover id
@@ -47,6 +49,21 @@ $('.ubahmanajer').click(function(){
             });
         }).uploadProgress(updateProgressBar).upload(updateProgressBar);
     });
+</script>
+<script>
+$('.ubahvisi').click(function(){
+    //get cover id
+    var id=$(this).data('id');
+    //set href for cancel button
+    $('#modallCancel').attr('href','perusahaan.destroy?id='+id);
+});
+
+$('.ubahmisi').click(function(){
+    //get cover id
+    var id=$(this).data('id');
+    //set href for cancel button
+    $('#modallCancel').attr('href','perusahaan.destroy?id='+id);
+});
 </script>
 <!-- <script>
 $(document).ready(function(){

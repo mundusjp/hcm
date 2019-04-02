@@ -1,4 +1,4 @@
-@extends('layouts.default')
+@extends('layouts.dashboard')
 
 @section('content')
 <!-- coding starts here  -->
@@ -12,8 +12,11 @@
          <h6 class="slim-pagetitle">Dashboard</h6>
        </div><!-- slim-pageheader -->
        <div class="section-wrapper mg-t-20">
+         <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+         <!--                                UNTUK KELAS DIREKSI                                       -->
+         <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+         @if(Auth::user()->kelas_jabatan <= 5)
          <label class="section-title">Task List</label>
-
          <p class="mg-b-20 mg-sm-b-40">Berikut adalah pekerjaan yang harus dilakukan hari ini</p>
              <table class="table table-orange">
                <thead>
@@ -50,6 +53,127 @@
                </tr>
                </thead>
              </table>
+             <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+             <!--                               UNTUK KELAS VICE PRESIDENT                                 -->
+             <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+             @elseif(Auth::user()->kelas_jabatan > 5 && Auth::user()->kelas_jabatan <=8)
+             <label class="section-title">Dashboard Vice President of {{Auth::user()->sub_divisi}}</label>
+             <hr>
+             <button class="btn btn-outline-warning float-right"> Tambahkan</button>
+             <label class="section-title">Assign Task to Deputy Vice President</label>
+             <table class="table table-orange">
+               <thead>
+               <tr>
+                 <td>ID</td>
+                 <td>Task</td>
+                 <td>Target</td>
+                 <td>Deadline</td>
+               </tr>
+               </thead>
+             </table>
+             <div class="modal fade" id="assigntasktodvp" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
+               <div class="modal-dialog modal-lg">
+                 <div class="modal-content">
+                   <div class="modal-header">
+                     <h6 class="modal-title" id="ConfigUpdateLabel">Berikan Tugas ke DVP</h6>
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                     </button>
+                   </div>
+                   <div class="modal-body">
+                         <div class="form-layout">
+                           <div class="row">
+                             <div class="col-12">
+                                   <div class="form-group">
+                                     <label class="form-control-label">Program Kerja Anda <span class="tx-danger">*</span></label>
+                                     <select name="program_direksi" class="form-control select2-show-search" data-placeholder="Choose one">
+                                       @foreach($proker_vp as $program)
+                                       <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                       @endforeach
+                                     </select>
+                                   </div>
+                                 </div><!-- col-12 -->
+                                 <div class="col-12">
+                                   <div class="form-group">
+                                     <label class="form-control-label">DVP Anda <span class="tx-danger">*</span></label>
+                                     <select name="program_direksi" class="form-control select2-show-search" data-placeholder="Choose one">
+                                       @foreach($proker_vp as $program)
+                                       <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                       @endforeach
+                                     </select>
+                                   </div>
+                                 </div> <!-- col-12 -->
+                              </div>
+                             </div>
+                           </div> <!-- form layout -->
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="modal-footer" style="text-align:right;">
+                     <button type="submit" class="btn btn-primary bd-0">Tambahkan</button>
+                     <button type="button" class="btn btn-secondary" class="close" data-dismiss="modal">Cancel</button>
+                     <!-- <button type="submit" class="btn btn-primary">Update</button> -->
+                   </div>
+               </div><!-- modal-dialog -->
+             </div><!-- modal -->
+           </div>
+
+             <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+             <!--                            UNTUK KELAS DEPUTY VICE PRESIDENT                             -->
+             <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+             @elseif(Auth::user()->kelas_jabatan > 8 && Auth::user()->kelas_jabatan <=10)
+             <label class="section-title">Dashboard Deputy Vice President of {{Auth::user()->sub_divisi}}</label>
+
+             <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+             <!--                               UNTUK KELAS OFFICER & TNO                                  -->
+             <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+             @else
+             <label class="section-title">Daily Logbook</label>
+             <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahlogbook">Tambahkan </button>
+             <p class="mg-b-20 mg-sm-b-40">Tuliskan Pekerjaan Anda Hari Ini</p>
+
+             <table class="table table-orange">
+               <thead>
+               <tr>
+                 <td>ID</td>
+                 <td>Task</td>
+                 <td>Target</td>
+                 <td>Deadline</td>
+               </tr>
+               </thead>
+             </table>
+             <br>
+             <hr>
+             <div class="row">
+               <div class="col">
+                 <label class="section-title">Upcoming Task</label>
+                 <table class="table table-orange">
+                   <thead>
+                   <tr>
+                     <td>ID</td>
+                     <td>Task</td>
+                     <td>Target</td>
+                     <td>Deadline</td>
+                   </tr>
+                   </thead>
+                 </table>
+               </div>
+               <div class="col">
+                 <label class="section-title">Pending Tasks</label>
+                 <table class="table table-orange">
+                   <thead>
+                   <tr>
+                     <td>ID</td>
+                     <td>Task</td>
+                     <td>Target</td>
+                     <td>Deadline</td>
+                   </tr>
+                   </thead>
+                 </table>
+               </div>
+             </div>
+             @endif
                    <div class="modal fade" id="tambahlogbook" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
                      <div class="modal-dialog modal-lg">
                        <div class="modal-content">

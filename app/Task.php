@@ -8,13 +8,22 @@ class Task extends Model
 {
   protected $table = 'task';
   protected $fillable = [
+      'id',
       'nipp',
       'officer_nipp',
+      'program_vp',
+      'id_provp'
       'program_kerja',
-      'target_proker',
-      'task',
-      'minggu_ke',
+      'target',
+      'mulai',
+      'berakhir',
+      'minggu',
+      'bulan',
+      'tahun',
+      'kategori',
       'progress',
-      'status_task'
+      'status_task',
+      'due_date',
+      'keterangan'
   ];
 }

@@ -15,5 +15,6 @@
 <link href="{{ asset('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/jquery-toggles/css/toggles-full.css') }}" rel="stylesheet" type="text/css" >
 <link href="{{ asset('lib/jquery-typeahead/dist/jquery.typeahead.min.css') }}" rel="stylesheet" type="text/css" >
+<link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css">
 <!-- Slim CSS -->
 <link href="{{ asset('css/slim.css') }}" rel="stylesheet" type="text/css" >

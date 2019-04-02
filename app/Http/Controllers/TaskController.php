@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class LogbookController extends Controller
+class TaskController extends Controller
 {
     public function __construct()
     {

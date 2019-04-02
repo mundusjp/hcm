@@ -16,8 +16,8 @@
           <ul>
             <li><a href="perusahaan">Perusahaan</a></li>
             <li><a href="direksi">Direksi</a></li>
-            <li><a href="manajer">Vice President</a><li>
-            <li><a href="supervisor">Supervisor</a></li>
+            <li><a href="vice-president">Vice President</a><li>
+            <li><a href="deputy-vice-president">DVP</a></li>
           </ul>
         </div><!-- dropdown-menu -->
       </li>

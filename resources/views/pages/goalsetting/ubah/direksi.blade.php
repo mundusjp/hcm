@@ -5,7 +5,8 @@
 <div class="slim-mainpanel">
       <div class="container">
         <div class="section-wrapper">
-          <form action="{{route('direksi-update')}}" method="post">
+          <form action="{{route('direksi.update',$program->id)}}" method="post">
+          @method('PATCH')
           {{ csrf_field() }}
           <div class="form-layout">
             <div class="row mg-b-25">
@@ -48,18 +49,10 @@
               </div><!-- col-6 -->
             </div><!-- row -->
             <div class="form-layout-footer">
-              <div class="row">
-                <div class="col-2">
-                  <button type="submit" class="btn bd-0">Submit Form</button> <br>
-                  </form>
-                </div>
-                <div class="col-2">
-                  <form action="{{route('direksi-delete')}}" method="post">
-                  @csrf
-                  <input style="display:none;"class="form-control" type="text" name="id" readonly value="{{$program->id}}" >
-                  <button type="submit" class="btn btn-danger bd-0">Hapus</button>
-                  </form>
-                </div>
+              <div class="justifier" style="text-align:right;">
+              <button type="submit" class="btn btn-outline-success">Ubah</button>
+              </div>
+              </form>
             </div><!-- form-layout-footer -->
           </div><!-- form-layout -->
 

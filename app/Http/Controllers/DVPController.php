@@ -3,8 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Perusahaan;
+use App\Direksi;
+use App\Task;
+use App\User;
+use App\Logbook;
+use App\Divisi;
+use App\Manajer;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
-class LogbookController extends Controller
+class DVPController extends Controller
 {
     public function __construct()
     {

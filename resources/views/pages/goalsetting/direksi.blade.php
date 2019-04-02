@@ -28,23 +28,25 @@
                 <strong> {{ session('failed')}} </strong>
               </div><!-- alert -->
               @endif
-              <label class="section-title">Silahkan masukkan Program Kerja Direksi</label>
               @if($divisi == "Utama")
+              <label class="section-title">Silahkan masukkan Program Kerja Direksi</label>
               <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
               <p class="mg-b-20 mg-sm-b-40">Menggunakan form berikut</p>
               @else
+              <label class="section-title">Program Kerja Direksi Terkait</label>
               <p class="mg-b-20 mg-sm-b-40">Berikut adalah Program Kerja Direktur Utama</p>
               @endif
               <label class="section-title">Program Direktur Utama</label>
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td>No</td>
+                  <td style="width:30px;">No</td>
                   <td>Program Kerja</td>
                   @if($divisi == "Utama")
                   <td>Mulai</td>
                   <td>Berakhir</td>
-                  <td>Action</td>
+                  <td>Ubah</td>
+                  <td>Hapus</td>
                   @endif
                 </tr>
                 </thead>
@@ -54,17 +56,25 @@
                   @foreach($program_direksi_utama as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px"scope="row">{{$i}}</th>
-                  <td style="width:500px">{{$program->program_kerja}}</td>
+                  <th style="width:30px;" scope="row">{{$i}}</th>
+                  <td style="width:500px;">{{$program->program_kerja}}</td>
                   @if($divisi == "Utama" && $kelas_jabatan <= 5)
-                  <td style="width:150px">{{$program->mulai}}</td>
-                  <td style="width:150px">{{$program->berakhir}}</td>
-                  <form id="hapus" action="{{route('direksi-delete')}}" method="post">
-                    <input class="form-control" type="text" name="id['{{$i}}']" style="display:none;" value="{{$program->id}}">
-                  @csrf
-                  <td><a href="" class="text-success">Ubah</a><br><a class="tx-danger" href="javascript:;" onclick="document.getElementById('hapus').submit();">Hapus</a></td>
+                  <td style="width:150px;">{{$program->mulai}}</td>
+                  <td style="width:150px;">{{$program->berakhir}}</td>
+                  <td>
+                    <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-success">Ubah</button>
+                    </form>
+                  </td>
+                  <td>
+                    <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
+                    @method('DELETE')
+                    @csrf
+                    <button class="btn btn-outline-danger" type="delete">Hapus</a>
+                    </form>
+                  </td>
                   @endif
-                </form>
                 </tr>
                 @endforeach
               </table>
@@ -79,12 +89,13 @@
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td>No</td>
+                  <td style="width:30px;">No</td>
                   <td>Program Kerja</td>
                   @if($kelas_jabatan <= 5 || $jabatan == "Superadmin")
                   <td>Mulai</td>
                   <td>Berakhir</td>
-                  <td>Action</td>
+                  <td>Ubah</td>
+                  <td>Hapus</td>
                   @endif
                 </tr>
                 </thead>
@@ -100,16 +111,16 @@
                   <td style="width:150px">{{$program->mulai}}</td>
                   <td style="width:150px">{{$program->berakhir}}</td>
                   <td>
-                    <form id="edit" action="{{route('direksi-edit')}}" method="post">
+                    <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
                     @csrf
-                    <input class="form-control" type="text" name="id" style="display:none;" value="{{$program->id}}">
-                    <a href="javascript:;" onclick="document.getElementById('edit').submit();" class="text-success">Ubah</a><br>
+                    <button type="submit" class="btn btn-outline-success">Ubah</button>
                     </form>
-                    <form id="hapus" action="{{route('direksi-delete')}}" method="post">
-                      <input class="form-control" type="text" name="id" style="display:none;" value="{{$program->id}}">
-                    @csrf
-                    <a class="tx-danger" href="javascript:;" onclick="document.getElementById('hapus').submit();">Hapus</a>
                   </td>
+                  <td>
+                    <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
+                    @method('DELETE')
+                    @csrf
+                    <button class="btn btn-outline-danger" type="delete">Hapus</a>
                     </form>
                   @endif
                 </tr>
@@ -129,7 +140,7 @@
                         <div class="form-group">
                           <div class="row">
                             <div class="col-12">
-                              <form id="tambahdireksi" action="{{route('direksi-insert')}}" method="post">
+                              <form id="tambahdireksi" action="{{route('direksi.store')}}" method="post">
                               {{ csrf_field() }}
                               <label class="section-title">Tambahkan Program Kerja Direktur {{$divisi}}</label>
                               <p class="mg-b-20 mg-sm-b-40">Untuk tahun {{date('Y')}}</p>

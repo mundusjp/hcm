@@ -28,41 +28,14 @@
                 <strong> {{ session('failed')}} </strong>
               </div><!-- alert -->
               @endif
-              <label class="section-title">Program Direktur {{$divisi}}</label>
-              <table class="table table-orange">
-                <thead>
-                <tr>
-                  <td>No</td>
-                  <td>Program Kerja</td>
-                  @if(($kelas_jabatan <=5)||($jabatan == "Superadmin"))
-                  <td>Mulai</td>
-                  <td>Berakhir</td>
-                  @endif
-                </tr>
-                </thead>
-                <tbody>
-
-                  <?php $i=0;?>
-                  @foreach($direksi as $program)
-                  <?php $i++;?>
-                  <tr>
-                  <th style="width:30px"scope="row">{{$i}}</th>
-                  <td style="width:500px">{{$program->program_kerja}}</td>
-                  @if(($kelas_jabatan <=5)||($jabatan == "Superadmin"))
-                  <td style="width:150px">{{$program->mulai}}</td>
-                  <td style="width:150px">{{$program->berakhir}}</td>
-                  @endif
-                    </form>
-                </tr>
-                @endforeach
-              </table>
-              <br>
-              <hr>
-              @if(($kelas_jabatan <=8)||($jabatan == "Superadmin"))
+              <?php use Carbon\Carbon; ?>
+              @if(($kelas_jabatan <=8 && $kelas_jabatan >= 5)||($jabatan == "Superadmin"))
               <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahmanajer">Tambahkan </button>
-              <label class="section-title">Program Anda Sebagai Vice President {{$divisi}}</label>
+              <label class="section-title">Program Anda Sebagai Vice President of {{Auth::user()->sub_divisi}}</label>
+              <p>Untuk Bulan {{Carbon::now()->month}}</p>
+
               @else
-              <label class="section-title">Program Vice President {{$divisi}}</label>
+              <label class="section-title">Program Vice President of {{Auth::user()->sub_divisi}}</label>
               @endif
               <table class="table table-orange">
                 <thead>
@@ -72,14 +45,14 @@
                   @if(($kelas_jabatan <=8)||($jabatan == "Superadmin"))
                   <td>Mulai</td>
                   <td>Berakhir</td>
-                  <td>Action</td>
+                  <td>Ubah</td>
+                  <td>Hapus</td>
                   @endif
                 </tr>
                 </thead>
                 <tbody>
-
                   <?php $i=0;?>
-                  @foreach($proker as $program)
+                  @foreach($proker_tahunan as $program)
                   <?php $i++;?>
                   <tr>
                   <th style="width:30px" scope="row">{{$i}}</th>
@@ -88,15 +61,16 @@
                   <td style="width:150px">{{$program->mulai}}</td>
                   <td style="width:150px">{{$program->berakhir}}</td>
                   <td>
-                    <form id="edit" action="{{route('manajer-edit')}}" method="post">
+                    <form id="edit" action="{{route('vice-president.edit',$program->id)}}" method="get">
                     @csrf
-                    <input class="form-control" type="text" name="id" style="display:none;" value="{{$program->id}}">
-                    <a href="javascript:;" onclick="document.getElementById('edit').submit();" class="text-success">Ubah</a><br>
+                    <button class="btn btn-outline-success" type="submit">Ubah</button>
                     </form>
-                    <form id="hapus" action="{{route('manajer-delete')}}" method="post">
-                      <input class="form-control" type="text" name="id" style="display:none;" value="{{$program->id}}">
+                  </td>
+                  <td>
+                    <form id="hapus" action="{{route('vice-president.destroy',$program->id)}}" method="post">
                     @csrf
-                    <a class="tx-danger" href="javascript:;" onclick="document.getElementById('hapus').submit();">Hapus</a>
+                    @method('DELETE')
+                    <button class="btn btn-outline-danger" type="submit">Hapus</button>
                   </td>
                   </form>
                   @endif
@@ -116,7 +90,7 @@
                         <div class="form-group">
                           <div class="row">
                             <div class="col-12">
-                              <form id="tambahmanajer" action="{{route('manajer-insert')}}" method="post">
+                              <form id="tambahmanajer" action="{{route('vice-president.store')}}" method="post">
                               {{ csrf_field() }}
                               <label class="section-title">Tambahkan Program Kerja Direktur {{$divisi}}</label>
                               <p class="mg-b-20 mg-sm-b-40">Untuk tahun {{date('Y')}}</p>
@@ -140,10 +114,55 @@
                                       <input class="form-control" type="text" readonly name="nipp" value="{{$nipp}}">
                                     </div>
                                   </div><!-- col-3 -->
-                                  <div class="col-lg-12">
+                                  <div class="col-lg-6">
+                                    <div class="form-group">
+                                      <label class="form-control-label">Program Direksi Terkait <span class="tx-danger">*</span></label>
+                                      <select name="program_direksi" class="form-control select2-show-search" data-placeholder="Choose one">
+                                        @foreach($direksi as $program)
+                                        <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                        @endforeach
+                                      </select>
+                                    </div>
+                                  </div><!-- col-6 -->
+                                  <div class="col-lg-6">
+                                    <div class="form-group">
+                                      <label class="form-control-label">Program Kerja Terkait <span class="tx-danger">*</span></label>
+                                      <select name="program_kerja_terkait" class="form-control select2-show-search" data-placeholder="Choose one">
+                                        <option value="">Tidak ada</option>
+                                        <optgroup label="Program Tahunan">
+                                          @foreach($proker_tahunan as $program)
+                                          <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                          @endforeach
+                                        </optgroup>
+                                        <optgroup label="Program 1/2 Tahunan">
+                                          @foreach($proker_settahunan as $program)
+                                          <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                          @endforeach
+                                        </optgroup>
+                                        <optgroup label="Program Bulanan">
+                                          @foreach($proker_bulanan as $program)
+                                          <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                          @endforeach
+                                        </optgroup>
+
+                                      </select>
+                                    </div>
+                                  </div><!-- col-6 -->
+                                  <div class="col-lg-9">
                                     <div class="form-group">
                                       <label class="form-control-label">Program Kerja <span class="tx-danger">*</span></label>
                                       <textarea required name="proker" class="form-control" type="text"></textarea>
+                                    </div>
+                                  </div><!-- col-9 -->
+                                  <div class="col-lg-3">
+                                    <div class="form-group">
+                                      <label class="form-control-label">Kategori <span class="tx-danger">*</span></label>
+                                      <select name="kategori" class="form-control select2-show-search" data-placeholder="Choose one">
+                                        <option value="1">Mingguan</option>
+                                        <option value="2">Bulanan</option>
+                                        <option value="3">1/2 Tahunan</option>
+                                        <option value="4">Tahunan</option>
+                                      </select>
                                     </div>
                                   </div><!-- col-3 -->
                                   <div class="col-lg-6">

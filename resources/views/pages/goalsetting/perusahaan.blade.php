@@ -47,7 +47,8 @@
                           <th>No</th>
                           <th style="width:350px;">Visi</th>
                           @if(($divisi == "Utama" && $kelas_jabatan <= 5) || $divisi == "Superadmin")
-                          <th>Action</th>
+                          <th>Edit</th>
+                          <th>Hapus</th>
                           @endif
                         </tr>
                       </thead>
@@ -60,11 +61,19 @@
                           <th scope="row">{{$i}}</th>
                           <td>{{$row->visi}}</td>
                           @if(($divisi == "Utama" && $kelas_jabatan <= 5) || $divisi == "Superadmin")
-                          <form id="visi" action="{{route('perusahaan-delete')}}" method="post">
-                            <textarea type="text" style="display:none;" name="id">{{$row->id}}</textarea>
-                          @csrf
-                          <td ><a class="tx-success" href="#">Ubah</a><br><a class="tx-danger" href="javascript:;" onclick="document.getElementById('visi').submit();">Hapus</a></td>
-                          </form>
+                          <td>
+                            <form action="{{route('perusahaan.edit', $row->id)}}" method="get">
+                            @csrf
+                            <button class="btn btn-outline-success" href="#">Ubah</button>
+                            </form>
+                          </td>
+                          <td>
+                            <form action="{{route('perusahaan.destroy', $row->id)}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-outline-danger" type="delete">Hapus</button>
+                            </form>
+                          </td>
                           @endif
                         </tr>
 
@@ -93,7 +102,8 @@
                           <th>No</th>
                           <th style="width:350px;">Misi</th>
                           @if(($divisi == "Utama" && $kelas_jabatan <= 5) || $divisi == "Superadmin")
-                          <th>Action</th>
+                          <th>Edit</th>
+                          <th>Hapus</th>
                           @endif
                         </tr>
                       </thead>
@@ -107,11 +117,19 @@
                           <th scope="row">{{$i}}</th>
                           <td>{{$row->misi}}</td>
                           @if(($divisi == "Utama" && $kelas_jabatan <= 5) || $divisi == "Superadmin")
-                          <form id="misi" action="{{route('perusahaan-delete')}}" method="post">
-                            <textarea type="text" style="display:none;" name="id">{{$row->id}}</textarea>
-                          @csrf
-                          <td ><a class="tx-success" href="#">Ubah</a><br><a class="tx-danger" href="javascript:;" onclick="document.getElementById('misi').submit();">Hapus</a></td>
-                          </form>
+                          <td>
+                            <form action="{{route('perusahaan.edit', $row->id)}}" method="get">
+                            @csrf
+                            <button class="btn btn-outline-success" href="#">Ubah</button>
+                            </form>
+                          </td>
+                          <td>
+                            <form action="{{route('perusahaan.destroy', $row->id)}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-outline-danger" type="delete">Hapus</button>
+                            </form>
+                          </td>
                           @endif
                         </tr>
 
@@ -141,7 +159,7 @@
                               <div class="form-group">
                                 <div class="row">
                                   <div class="col-12">
-                                    <form id="tambahvisi" action="{{route('perusahaan-insert')}}" method="post">
+                                    <form id="tambahvisi" action="{{route('perusahaan.store')}}" method="post">
                                     {{ csrf_field() }}
                                     <label class="section-title">Tambahkan Visi Perusahaan</label>
                                     <p class="mg-b-20 mg-sm-b-40">Untuk tahun {{date('Y')}}</p>
@@ -185,7 +203,7 @@
                         <div class="form-group">
                           <div class="row">
                             <div class="col-12">
-                              <form id="tambahmisi" action="{{route('perusahaan-insert')}}" method="post">
+                              <form id="tambahmisi" action="{{route('perusahaan.store')}}" method="post">
                               {{ csrf_field() }}
                               <label class="section-title">Tambahkan Misi Perusahaan</label>
                               <p class="mg-b-20 mg-sm-b-40">Untuk tahun {{date('Y')}}</p>

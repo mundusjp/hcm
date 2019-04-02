@@ -9,10 +9,21 @@ class Manajer extends Model
   protected $table = 'manajer';
   protected $fillable = [
       'id',
-      'program_kerja',
+      'nipp',
       'divisi',
+      'sub_divisi',
+      'program_direksi',
+      'id_prodir',
+      'program_kerja_terkait',
+      'id_prokerkait',
+      'program_kerja',
       'mulai',
       'berakhir',
-      'minggu_ke'
+      'minggu',
+      'bulan',
+      'tahun',
+      'kategori',
+      'status_proker',
+      'keterangan'
   ];
 }

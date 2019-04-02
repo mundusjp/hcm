@@ -9,6 +9,8 @@ class Direksi extends Model
   protected $table = 'direksi';
   protected $fillable = [
       'id',
+      'nipp',
+      'nipp_pj',
       'program_kerja',
       'divisi',
       'mulai',
