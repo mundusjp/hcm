@@ -31,9 +31,21 @@ class DireksiController extends Controller
       $divisi = Auth::user()->divisi;
       $jabatan = Auth::user()->jabatan;
       $kelas_jabatan = Auth::user()->kelas_jabatan;
+      $seluruh_direksi = User::where('kelas_jabatan','<=','5')->where('supervisor_nipp','277056896')->get();
+      $seluruh_divisi = Divisi::all();
       $direksi = Direksi::where('divisi',$divisi)->get();
       $program_direksi_utama = Direksi::where('divisi','Utama')->get();
-      return view('pages.goalsetting.direksi',compact('nipp','nama','divisi','direksi','program_direksi_utama','kelas_jabatan','jabatan'));
+      return view('pages.goalsetting.direksi',compact(
+        'nipp',
+        'nama',
+        'divisi',
+        'direksi',
+        'program_direksi_utama',
+        'kelas_jabatan',
+        'jabatan',
+        'seluruh_direksi',
+        'seluruh_divisi'
+      ));
     }
 
     /**
@@ -62,7 +74,7 @@ class DireksiController extends Controller
       $tambah_proker->mulai = $request->from;
       $tambah_proker->berakhir = $request->to;
       $tambah_proker->save();
-      return redirect('direksi');
+      return redirect('direksi')->with('success','Sukses menambah Program Direksi!');
     }
 
     /**
@@ -116,5 +128,11 @@ class DireksiController extends Controller
       $cari = Direksi::find($id);
       $cari->delete();
       return redirect('direksi')->with('success', 'Program Direksi Berhasil Dihapus!');
+    }
+
+    public function get_divisi(Request $request)
+    {
+      $divisi = User::where('nipp',$request->nipp)->first();
+      return $divisi->divisi;
     }
 }

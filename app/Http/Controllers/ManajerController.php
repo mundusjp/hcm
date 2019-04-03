@@ -33,12 +33,28 @@ class ManajerController extends Controller
       $kelas_jabatan = Auth::user()->kelas_jabatan;
       $jabatan = Auth::user()->jabatan;
       $now = Carbon::now();
-      $start = Carbon::now()->subDays(7);
+      $all_vp = User::where('kelas_jabatan','<=','8')->get();
+      $vp = User::where('supervisor_nipp',$nipp)->where('kelas_jabatan','<=','8')->where('kelas_jabatan','>=','6')->get();
       $direksi = Direksi::where('divisi',$divisi)->get();
-      $proker_tahunan = Manajer::where('nipp',$nipp)->where('kategori','Tahunan')->get();
-      $proker_settahunan = Manajer::where('nipp',$nipp)->where('kategori','1/2 Tahunan')->get();
-      $proker_bulanan = Manajer::where('nipp',$nipp)->where('kategori','Bulanan')->get();
-      return view('pages.goalsetting.manajer',compact('divisi','jabatan','nama','nipp','kelas_jabatan','now','direksi','proker_bulanan','proker_settahunan','proker_tahunan'));
+      $assigned_tasks = Manajer::whereNotNull('nipp_pj')->get();
+      $proker_tahunan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','Tahunan')->get();
+      $proker_settahunan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','1/2 Tahunan')->get();
+      $proker_bulanan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','Bulanan')->get();
+      return view('pages.goalsetting.manajer',compact(
+        'divisi',
+        'jabatan',
+        'nama',
+        'nipp',
+        'all_vp',
+        'vp',
+        'kelas_jabatan',
+        'now',
+        'direksi',
+        'proker_bulanan',
+        'proker_settahunan',
+        'proker_tahunan',
+        'assigned_tasks'
+      ));
     }
 
     /**
@@ -78,50 +94,25 @@ class ManajerController extends Controller
       $insert->program_kerja = $request->proker;
       $insert->mulai = $request->from;
       $insert->berakhir = $request->to;
-      $insert->status_proker = "Belum Diproses";
+      $insert->status_proker = "Belum Disampaikan";
+      $insert->keterangan = "Task belum diberikan kepada DVP terkait";
+      $date = Carbon::createFromFormat('Y-m-d', $request->to);
 
-      if($request->kategori == 1){ // mingguan
-        $insert->minggu = $now->weekOfYear;
-        if($now->weekOfYear%4 == 0){
-          if($now->weekOfYear == 52){
-            $insert->bulan = ($now->month + 1)%12;
-          }else{
-            $insert->bulan = $now->month + 1;
-          };
-        }else{
-          $insert->bulan = $now->month;
-        };
-        if($now->month + 1 == 13){
-          $insert->tahun = $now->year + 1;
-        }else{
-          $insert->tahun = $now->year;
-        };
-        $insert->kategori = "Mingguan";
-      }elseif($request->kategori == 2){ //bulanan
-        $minggu = ($now->weekOfYear + 4)%52;
-        $insert->minggu = $minggu;
-        $insert->bulan = $now->month + 1;
-        if($now->month == 12){
-          $insert->tahun = $now->year + 1;
-        }else{
-          $insert->tahun = $now->year;
-        };
-        $insert->kategori = "Bulanan";
-      }elseif($request->kategori == 3){ //1/2 tahunan
-        $insert->kategori = "1/2 Tahunan";
-        $insert->minggu = ($now->weekOfYear+26)%52;
-        $insert->bulan = ($now->month + 6)%12;
-        if($now->month >=7){
-          $insert->tahun = $now->year+1;
-        }else{
-          $insert->tahun = $now->year;
-        };
-      }else{ // tahunan
-        $insert->minggu = $now->weekOfYear;
-        $insert->bulan = $now->month;
-        $insert->tahun = $now->year+1;
+      if(($date->day == 31 && $date->month == 12)||$date->weekOfYear - $now->weekOfYear > 26){
+        $insert->minggu = 52;
         $insert->kategori = "Tahunan";
-      };
+      }elseif($date->weekOfYear - $now->weekOfYear <= 26 && $date->weekOfYear - $now->weekOfYear >= 5){
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "1/2 Tahunan";
+      }elseif($date->weekOfYear - $now->weekOfYear < 5 && $date->weekOfYear - $now->weekOfYear > 1 ){
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "Bulanan";
+      }else{
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "Mingguan";
+      }
+      $insert->bulan = $date->month;
+      $insert->tahun = $date->year;
       $insert->save();
       return redirect('vice-president')->with('success', 'Program Vice President Berhasil Ditambahkan!');
     }
@@ -171,6 +162,23 @@ class ManajerController extends Controller
     {
       $id1 = $request->program_direksi;
       $prodir = Direksi::where('id',$id1)->first();
+      $date = Carbon::createFromFormat('Y-m-d', $request->to);
+      $now = Carbon::now();
+      if(($date->day == 31 && $date->month == 12)||$date->weekOfYear - $now->weekOfYear > 26){
+        $minggu = 52;
+        $kategori = "Tahunan";
+      }elseif($date->weekOfYear - $now->weekOfYear <= 26 && $date->weekOfYear - $now->weekOfYear >= 5){
+        $minggu = $date->weekOfYear;
+        $kategori = "1/2 Tahunan";
+      }elseif($date->weekOfYear - $now->weekOfYear < 5 && $date->weekOfYear - $now->weekOfYear > 1 ){
+        $minggu = $date->weekOfYear;
+        $kategori = "Bulanan";
+      }else{
+        $minggu = $date->weekOfYear;
+        $kategori = "Mingguan";
+      };
+      $bulan = $date->month;
+      $tahun = $date->year;
       if(!empty($request->program_kerja_terkait)){
         $id2 = $request->program_kerja_terkait;
         $prokerkait = Manajer::where('id',$id2)->first();
@@ -181,7 +189,11 @@ class ManajerController extends Controller
           'id_prokerkait'=>$id2,
           'program_kerja'=>$request->proker,
           'mulai'=>$request->from,
-          'berakhir'=>$request->to
+          'berakhir'=>$request->to,
+          'minggu'=> $minggu,
+          'bulan'=> $bulan,
+          'tahun'=> $tahun,
+          'kategori'=> $kategori
         ]);
       }else{
         Manajer::where('id',$id)->update([
@@ -189,7 +201,11 @@ class ManajerController extends Controller
           'id_prodir'=>$id1,
           'program_kerja'=>$request->proker,
           'mulai'=>$request->from,
-          'berakhir'=>$request->to
+          'berakhir'=>$request->to,
+          'minggu'=> $minggu,
+          'bulan'=> $bulan,
+          'tahun'=> $tahun,
+          'kategori'=> $kategori
         ]);
       };
 
@@ -207,5 +223,63 @@ class ManajerController extends Controller
       $cari = Manajer::find($id);
       $cari->delete();
       return redirect('vice-president')->with('success', 'Program Vice President Berhasil Dihapuskan!');
+    }
+
+    public function assign_task(Request $request)
+    {
+      Manajer::where('id',$request->id)->update([
+        'target'=>$request->target,
+        'nipp_pj'=>$request->nipp_pj,
+        'status_proker'=>"Belum Direspon",
+        'keterangan'=>"Proker Belum Direspon oleh DVP Terkait"
+      ]);
+      return redirect('home')->with('success','Sukses Memberikan Tugas ke DVP!');
+    }
+
+    public function konfirmasi($id){
+      $today = Carbon::today();
+      Manajer::where('id',$id)->update([
+        'status_proker'=>"Ditolak",
+        'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today
+      ]);
+        return redirect('home')->with('success','Sukses Menolak Tugas DVP dan diberikan keterangan!');
+    }
+
+    public function reject_page($id){
+      $program = Manajer::find($id);
+      return view('pages.dashboard.reject.vp', compact('program'));
+    }
+    public function reject_task(Request $request, $id){
+      Manajer::where('id',$id)->update([
+        'status_proker'=>"Ditolak",
+        'keterangan'=>$request->keterangan
+      ]);
+        return redirect('home')->with('success','Sukses Menolak Tugas DVP dan diberikan keterangan!');
+    }
+
+    public function batalkan_page($id){
+      $program = Manajer::find($id);
+      return view('pages.dashboard.batalkan.vp', compact('program'));
+    }
+
+    public function batalkan_task(Request $request, $id){
+      Manajer::where('id',$id)->update([
+        'status_proker'=>"Dibatalkan",
+        'keterangan'=>$request->keterangan
+      ]);
+        return redirect('home')->with('success','Sukses Membatalkan Tugas DVP dan diberikan keterangan!');
+    }
+
+    public function peringatkan_page($id){
+      $program = Manajer::find($id);
+      return view('pages.dashboard.peringatkan.vp', compact('program'));
+    }
+
+    public function peringatkan_task(Request $request, $id){
+      Manajer::where('id',$id)->update([
+        'status_proker'=>"Diperingatkan",
+        'keterangan'=>$request->keterangan
+      ]);
+        return redirect('home')->with('success','Sukses Memperingatkan Tugas DVP dan diberikan keterangan!');
     }
 }

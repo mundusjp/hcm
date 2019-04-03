@@ -26,7 +26,13 @@ class DVPController extends Controller
      */
     public function index()
     {
-        //
+      $divisi = Auth::user()->divisi;
+      $kelas_jabatan = Auth::user()->kelas_jabatan;
+      $jabatan = Auth::user()->jabatan;
+      $nipp = Auth::user()->nipp;
+      $manajer = Manajer::where('divisi',$divisi)->get();
+      $tugas = Task::where('nipp',$nipp)->get();
+      return view('pages.goalsetting.supervisor',compact('divisi','jabatan','tugas','kelas_jabatan','manajer'));
     }
 
     /**
@@ -47,7 +53,46 @@ class DVPController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $now = Carbon::now();
+      $insert = new Manajer;
+      $insert->nipp = $request->nipp;
+      $id1 = $request->program_vp;
+      $program_vp = Manajer::where('id',$id1)->first();
+      $insert->id_provp = $request->program_vp;
+      $insert->program_vp = $program_vp->program_kerja;
+      if(!empty($request->program_kerja_terkait)){
+      $id2 = $request->program_kerja_terkait;
+      $prokerkait = Task::where('id',$id2)->first();
+      $insert->program_kerja_terkait = $prokerkait->program_kerja;
+      $insert->id_prokerkait = $request->program_kerja_terkait;
+      }
+      $insert->program_kerja = $request->proker;
+      $insert->sub_divisi = Auth::user()->sub_divisi;
+      $insert->sub_subdivisi = Auth::user()->sub_subdivisi;
+      $insert->program_direksi = $prodir->program_kerja;
+      $insert->mulai = $request->from;
+      $insert->berakhir = $request->to;
+      $insert->status_task = "Belum Disampaikan";
+      $insert->due_date = $request->to;
+      $insert->keterangan = "Task belum diberikan kepada officer terkait";
+      $date = Carbon::createFromFormat('Y-m-d', $request->to);
+      if(($date->day == 31 && $date->month == 12)||$date->weekOfYear - $now->weekOfYear > 26){
+        $insert->minggu = 52;
+        $insert->kategori = "Tahunan";
+      }elseif($date->weekOfYear - $now->weekOfYear <= 26 && $date->weekOfYear - $now->weekOfYear >= 5){
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "1/2 Tahunan";
+      }elseif($date->weekOfYear - $now->weekOfYear < 5 && $date->weekOfYear - $now->weekOfYear > 1 ){
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "Bulanan";
+      }else{
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "Mingguan";
+      };
+      $insert->bulan = $date->month;
+      $insert->tahun = $date->year;
+      $insert->save();
+      return redirect('vice-president')->with('success', 'Program Vice President Berhasil Ditambahkan!');
     }
 
     /**

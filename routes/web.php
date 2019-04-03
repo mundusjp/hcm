@@ -35,6 +35,7 @@ Route::resource('perusahaan', 'PerusahaanController');
 //                                  DIREKSI
 
 Route::resource('direksi', 'DireksiController');
+Route::post('get-divisi','DireksiController@get_divisi')->name('get-divisi');
 // Route::get('direksi','GoalsettingController@index_direksi');
 // Route::post('direksi-insert','GoalsettingController@insert_misi_direksi')->name('direksi-insert');
 // Route::post('direksi-edit','GoalsettingController@edit_misi_direksi')->name('direksi-edit');
@@ -45,6 +46,13 @@ Route::resource('direksi', 'DireksiController');
 //                                 MANAJER
 
 Route::resource('vice-president', 'ManajerController');
+Route::post('assign-task-to-dvp', 'ManajerController@assign_task')->name('assign-task-to-dvp');
+Route::get('vice-president.reject-page/{id}', 'ManajerController@reject_page')->name('vice-president.reject-page');
+Route::match(['put', 'patch'], 'vice-president.reject/{id}','ManajerController@reject_task')->name('vice-president.reject');
+Route::get('vice-president.batalkan-page/{id}', 'ManajerController@batalkan_page')->name('vice-president.batalkan-page');
+Route::match(['put', 'patch'], 'vice-president.batalkan/{id}','ManajerController@batalkan_task')->name('vice-president.batalkan');
+Route::get('vice-president.peringatkan-page/{id}', 'ManajerController@peringatkan_page')->name('vice-president.peringatkan-page');
+Route::match(['put', 'patch'], 'vice-president.konfirmasi/{id}','ManajerController@konfirmasi')->name('vice-president.konfirmasi');
 // Route::get('manajer','GoalsettingController@index_manajer');
 // Route::post('manajer-insert','GoalsettingController@insert_misi_manajer')->name('manajer-insert');
 // Route::post('manajer-edit','GoalsettingController@edit_misi_manajer')->name('manajer-edit');

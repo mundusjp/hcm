@@ -29,22 +29,21 @@
               </div><!-- alert -->
               @endif
               <?php use Carbon\Carbon; ?>
-              @if(($kelas_jabatan <=8 && $kelas_jabatan >= 5)||($jabatan == "Superadmin"))
+              <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+              <!--                                              Kelas VP                                                       -->
+              <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+              @if($kelas_jabatan <=8 && $kelas_jabatan > 5)
               <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahmanajer">Tambahkan </button>
               <label class="section-title">Program Anda Sebagai Vice President of {{Auth::user()->sub_divisi}}</label>
               <p>Untuk Bulan {{Carbon::now()->month}}</p>
-
-              @else
-              <label class="section-title">Program Vice President of {{Auth::user()->sub_divisi}}</label>
-              @endif
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td>No</td>
-                  <td>Program Kerja</td>
+                  <td style="width:30px">No</td>
+                  <td style="width:500px">Program Kerja</td>
                   @if(($kelas_jabatan <=8)||($jabatan == "Superadmin"))
-                  <td>Mulai</td>
-                  <td>Berakhir</td>
+                  <td style="width:150px">Mulai</td>
+                  <td style="width:150px">Berakhir</td>
                   <td>Ubah</td>
                   <td>Hapus</td>
                   @endif
@@ -55,11 +54,11 @@
                   @foreach($proker_tahunan as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px" scope="row">{{$i}}</th>
-                  <td style="width:500px">{{$program->program_kerja}}</td>
+                  <th scope="row">{{$i}}</th>
+                  <td >{{$program->program_kerja}}</td>
                   @if(($kelas_jabatan <=8)||($jabatan == "Superadmin"))
-                  <td style="width:150px">{{$program->mulai}}</td>
-                  <td style="width:150px">{{$program->berakhir}}</td>
+                  <td >{{$program->mulai}}</td>
+                  <td >{{$program->berakhir}}</td>
                   <td>
                     <form id="edit" action="{{route('vice-president.edit',$program->id)}}" method="get">
                     @csrf
@@ -77,6 +76,129 @@
                 </tr>
                 @endforeach
               </table>
+              <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+              <!--                                            Kelas Superadmin                                                 -->
+              <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+              @elseif($kelas_jabatan <=1)
+              @foreach($all_vp as $user)
+                <label class="section-title">Program Vice President of {{$user->sub_divisi}}</label>
+                <table class="table table-orange">
+                  <thead>
+                  <tr>
+                    <td style="width:30px">No</td>
+                    <td style="width:500px">Program Kerja</td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <?php $i=0;
+                    $proker = App\Manajer::where('nipp',$user->nipp)->get();
+                    ?>
+                    @foreach($proker as $program)
+                    <?php $i++;?>
+                    <tr>
+                      <th  scope="row">{{$i}}</th>
+                      <td >{{$program->program_kerja}}</td>
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              @endforeach
+              <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+              <!--                                            Kelas Direksi                                                    -->
+              <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+              @elseif($kelas_jabatan <=5)
+                @foreach($vp as $user)
+                  <label class="section-title">Program Vice President of {{$user->sub_divisi}}</label>
+                  <table class="table table-orange">
+                    <thead>
+                    <tr>
+                      <td style="width:30px">No</td>
+                      <td style="width:500px">Program Kerja</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <?php $i=0;
+                      $proker = App\Manajer::where('nipp',$user->nipp)->get();
+                      ?>
+                      @foreach($proker as $program)
+                      <?php $i++;?>
+                      <tr>
+                        <th  scope="row">{{$i}}</th>
+                        <td >{{$program->program_kerja}}</td>
+                      </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                @endforeach
+                <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+                <!--                                            Kelas lainnya                                                    -->
+                <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+              @else
+              <label class="section-title">Program Vice President of {{Auth::user()->sub_divisi}}</label>
+              <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+              <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+              <label class="section-title tx-orange">Bulanan</label>
+              <table class="table table-orange">
+                <thead>
+                <tr>
+                  <td>No</td>
+                  <td>Program Kerja</td>
+                </tr>
+                </thead>
+                <tbody>
+                  <?php $i=0;?>
+                  @foreach($proker_bulanan as $program)
+                  <?php $i++;?>
+                  <tr>
+                  <th style="width:30px" scope="row">{{$i}}</th>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                </tr>
+                @endforeach
+              </table>
+              <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+              <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+              <label class="section-title tx-orange">1/2 Tahunan</label>
+              <table class="table table-orange">
+                <thead>
+                <tr>
+                  <td>No</td>
+                  <td>Program Kerja</td>
+                </tr>
+                </thead>
+                <tbody>
+                  <?php $i=0;?>
+                  @foreach($proker_settahunan as $program)
+                  <?php $i++;?>
+                  <tr>
+                  <th style="width:30px" scope="row">{{$i}}</th>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                </tr>
+                @endforeach
+              </table>
+              <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+              <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+              <label class="section-title tx-orange">Tahunan</label>
+              <table class="table table-orange">
+                <thead>
+                <tr>
+                  <td>No</td>
+                  <td>Program Kerja</td>
+                </tr>
+                </thead>
+                <tbody>
+                  <?php $i=0;?>
+                  @foreach($proker_tahunan as $program)
+                  <?php $i++;?>
+                  <tr>
+                  <th style="width:30px" scope="row">{{$i}}</th>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                </tr>
+                @endforeach
+              </table>
+              @endif
+              <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+              <!--                                               MODALS                                                        -->
+              <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               <div class="modal fade" id="tambahmanajer" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                   <div class="modal-content">
@@ -148,23 +270,12 @@
                                       </select>
                                     </div>
                                   </div><!-- col-6 -->
-                                  <div class="col-lg-9">
+                                  <div class="col-lg-12">
                                     <div class="form-group">
                                       <label class="form-control-label">Program Kerja <span class="tx-danger">*</span></label>
                                       <textarea required name="proker" class="form-control" type="text"></textarea>
                                     </div>
                                   </div><!-- col-9 -->
-                                  <div class="col-lg-3">
-                                    <div class="form-group">
-                                      <label class="form-control-label">Kategori <span class="tx-danger">*</span></label>
-                                      <select name="kategori" class="form-control select2-show-search" data-placeholder="Choose one">
-                                        <option value="1">Mingguan</option>
-                                        <option value="2">Bulanan</option>
-                                        <option value="3">1/2 Tahunan</option>
-                                        <option value="4">Tahunan</option>
-                                      </select>
-                                    </div>
-                                  </div><!-- col-3 -->
                                   <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="from" class="form-control-label">Tanggal Mulai <span class="tx-danger">*</span></label><br>

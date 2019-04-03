@@ -4,6 +4,9 @@
 <!-- Start Coding here -->
 <div class="slim-mainpanel">
       <div class="container">
+        <div class="slim-pageheader">
+          <h6 class="slim-pagetitle">Ubah Program Kerja Direksi</h6>
+        </div><!-- slim-pageheader -->
         <div class="section-wrapper">
           <form action="{{route('direksi.update',$program->id)}}" method="post">
           @method('PATCH')

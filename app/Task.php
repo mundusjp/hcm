@@ -10,9 +10,12 @@ class Task extends Model
   protected $fillable = [
       'id',
       'nipp',
-      'officer_nipp',
+      'nipp_pj',
+      'sub_divisi',
+      'sub_subdivisi',
+      '3rd_divisi',
       'program_vp',
-      'id_provp'
+      'id_provp',
       'program_kerja',
       'target',
       'mulai',

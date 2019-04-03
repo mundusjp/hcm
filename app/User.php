@@ -17,11 +17,14 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'nipp',
+        'supervisor_nipp',
         'nama',
         'email',
         'password',
         'jabatan',
         'divisi',
+        'sub_divisi',
+        'sub_subdivisi',
         'kelas_jataban',
         'golongan',
         'pendidikan',

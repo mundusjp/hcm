@@ -14,10 +14,26 @@
         </a>
         <div class="sub-item">
           <ul>
+            @if(Auth::user()->kelas_jabatan <= 1)
             <li><a href="perusahaan">Perusahaan</a></li>
             <li><a href="direksi">Direksi</a></li>
             <li><a href="vice-president">Vice President</a><li>
             <li><a href="deputy-vice-president">DVP</a></li>
+            <li><a href="users">User Control</a></li>
+            @elseif(Auth::user()->kelas_jabatan <= 5 && Auth::user()->divisi == "Utama")
+            <li><a href="perusahaan">Perusahaan</a></li>
+            <li><a href="direksi">Direksi</a></li>
+            @elseif(Auth::user()->kelas_jabatan <= 5)
+            <li><a href="perusahaan">Perusahaan</a></li>
+            <li><a href="direksi">Direksi</a></li>
+            <li><a href="vice-president">Vice President</a><li>
+            @else
+            <li><a href="perusahaan">Perusahaan</a></li>
+            <li><a href="direksi">Direksi</a></li>
+            <li><a href="vice-president">Vice President</a><li>
+            <li><a href="deputy-vice-president">DVP</a></li>
+            @endif
+
           </ul>
         </div><!-- dropdown-menu -->
       </li>
