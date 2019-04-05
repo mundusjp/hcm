@@ -37,9 +37,10 @@ class ManajerController extends Controller
       $vp = User::where('supervisor_nipp',$nipp)->where('kelas_jabatan','<=','8')->where('kelas_jabatan','>=','6')->get();
       $direksi = Direksi::where('divisi',$divisi)->get();
       $assigned_tasks = Manajer::whereNotNull('nipp_pj')->get();
-      $proker_tahunan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','Tahunan')->get();
-      $proker_settahunan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','1/2 Tahunan')->get();
-      $proker_bulanan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','Bulanan')->get();
+      $proker_mingguan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','Mingguan')->paginate(10);
+      $proker_tahunan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','Tahunan')->paginate(10);
+      $proker_settahunan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','1/2 Tahunan')->paginate(10);
+      $proker_bulanan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','Bulanan')->paginate(10);
       return view('pages.goalsetting.manajer',compact(
         'divisi',
         'jabatan',
@@ -50,6 +51,7 @@ class ManajerController extends Controller
         'kelas_jabatan',
         'now',
         'direksi',
+        'proker_mingguan',
         'proker_bulanan',
         'proker_settahunan',
         'proker_tahunan',
@@ -205,6 +207,7 @@ class ManajerController extends Controller
           'minggu'=> $minggu,
           'bulan'=> $bulan,
           'tahun'=> $tahun,
+          'due_date'=>$request->to,
           'kategori'=> $kategori
         ]);
       };
@@ -237,10 +240,10 @@ class ManajerController extends Controller
     }
 
     public function konfirmasi($id){
-      $today = Carbon::today();
       Manajer::where('id',$id)->update([
-        'status_proker'=>"Ditolak",
-        'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today
+        'status_proker'=>"Selesai",
+        'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today,
+        'selesai_pada'=>$today
       ]);
         return redirect('home')->with('success','Sukses Menolak Tugas DVP dan diberikan keterangan!');
     }

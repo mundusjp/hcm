@@ -17,7 +17,7 @@
             @if(Auth::user()->kelas_jabatan <= 1)
             <li><a href="perusahaan">Perusahaan</a></li>
             <li><a href="direksi">Direksi</a></li>
-            <li><a href="vice-president">Vice President</a><li>
+            <li><a href="vice-president">Vice President</a></li>
             <li><a href="deputy-vice-president">DVP</a></li>
             <li><a href="users">User Control</a></li>
             @elseif(Auth::user()->kelas_jabatan <= 5 && Auth::user()->divisi == "Utama")
@@ -26,22 +26,33 @@
             @elseif(Auth::user()->kelas_jabatan <= 5)
             <li><a href="perusahaan">Perusahaan</a></li>
             <li><a href="direksi">Direksi</a></li>
-            <li><a href="vice-president">Vice President</a><li>
+            <li><a href="vice-president">Vice President</a></li>
             @else
             <li><a href="perusahaan">Perusahaan</a></li>
             <li><a href="direksi">Direksi</a></li>
-            <li><a href="vice-president">Vice President</a><li>
+            <li><a href="vice-president">Vice President</a></li>
             <li><a href="deputy-vice-president">DVP</a></li>
             @endif
 
           </ul>
         </div><!-- dropdown-menu -->
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="goal-matching">
+      <li class="nav-item with-sub">
+        <a class="nav-link" href="goalmatching">
           <i class="icon ion-ios-gear"></i>
-          <span>Goal Matching</span>
+          <span>Goalmatching</span>
         </a>
+        <div class="sub-item">
+          <ul>
+            @if(Auth::user()->kelas_jabatan >5 && Auth::user()->kelas_jabatan <= 8 )
+            <li><a href="goalmatching-coach">Coach</a></li>
+            <li><a href="goalmatching-evaluasi">Evaluasi</a></li>
+            @elseif(Auth::user()->kelas_jabatan > 8 && Auth::user()->kelas_jabatan <=10)
+            <li><a href="goalmatching-coachee">Coachee</a></li>
+            <li><a href="goalmatching-evaluasi">Evaluasi</a></li>
+            @endif
+          </ul>
+        </div><!-- dropdown-menu -->
       </li>
     </ul>
   </div><!-- container -->

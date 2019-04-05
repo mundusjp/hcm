@@ -1,12 +1,10 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script type="text/javascript" src="{{ asset('lib/jquery-typeahead/dist/jquery.typeahead.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('lib/jquery/js/jquery.js') }}"></script>
 <script type="text/javascript" src="{{ asset('lib/popper.js/js/popper.js') }}"></script>
 <script type="text/javascript" src="{{ asset('lib/bootstrap/js/bootstrap.js') }}"></script>
-<script type="text/javascript" src="{{ asset('lib/jquery-toggles/js/toggles.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('https://unpkg.com/sweetalert/dist/sweetalert.min.js')}}"></script>
+<script type="text/javascript" src="{{ url('https://unpkg.com/sweetalert/dist/sweetalert.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('js/slim.js') }}"></script>
-<script type="text/javascript" src="{{ asset('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ url('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ url('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('lib/PapaParse/papaparse.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('lib/select2/js/select2.full.min.js') }}"></script>
 

@@ -28,7 +28,7 @@
             </div><!-- row -->
             <div class="form-layout-footer">
               <div class="justifier" style="text-align:right;">
-              <button type="submit" class="btn btn-outline-success">Batalkan</button>
+              <button type="submit" class="btn btn-outline-danger">Batalkan</button>
               </div>
               </form>
             </div><!-- form-layout-footer -->

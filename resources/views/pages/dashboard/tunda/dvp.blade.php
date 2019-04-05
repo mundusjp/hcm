@@ -5,7 +5,7 @@
 <div class="slim-mainpanel">
       <div class="container">
         <div class="slim-pageheader">
-          <h6 class="slim-pagetitle">Ubah Program Kerja Vice President</h6>
+          <h6 class="slim-pagetitle">Tunda Program Kerja Deputy Vice President</h6>
         </div><!-- slim-pageheader -->
         <div class="section-wrapper">
           <form action="{{route('vice-president.reject',$program->id)}}" method="post">
@@ -28,7 +28,7 @@
             </div><!-- row -->
             <div class="form-layout-footer">
               <div class="justifier" style="text-align:right;">
-              <button type="submit" class="btn btn-outline-danger">Tolak</button>
+              <button type="submit" class="btn btn-outline-success">Tolak</button>
               </div>
               </form>
             </div><!-- form-layout-footer -->

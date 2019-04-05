@@ -26,13 +26,24 @@ class DVPController extends Controller
      */
     public function index()
     {
+      $now = Carbon::now();
       $divisi = Auth::user()->divisi;
+      $sub_divisi = Auth::user()->sub_divisi;
       $kelas_jabatan = Auth::user()->kelas_jabatan;
       $jabatan = Auth::user()->jabatan;
       $nipp = Auth::user()->nipp;
-      $manajer = Manajer::where('divisi',$divisi)->get();
+      $program_vp = Manajer::where('nipp_pj',$nipp)->where('status_proker','Sedang Diproses')->get();
+      $semua_dpv = User::where('supervisor_nipp',$nipp)->get();
       $tugas = Task::where('nipp',$nipp)->get();
-      return view('pages.goalsetting.supervisor',compact('divisi','jabatan','tugas','kelas_jabatan','manajer'));
+      return view('pages.goalsetting.supervisor',compact(
+        'now',
+        'divisi',
+        'jabatan',
+        'tugas',
+        'kelas_jabatan',
+        'program_vp',
+        'semua_dpv'
+      ));
     }
 
     /**
@@ -54,22 +65,15 @@ class DVPController extends Controller
     public function store(Request $request)
     {
       $now = Carbon::now();
-      $insert = new Manajer;
+      $insert = new Task;
       $insert->nipp = $request->nipp;
       $id1 = $request->program_vp;
       $program_vp = Manajer::where('id',$id1)->first();
       $insert->id_provp = $request->program_vp;
       $insert->program_vp = $program_vp->program_kerja;
-      if(!empty($request->program_kerja_terkait)){
-      $id2 = $request->program_kerja_terkait;
-      $prokerkait = Task::where('id',$id2)->first();
-      $insert->program_kerja_terkait = $prokerkait->program_kerja;
-      $insert->id_prokerkait = $request->program_kerja_terkait;
-      }
       $insert->program_kerja = $request->proker;
       $insert->sub_divisi = Auth::user()->sub_divisi;
       $insert->sub_subdivisi = Auth::user()->sub_subdivisi;
-      $insert->program_direksi = $prodir->program_kerja;
       $insert->mulai = $request->from;
       $insert->berakhir = $request->to;
       $insert->status_task = "Belum Disampaikan";
@@ -92,7 +96,7 @@ class DVPController extends Controller
       $insert->bulan = $date->month;
       $insert->tahun = $date->year;
       $insert->save();
-      return redirect('vice-president')->with('success', 'Program Vice President Berhasil Ditambahkan!');
+      return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Ditambahkan!');
     }
 
     /**
@@ -114,7 +118,21 @@ class DVPController extends Controller
      */
     public function edit($id)
     {
-        //
+      $now = Carbon::now();
+      $divisi = Auth::user()->divisi;
+      $sub_divisi = Auth::user()->sub_divisi;
+      $kelas_jabatan = Auth::user()->kelas_jabatan;
+      $jabatan = Auth::user()->jabatan;
+      $nipp = Auth::user()->nipp;
+      $program_vp = Manajer::where('nipp_pj',$nipp)->get();
+      $semua_dpv = User::where('supervisor_nipp',$nipp)->get();
+      $program = Task::find($id);
+      return view('pages.goalsetting.ubah.supervisor', compact(
+        'now',
+        'kelas_jabatan',
+        'program',
+        'program_vp'
+      ));
     }
 
     /**
@@ -126,7 +144,34 @@ class DVPController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $date = Carbon::createFromFormat('Y-m-d', $request->to);
+      $now = Carbon::now();
+      if(($date->day == 31 && $date->month == 12)||$date->weekOfYear - $now->weekOfYear > 26){
+        $minggu = 52;
+        $kategori = "Tahunan";
+      }elseif($date->weekOfYear - $now->weekOfYear <= 26 && $date->weekOfYear - $now->weekOfYear >= 5){
+        $minggu = $date->weekOfYear;
+        $kategori = "1/2 Tahunan";
+      }elseif($date->weekOfYear - $now->weekOfYear < 5 && $date->weekOfYear - $now->weekOfYear > 1 ){
+        $minggu = $date->weekOfYear;
+        $kategori = "Bulanan";
+      }else{
+        $minggu = $date->weekOfYear;
+        $kategori = "Mingguan";
+      };
+      $bulan = $date->month;
+      $tahun = $date->year;
+      Task::where('id',$id)->update([
+        'program_kerja'=>$request->proker,
+        'mulai'=>$request->from,
+        'berakhir'=>$request->to,
+        'minggu'=> $minggu,
+        'bulan'=> $bulan,
+        'tahun'=> $tahun,
+        'due_date'=>$request->to,
+        'kategori'=> $kategori
+      ]);
+      return redirect('deputy-vice-president')->with('success','Sukses mengubah Program Deputy Vice President!');
     }
 
     /**
@@ -137,6 +182,63 @@ class DVPController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $cari = Task::find($id);
+      $cari->delete();
+      return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Dihapuskan!');
+    }
+    public function proses($id){
+      $today = Carbon::now();
+      Manajer::where('id',$id)->update([
+        'status_proker'=>"Sedang Diproses",
+        'keterangan'=>"Tugas mulai diproses pada ".$today
+      ]);
+        return redirect('home')->with('success','Sukses Memproses Tugas VP');
+    }
+    public function selesai_page($id){
+      $program = Manajer::find($id);
+      return view('pages.dashboard.selesai.vp', compact('program'));
+    }
+
+    public function batal_selesai($id){
+      $today = Carbon::now();
+      Manajer::where('id',$id)->update([
+        'status_proker'=>"Konfirmasi Dibatalkan",
+        'keterangan'=>"Konfirmasi Selesai dibatalkan pada ".$today
+      ]);
+        return redirect('home')->with('success','Sukses Membatalkan Selesai Tugas VP');
+    }
+
+    public function selesai(Request $request,$id){
+      $today = Carbon::now();
+      Manajer::where('id',$id)->update([
+        'status_proker'=>"Konfirmasi Selesai",
+        'keterangan'=>$request->keterangan
+      ]);
+        return redirect('home')->with('success','Sukses Request Konfirmasi Penyelesaian Tugas!');
+    }
+
+    public function tunda_page($id){
+      $program = Manajer::find($id);
+      return view('pages.dashboard.tunda.vp', compact('program'));
+    }
+
+    public function tunda_task(Request $request, $id){
+      Manajer::where('id',$id)->update([
+        'status_proker'=>"Ditunda",
+        'due_date'=>$request->due_date,
+        'keterangan'=>$request->keterangan
+      ]);
+        return redirect('home')->with('success','Sukses Memperingatkan Tugas DVP dan diberikan keterangan!');
+    }
+
+    public function assign_task(Request $request)
+    {
+      Task::where('id',$request->id)->update([
+        'target'=>$request->target,
+        'nipp_pj'=>$request->nipp_pj,
+        'status_task'=>"Belum Direspon",
+        'keterangan'=>"Proker Belum Direspon oleh Officer Terkait"
+      ]);
+      return redirect('home')->with('success','Sukses Memberikan Tugas ke Officer!');
     }
 }

@@ -40,8 +40,7 @@
                             <label for="jabatan" class="col-md-4 col-form-label text-md-right">{{ __('Jabatan') }}</label>
 
                             <div class="col-md-6">
-                                <input id="jabatan" type="text" class="form-control{{ $errors->has('jabatan') ? ' is-invalid' : '' }}" name="nipp" value="{{ old('jabatan') }}" required autofocus>
-
+                                <input id="jabatan" type="text" class="form-control{{ $errors->has('jabatan') ? ' is-invalid' : '' }}" name="jabatan" value="{{ old('jabatan') }}" required autofocus>
                                 @if ($errors->has('jabatan'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('jabatan') }}</strong>

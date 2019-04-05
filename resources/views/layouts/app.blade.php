@@ -21,22 +21,22 @@
     <!-- Slim CSS -->
     <link href="{{ asset('css/slim.css') }}" rel="stylesheet" type="text/css" >
 </head>
-<body>
+<body background="{{asset('img/ikt-bg.png')}}">
     <div id="app">
       <div class="slim-header">
         <div class="container">
           <div class="slim-header-left">
-            <h2 class="slim-logo"><a href="/" style="color:#ff6600;">PT. IKT<span></span></a></h2>
+            <h2 class="slim-logo"><img src="{{asset('img/ikt-logo.png')}}"></span></a></h2>
           </div><!-- slim-header-left -->
           <div class="slim-header-right">
             @guest
-                <li class="nav-item">
+
                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                </li>
+
                 @if (Route::has('register'))
-                    <li class="nav-item">
+
                         <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                    </li>
+
                 @endif
             @else
                 <li class="nav-item dropdown">

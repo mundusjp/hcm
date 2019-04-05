@@ -49,6 +49,8 @@ Route::resource('vice-president', 'ManajerController');
 Route::post('assign-task-to-dvp', 'ManajerController@assign_task')->name('assign-task-to-dvp');
 Route::get('vice-president.reject-page/{id}', 'ManajerController@reject_page')->name('vice-president.reject-page');
 Route::match(['put', 'patch'], 'vice-president.reject/{id}','ManajerController@reject_task')->name('vice-president.reject');
+Route::get('vice-president.peringatkan-page/{id}', 'ManajerController@peringatkan_page')->name('vice-president.peringatkan-page');
+Route::match(['put', 'patch'], 'vice-president.peringatkan/{id}','ManajerController@peringatkan_task')->name('vice-president.peringatkan');
 Route::get('vice-president.batalkan-page/{id}', 'ManajerController@batalkan_page')->name('vice-president.batalkan-page');
 Route::match(['put', 'patch'], 'vice-president.batalkan/{id}','ManajerController@batalkan_task')->name('vice-president.batalkan');
 Route::get('vice-president.peringatkan-page/{id}', 'ManajerController@peringatkan_page')->name('vice-president.peringatkan-page');
@@ -59,9 +61,16 @@ Route::match(['put', 'patch'], 'vice-president.konfirmasi/{id}','ManajerControll
 // Route::post('manajer-update','GoalsettingController@update_misi_manajer')->name('manajer-update');
 // Route::post('manajer-delete','GoalsettingController@delete_misi_manajer')->name('manajer-delete');
 // -------------------------------------------------------------------------------
-//                                 SUPERVISOR
+//                                 DEPUTY VICE DIRECTOR
 
 Route::resource('deputy-vice-president', 'DVPController');
+Route::post('assign-task-to-officer', 'DVPController@assign_task')->name('assign-task-to-officer');
+Route::match(['put', 'patch'], 'deputy-vice-president.proses/{id}','DVPController@proses')->name('deputy-vice-president.proses');
+Route::match(['put', 'patch'], 'deputy-vice-president.batal-selesai/{id}','DVPController@batal_selesai')->name('deputy-vice-president.batal-selesai');
+Route::get('deputy-vice-president.selesai-page/{id}', 'DVPController@selesai_page')->name('deputy-vice-president.selesai-page');
+Route::match(['put', 'patch'], 'deputy-vice-president.selesai/{id}','DVPController@selesai')->name('deputy-vice-president.selesai');
+Route::get('deputy-vice-president.tunda-page/{id}', 'DVPController@tunda_page')->name('deputy-vice-president.tunda-page');
+Route::match(['put', 'patch'], 'deputy-vice-president.tunda/{id}','DVPController@tunda_task')->name('deputy-vice-president.tunda');
 // Route::get('supervisor','GoalsettingController@index_supervisor');
 // Route::post('supervisor-insert','GoalsettingController@insert_misi_supervisor')->name('supervisor-insert');
 // Route::post('supervisor-edit','GoalsettingController@edit_misi_supervisor')->name('supervisor-edit');
@@ -85,3 +94,16 @@ Route::resource('tasks', 'TaskController');
 // -------------------------------------------------------------------------------
 
 Route::resource('logbook','LogbookController');
+Route::get('download-logbook-harian','LogbookController@export_harian')->name('download-logbook-harian');
+Route::get('download-logbook-mingguan','LogbookController@export_mingguan')->name('download-logbook-mingguan');
+Route::get('download-logbook-bulanan','LogbookController@export_bulanan')->name('download-logbook-bulanan');
+Route::get('logbook-harian','LogbookController@logbook_harian');
+
+// -------------------------------------------------------------------------------
+//                               GOALMATCHING ROUTES
+// -------------------------------------------------------------------------------
+
+Route::resource('goalmatching','goalmatchingController');
+Route::get('goalmatching-coach','goalmatchingController@index_coach')->name('goalmatching-coach');
+Route::get('goalmatching-coachee','goalmatchingController@index_coachee')->name('goalmatching-coachee');
+Route::get('goalmatching-evaluasi','goalmatchingController@index_evaluasi')->name('goalmatching-evaluasi');

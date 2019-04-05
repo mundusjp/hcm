@@ -18,7 +18,7 @@
     <link href="{{ asset('css/slim.css') }}" rel="stylesheet" type="text/css" >
 
   </head>
-  <body class="slim-landing">
+  <body class="slim-landing" background="{{asset('img/ikt-bg.jpeg')}}">
 
     <div class="slim-landing-header">
       <div class="container">

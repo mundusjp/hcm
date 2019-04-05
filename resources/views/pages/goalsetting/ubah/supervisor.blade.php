@@ -8,7 +8,8 @@
           <h6 class="slim-pagetitle">Ubah Program Kerja Deputy Vice President</h6>
         </div><!-- slim-pageheader -->
         <div class="section-wrapper">
-          <form action="{{route('supervisor-update')}}" method="post">
+          <form action="{{route('deputy-vice-president.update', $program->id)}}" method="post">
+            @method('PATCH')
           {{ csrf_field() }}
           <div class="form-layout">
             <div class="row mg-b-25">
@@ -16,13 +17,12 @@
                 <div class="form-group">
                   <label class="form-control-label">Nama: <span class="tx-danger">*</span></label>
                   <input class="form-control" type="text" name="nama" readonly value="{{Auth::user()->nama}}" >
-                  <input style="display:none;"class="form-control" type="text" name="id" readonly value="{{$program->id}}" >
                 </div>
               </div><!-- col-6 -->
               <div class="col-lg-3">
                 <div class="form-group">
-                  <label class="form-control-label">Sub-Divisi: <span class="tx-danger">*</span></label>
-                  <input class="form-control" type="text" readonly name="divisi" value="{{$program->divisi}}">
+                  <label class="form-control-label">Sub-Subdivisi: <span class="tx-danger">*</span></label>
+                  <input class="form-control" type="text" readonly name="divisi" value="{{$program->sub_subdivisi}}">
                 </div>
               </div><!-- col-3 -->
               <div class="col-lg-3">
@@ -51,17 +51,12 @@
               </div><!-- col-6 -->
             </div><!-- row -->
             <div class="form-layout-footer">
-
-              <button type="submit" class="btn bd-0">Submit Form</button> <br>
-              </form>
-              <form action="{{route('supervisor-delete')}}" method="post">
-              @csrf
-              <input style="display:none;"class="form-control" type="text" name="id" readonly value="{{$program->id}}" >
-              <button type="submit" class="btn btn-danger bd-0">Hapus</button>
+              <div class="justifier" style="text-align:right;">
+              <button type="submit" class="btn btn-outline-success">Ubah</button>
+              </div>
               </form>
             </div><!-- form-layout-footer -->
           </div><!-- form-layout -->
-
         </div> <!-- Wrapeer -->
       </div> <!-- container -->
 </div>

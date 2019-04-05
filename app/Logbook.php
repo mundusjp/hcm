@@ -8,11 +8,16 @@ class Logbook extends Model
 {
   protected $table = 'logbook';
   protected $fillable = [
+      'id',
       'nipp',
-      'task_id',
+      'program_kerja_terkait',
+      'id_program_kerja_terkait',
       'target',
-      'logbook'
-      'deadline',
-      'status'
+      'logbook',
+      'status',
+      'tanggal',
+      'minggu',
+      'bulan',
+      'tahun'
   ];
 }

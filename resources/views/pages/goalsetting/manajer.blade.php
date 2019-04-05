@@ -137,12 +137,33 @@
               <label class="section-title">Program Vice President of {{Auth::user()->sub_divisi}}</label>
               <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
               <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+              <label class="section-title tx-orange">Mingguan</label>
+              <table class="table table-orange">
+                <thead>
+                <tr>
+                  <td style="width:30px">No</td>
+                  <td style="width:500px">Program Kerja</td>
+                </tr>
+                </thead>
+                <tbody>
+                  <?php $i=0;?>
+                  @foreach($proker_mingguan as $program)
+                  <?php $i++;?>
+                  <tr>
+                  <th style="width:30px" scope="row">{{$i}}</th>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                </tr>
+                @endforeach
+              </table>
+              {{ $proker_mingguan->links() }}
+              <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+              <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
               <label class="section-title tx-orange">Bulanan</label>
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td>No</td>
-                  <td>Program Kerja</td>
+                  <td style="width:30px">No</td>
+                  <td style="width:500px">Program Kerja</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -155,14 +176,15 @@
                 </tr>
                 @endforeach
               </table>
+              {{ $proker_bulanan->links() }}
               <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
               <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
               <label class="section-title tx-orange">1/2 Tahunan</label>
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td>No</td>
-                  <td>Program Kerja</td>
+                  <td style="width:30px">No</td>
+                  <td style="width:500px">Program Kerja</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -175,14 +197,15 @@
                 </tr>
                 @endforeach
               </table>
+              {{ $proker_settahunan->links() }}
               <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
               <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
               <label class="section-title tx-orange">Tahunan</label>
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td>No</td>
-                  <td>Program Kerja</td>
+                  <td style="width:30px">No</td>
+                  <td style="width:500px">Program Kerja</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -190,12 +213,13 @@
                   @foreach($proker_tahunan as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px" scope="row">{{$i}}</th>
-                  <td style="width:500px">{{$program->program_kerja}}</td>
+                  <th scope="row">{{$i}}</th>
+                  <td >{{$program->program_kerja}}</td>
                 </tr>
                 @endforeach
               </table>
               @endif
+              {{ $proker_tahunan->links() }}
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               <!--                                               MODALS                                                        -->
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -279,13 +303,13 @@
                                   <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="from" class="form-control-label">Tanggal Mulai <span class="tx-danger">*</span></label><br>
-                                        <input required name="from" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd">
+                                        <input required name="from" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd" value="{{$now->format('Y-m-d')}}">
                                     </div>
                                   </div><!-- col-6 -->
                                   <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="to" class="form-control-label">Tanggal Berakhir <span class="tx-danger">*</span></label><br>
-                                        <input required name="to" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd">
+                                        <input required name="to" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd" value="{{Carbon::tomorrow()->format('Y-m-d')}}">
                                     </div>
                                   </div><!-- col-6 -->
                                   <div class="col-lg-6" style="display:none;">

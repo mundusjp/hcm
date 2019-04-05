@@ -5,17 +5,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
      public function index(){
-       $users= User::where('email',null)->paginate(100);
-       return view('pages.user.user', compact('users'));
+       if(Auth::user()->kelas_jabatan != 1){
+         return redirect('home')->with('failed','You do not have the privillege to access the page');
+       }else{
+         $users= User::paginate(10);
+         return view('pages.user.user', compact('users'));
+       };
      }
 
     /**

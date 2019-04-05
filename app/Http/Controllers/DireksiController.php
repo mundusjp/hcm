@@ -26,6 +26,7 @@ class DireksiController extends Controller
      */
     public function index()
     {
+      $now = Carbon::now();
       $nipp = Auth::user()->nipp;
       $nama = Auth::user()->nama;
       $divisi = Auth::user()->divisi;
@@ -36,6 +37,7 @@ class DireksiController extends Controller
       $direksi = Direksi::where('divisi',$divisi)->get();
       $program_direksi_utama = Direksi::where('divisi','Utama')->get();
       return view('pages.goalsetting.direksi',compact(
+        'now',
         'nipp',
         'nama',
         'divisi',

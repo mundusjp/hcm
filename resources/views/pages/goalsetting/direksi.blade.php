@@ -40,7 +40,7 @@
                 <tr>
                   <td style="width:30px;">No</td>
                   <td>Program Kerja</td>
-                  @if($divisi == "Utama")
+                  @if($divisi == "Utama" || (Auth::user()->jabatan == "Superadmin"))
                   <td>Mulai</td>
                   <td>Berakhir</td>
                   <td>Ubah</td>
@@ -56,7 +56,7 @@
                   <tr>
                   <th style="width:30px;" scope="row">{{$i}}</th>
                   <td style="width:500px;">{{$program->program_kerja}}</td>
-                  @if($divisi == "Utama" && $kelas_jabatan <= 5)
+                  @if($divisi == "Utama" && $kelas_jabatan <= 5 || (Auth::user()->jabatan == "Superadmin") )
                   <td style="width:150px;">{{$program->mulai}}</td>
                   <td style="width:150px;">{{$program->berakhir}}</td>
                   <td>
@@ -306,13 +306,13 @@
                                   <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="from" class="form-control-label">Tanggal Mulai <span class="tx-danger">*</span></label><br>
-                                        <input required name="from" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd">
+                                        <input required name="from" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd" value="{{$now->format('Y-m-d')}}">
                                     </div>
                                   </div><!-- col-6 -->
                                   <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="to" class="form-control-label">Tanggal Berakhir <span class="tx-danger">*</span></label><br>
-                                        <input required name="to" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd">
+                                        <input required name="to" class="form-control" type="date" data-date="" data-date-format="yyyy-mm-dd" value="{{Carbon\Carbon::tomorrow()->format('Y-m-d')}}">
                                     </div>
                                   </div><!-- col-6 -->
                                 </div><!-- row -->
