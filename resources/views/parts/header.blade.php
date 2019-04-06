@@ -11,7 +11,7 @@
     <div class="slim-header-right">
       <div class="dropdown dropdown-c">
         <a href="#" class="logged-user" data-toggle="dropdown">
-          <img src="http://via.placeholder.com/500x500" alt="">
+          <img src="{{Auth::user()->avatar}}" alt="">
           <span>{{Auth::user()->nama}}</span>
           <i class="fa fa-angle-down"></i>
         </a>

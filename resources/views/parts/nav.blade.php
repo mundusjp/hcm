@@ -36,6 +36,7 @@
           </ul>
         </div><!-- dropdown-menu -->
       </li>
+      @if(Auth::user()->kelas_jabatan != 5 && Auth::user()->kelas_jabatan != 4)
       <li class="nav-item with-sub">
         <a class="nav-link" href="goalmatching">
           <i class="icon fa fa-exchange"></i>
@@ -57,6 +58,7 @@
           </ul>
         </div><!-- dropdown-menu -->
       </li>
+      @endif
     </ul>
   </div><!-- container -->
 </div><!-- slim-navbar -->

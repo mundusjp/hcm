@@ -33,7 +33,7 @@
          @if(Auth::user()->kelas_jabatan <= 5)
          <label class="section-title">Status Program Kerja Anda</label>
          @foreach($officer as $vp)
-            <label class="section-title tx-warning">{{$vp->sub_divisi}}</label>
+            <label class="section-title tx-warning">{{$vp->sub_divisi}} - {{$vp->nama}}</label>
            <div class="table-responsive">
              <table class="table table-hover mg-b-0">
                <thead>

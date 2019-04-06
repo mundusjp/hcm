@@ -259,6 +259,7 @@
                   <th style="width:500px">Program Kerja</th>
                   <th style="width:50px;text-align:center;">Tahun</th>
                   <th style="width:150px;text-align:center;">Progres</th>
+                  <th style="text-align:center;">Target</th>
                   <th style="width:150px;text-align:center;">Status</th>
                 </tr>
                 </thead>
@@ -276,6 +277,7 @@
                         <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
                       </div>
                     </td>
+                    <td style="text-align:center;">{{$program->target_bulanan}}%</td>
                     @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Belum Disampaikan")
                     <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_proker}}</span></td>
                     @elseif($program->status_proker == "Sedang Diproses")
@@ -301,6 +303,7 @@
                   <th style="width:500px">Program Kerja</th>
                   <th style="width:50px;text-align:center;">Tahun</th>
                   <th style="width:150px;text-align:center;">Progres</th>
+                  <th style="text-align:center;">Target</th>
                   <th style="width:150px;text-align:center;">Status</th>
                 </tr>
                 </thead>
@@ -318,6 +321,7 @@
                         <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
                       </div>
                     </td>
+                    <td style="text-align:center;">{{$program->target_bulanan}}%</td>
                     @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Belum Disampaikan")
                     <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_proker}}</span></td>
                     @elseif($program->status_proker == "Sedang Diproses")
