@@ -14,6 +14,8 @@ class Direksi extends Model
       'program_kerja',
       'divisi',
       'mulai',
+      'progres',
+      'status',
       'berakhir'
   ];
 }

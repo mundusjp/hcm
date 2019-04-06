@@ -33,46 +33,57 @@
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               @if((Auth::user()->kelas_jabatan <= 5 && $divisi == "Utama") || (Auth::user()->jabatan == "Superadmin"))
               <label class="section-title">Silahkan masukkan Program Kerja Direksi {{Auth::user()->divisi}}</label>
-              <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
+              <button type="button"class="btn btn-outline-warning float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
               <p class="mg-b-20 mg-sm-b-40">Menggunakan form berikut</p>
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td style="width:30px;">No</td>
-                  <td>Program Kerja</td>
-                  @if($divisi == "Utama" || (Auth::user()->jabatan == "Superadmin"))
-                  <td>Mulai</td>
-                  <td>Berakhir</td>
+                  <th style="width:30px;text-align:center;">No</th>
+                  <th style="width:500px">Program Kerja</th>
+                  <th style="width:50px;text-align:center;">Tahun</th>
+                  <th style="width:150px;text-align:center;">Progres</th>
+                  <th style="width:150px;text-align:center;">Status</th>
                   <td>Ubah</td>
                   <td>Hapus</td>
-                  @endif
                 </tr>
                 </thead>
                 <tbody>
-
                   <?php $i=0;?>
                   @foreach($program_direksi_utama as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px;" scope="row">{{$i}}</th>
-                  <td style="width:500px;">{{$program->program_kerja}}</td>
-                  @if($divisi == "Utama" && $kelas_jabatan <= 5 || (Auth::user()->jabatan == "Superadmin") )
-                  <td style="width:150px;">{{$program->mulai}}</td>
-                  <td style="width:150px;">{{$program->berakhir}}</td>
-                  <td>
-                    <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-success">Ubah</button>
-                    </form>
-                  </td>
-                  <td>
-                    <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
-                    @method('DELETE')
-                    @csrf
-                    <button class="btn btn-outline-danger" type="delete">Hapus</a>
-                    </form>
-                  </td>
-                  @endif
+                    <th scope="row">{{$i}}</th>
+                    <td style="width:500px">{{$program->program_kerja}}</td>
+                    <td style="text-align:center;">{{$program->tahun}}</td>
+                    <td >
+                      <div class="progress mg-b-5">
+                        <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                      </div>
+                    </td>
+                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Belum Disampaikan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Sedang Diproses")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Terlambat" || $program->status_proker == "Diperingatkan" || $program->status_proker == "Ditunda" || $program->status_proker == "Konfirmasi Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_proker}}</span></td>
+                    @else
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
+                    @endif
+                    <td>
+                      <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
+                      @csrf
+                      <button type="submit" class="btn btn-outline-success">Ubah</button>
+                      </form>
+                    </td>
+                    <td>
+                      <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
+                      @method('DELETE')
+                      @csrf
+                      <button class="btn btn-outline-danger" type="delete">Hapus</a>
+                      </form>
+                    </td>
                 </tr>
                 @endforeach
               </table>
@@ -82,14 +93,13 @@
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td style="width:30px;">No</td>
-                  <td>Program Kerja</td>
-                  @if(Auth::user()->jabatan == "Superadmin")
-                  <td>Mulai</td>
-                  <td>Berakhir</td>
+                  <th style="width:30px;text-align:center;">No</th>
+                  <th style="width:500px">Program Kerja</th>
+                  <th style="width:50px;text-align:center;">Tahun</th>
+                  <th style="width:150px;text-align:center;">Progres</th>
+                  <th style="width:150px;text-align:center;">Status</th>
                   <td>Ubah</td>
                   <td>Hapus</td>
-                  @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -99,25 +109,38 @@
                   @foreach($proker as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px;" scope="row">{{$i}}</th>
-                  <td style="width:500px;">{{$program->program_kerja}}</td>
-                  @if(Auth::user()->jabatan == "Superadmin")
-                  <td style="width:150px;">{{$program->mulai}}</td>
-                  <td style="width:150px;">{{$program->berakhir}}</td>
-                  <td>
-                    <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-success">Ubah</button>
-                    </form>
-                  </td>
-                  <td>
-                    <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
-                    @method('DELETE')
-                    @csrf
-                    <button class="btn btn-outline-danger" type="delete">Hapus</a>
-                    </form>
-                  </td>
-                  @endif
+                    <th scope="row">{{$i}}</th>
+                    <td style="width:500px">{{$program->program_kerja}}</td>
+                    <td style="text-align:center;">{{$program->tahun}}</td>
+                    <td >
+                      <div class="progress mg-b-5">
+                        <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                      </div>
+                    </td>
+                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Belum Disampaikan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Sedang Diproses")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Terlambat" || $program->status_proker == "Diperingatkan" || $program->status_proker == "Ditunda" || $program->status_proker == "Konfirmasi Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_proker}}</span></td>
+                    @else
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
+                    @endif
+                    <td>
+                      <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
+                      @csrf
+                      <button type="submit" class="btn btn-outline-success">Ubah</button>
+                      </form>
+                    </td>
+                    <td>
+                      <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
+                      @method('DELETE')
+                      @csrf
+                      <button class="btn btn-outline-danger" type="delete">Hapus</a>
+                      </form>
+                    </td>
                 </tr>
                 @endforeach
               </table>
@@ -128,19 +151,18 @@
               <!--                                            DIREKSI LAIN                                                     -->
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               @elseif(Auth::user()->kelas_jabatan <= 5 && $divisi != "Utama")
-              <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
+              <button type="button"class="btn btn-outline-warning float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
               <label class="section-title">Program Direktur {{$divisi}}</label>
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td style="width:30px;">No</td>
-                  <td>Program Kerja</td>
-                  @if($kelas_jabatan <= 5 || $jabatan == "Superadmin")
-                  <td>Mulai</td>
-                  <td>Berakhir</td>
+                  <th style="width:30px;text-align:center;">No</th>
+                  <th style="width:500px">Program Kerja</th>
+                  <th style="width:50px;text-align:center;">Tahun</th>
+                  <th style="width:150px;text-align:center;">Progres</th>
+                  <th style="width:150px;text-align:center;">Status</th>
                   <td>Ubah</td>
                   <td>Hapus</td>
-                  @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -149,24 +171,38 @@
                   @foreach($direksi as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px" scope="row">{{$i}}</th>
-                  <td style="width:500px">{{$program->program_kerja}}</td>
-                  @if($kelas_jabatan <= 5 || $jabatan == "Superadmin")
-                  <td style="width:150px">{{$program->mulai}}</td>
-                  <td style="width:150px">{{$program->berakhir}}</td>
-                  <td>
-                    <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-success">Ubah</button>
-                    </form>
-                  </td>
-                  <td>
-                    <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
-                    @method('DELETE')
-                    @csrf
-                    <button class="btn btn-outline-danger" type="delete">Hapus</a>
-                    </form>
-                  @endif
+                    <th scope="row">{{$i}}</th>
+                    <td style="width:500px">{{$program->program_kerja}}</td>
+                    <td style="text-align:center;">{{$program->tahun}}</td>
+                    <td >
+                      <div class="progress mg-b-5">
+                        <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                      </div>
+                    </td>
+                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Belum Disampaikan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Sedang Diproses")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Terlambat" || $program->status_proker == "Diperingatkan" || $program->status_proker == "Ditunda" || $program->status_proker == "Konfirmasi Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_proker}}</span></td>
+                    @else
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
+                    @endif
+                    <td>
+                      <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
+                      @csrf
+                      <button type="submit" class="btn btn-outline-success">Ubah</button>
+                      </form>
+                    </td>
+                    <td>
+                      <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
+                      @method('DELETE')
+                      @csrf
+                      <button class="btn btn-outline-danger" type="delete">Hapus</a>
+                      </form>
+                    </td>
                 </tr>
                 @endforeach
               </table>
@@ -176,8 +212,11 @@
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td style="width:30px;">No</td>
-                  <td>Program Kerja</td>
+                  <th style="width:30px;text-align:center;">No</th>
+                  <th style="width:500px">Program Kerja</th>
+                  <th style="width:50px;text-align:center;">Tahun</th>
+                  <th style="width:150px;text-align:center;">Progres</th>
+                  <th style="width:150px;text-align:center;">Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -186,8 +225,25 @@
                   @foreach($program_direksi_utama as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px;" scope="row">{{$i}}</th>
-                  <td style="width:500px;">{{$program->program_kerja}}</td>
+                    <th scope="row">{{$i}}</th>
+                    <td style="width:500px">{{$program->program_kerja}}</td>
+                    <td style="text-align:center;">{{$program->tahun}}</td>
+                    <td >
+                      <div class="progress mg-b-5">
+                        <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                      </div>
+                    </td>
+                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Belum Disampaikan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Sedang Diproses")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Terlambat" || $program->status_proker == "Diperingatkan" || $program->status_proker == "Ditunda" || $program->status_proker == "Konfirmasi Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_proker}}</span></td>
+                    @else
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
+                    @endif
                 </tr>
                 @endforeach
               </table>
@@ -199,8 +255,11 @@
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td style="width:30px;">No</td>
-                  <td>Program Kerja</td>
+                  <th style="width:30px;text-align:center;">No</th>
+                  <th style="width:500px">Program Kerja</th>
+                  <th style="width:50px;text-align:center;">Tahun</th>
+                  <th style="width:150px;text-align:center;">Progres</th>
+                  <th style="width:150px;text-align:center;">Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -209,8 +268,25 @@
                   @foreach($program_direksi_utama as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px;" scope="row">{{$i}}</th>
-                  <td style="width:500px;">{{$program->program_kerja}}</td>
+                    <th scope="row">{{$i}}</th>
+                    <td style="width:500px">{{$program->program_kerja}}</td>
+                    <td style="text-align:center;">{{$program->tahun}}</td>
+                    <td >
+                      <div class="progress mg-b-5">
+                        <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                      </div>
+                    </td>
+                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Belum Disampaikan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Sedang Diproses")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Terlambat" || $program->status_proker == "Diperingatkan" || $program->status_proker == "Ditunda" || $program->status_proker == "Konfirmasi Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_proker}}</span></td>
+                    @else
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
+                    @endif
                 </tr>
                 @endforeach
               </table>
@@ -221,8 +297,11 @@
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td style="width:30px;">No</td>
-                  <td>Program Kerja</td>
+                  <th style="width:30px;text-align:center;">No</th>
+                  <th style="width:500px">Program Kerja</th>
+                  <th style="width:50px;text-align:center;">Tahun</th>
+                  <th style="width:150px;text-align:center;">Progres</th>
+                  <th style="width:150px;text-align:center;">Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -231,8 +310,25 @@
                   @foreach($direksi as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px" scope="row">{{$i}}</th>
-                  <td style="width:500px">{{$program->program_kerja}}</td>
+                    <th scope="row">{{$i}}</th>
+                    <td style="width:500px">{{$program->program_kerja}}</td>
+                    <td style="text-align:center;">{{$program->tahun}}</td>
+                    <td >
+                      <div class="progress mg-b-5">
+                        <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                      </div>
+                    </td>
+                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Belum Disampaikan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Sedang Diproses")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Terlambat" || $program->status_proker == "Diperingatkan" || $program->status_proker == "Ditunda" || $program->status_proker == "Konfirmasi Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_proker}}</span></td>
+                    @elseif($program->status_proker == "Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_proker}}</span></td>
+                    @else
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
+                    @endif
                 </tr>
                 @endforeach
               </table>

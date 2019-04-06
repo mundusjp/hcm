@@ -22,10 +22,13 @@ class Manajer extends Model
       'target',
       'mulai',
       'berakhir',
+      'bobot',
+      'hari',
       'minggu',
       'bulan',
       'tahun',
       'kategori',
+      'progres',
       'status_proker',
       'keterangan'
   ];

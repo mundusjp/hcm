@@ -27,6 +27,7 @@ class DVPController extends Controller
     public function index()
     {
       $now = Carbon::now();
+      $now->setTimezone('Asia/Jakarta');
       $divisi = Auth::user()->divisi;
       $sub_divisi = Auth::user()->sub_divisi;
       $kelas_jabatan = Auth::user()->kelas_jabatan;
@@ -65,6 +66,7 @@ class DVPController extends Controller
     public function store(Request $request)
     {
       $now = Carbon::now();
+      $now->setTimezone('Asia/Jakarta');
       $insert = new Task;
       $insert->nipp = $request->nipp;
       $id1 = $request->program_vp;
@@ -79,22 +81,25 @@ class DVPController extends Controller
       $insert->status_task = "Belum Disampaikan";
       $insert->due_date = $request->to;
       $insert->keterangan = "Task belum diberikan kepada officer terkait";
+      $start_date = Carbon::createFromFormat('Y-m-d', $request->from);
       $date = Carbon::createFromFormat('Y-m-d', $request->to);
-      if(($date->day == 31 && $date->month == 12)||$date->weekOfYear - $now->weekOfYear > 26){
+      $diff_between_dates = $date->diffInDays($start_date);
+      if(($date->day == 31 && $date->month == 12)||$diff_between_dates > 185){
         $insert->minggu = 52;
         $insert->kategori = "Tahunan";
-      }elseif($date->weekOfYear - $now->weekOfYear <= 26 && $date->weekOfYear - $now->weekOfYear >= 5){
+      }elseif($diff_between_dates <= 185 && $diff_between_dates >= 180){
         $insert->minggu = $date->weekOfYear;
         $insert->kategori = "1/2 Tahunan";
-      }elseif($date->weekOfYear - $now->weekOfYear < 5 && $date->weekOfYear - $now->weekOfYear > 1 ){
+      }elseif($diff_between_dates < 180 && $diff_between_dates > 28 ){
         $insert->minggu = $date->weekOfYear;
         $insert->kategori = "Bulanan";
       }else{
         $insert->minggu = $date->weekOfYear;
         $insert->kategori = "Mingguan";
-      };
-      $insert->bulan = $date->month;
-      $insert->tahun = $date->year;
+      }
+      $insert->hari = $date->dayOfWeek;
+      $insert->bulan = $start_date->month;
+      $insert->tahun = $start_date->year;
       $insert->save();
       return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Ditambahkan!');
     }
@@ -119,6 +124,7 @@ class DVPController extends Controller
     public function edit($id)
     {
       $now = Carbon::now();
+      $now->setTimezone('Asia/Jakarta');
       $divisi = Auth::user()->divisi;
       $sub_divisi = Auth::user()->sub_divisi;
       $kelas_jabatan = Auth::user()->kelas_jabatan;
@@ -146,25 +152,30 @@ class DVPController extends Controller
     {
       $date = Carbon::createFromFormat('Y-m-d', $request->to);
       $now = Carbon::now();
-      if(($date->day == 31 && $date->month == 12)||$date->weekOfYear - $now->weekOfYear > 26){
-        $minggu = 52;
-        $kategori = "Tahunan";
-      }elseif($date->weekOfYear - $now->weekOfYear <= 26 && $date->weekOfYear - $now->weekOfYear >= 5){
-        $minggu = $date->weekOfYear;
-        $kategori = "1/2 Tahunan";
-      }elseif($date->weekOfYear - $now->weekOfYear < 5 && $date->weekOfYear - $now->weekOfYear > 1 ){
-        $minggu = $date->weekOfYear;
-        $kategori = "Bulanan";
+      $now->setTimezone('Asia/Jakarta');
+      $start_date = Carbon::createFromFormat('Y-m-d', $request->from);
+      $diff_between_dates = $date->diffInDays($start_date);
+      if(($date->day == 31 && $date->month == 12)||$diff_between_dates > 185){
+        $insert->minggu = 52;
+        $insert->kategori = "Tahunan";
+      }elseif($diff_between_dates <= 185 && $diff_between_dates >= 180){
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "1/2 Tahunan";
+      }elseif($diff_between_dates < 180 && $diff_between_dates > 28 ){
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "Bulanan";
       }else{
-        $minggu = $date->weekOfYear;
-        $kategori = "Mingguan";
-      };
-      $bulan = $date->month;
-      $tahun = $date->year;
+        $insert->minggu = $date->weekOfYear;
+        $insert->kategori = "Mingguan";
+      }
+      $hari = $date->dayOfWeek;
+      $bulan = $start_date->month;
+      $tahun = $start_date->year;
       Task::where('id',$id)->update([
         'program_kerja'=>$request->proker,
         'mulai'=>$request->from,
         'berakhir'=>$request->to,
+        'hari'=> $hari,
         'minggu'=> $minggu,
         'bulan'=> $bulan,
         'tahun'=> $tahun,
@@ -187,7 +198,7 @@ class DVPController extends Controller
       return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Dihapuskan!');
     }
     public function proses($id){
-      $today = Carbon::now();
+      $today = Carbon::now()->setTimezone('Asia/Jakarta');
       Manajer::where('id',$id)->update([
         'status_proker'=>"Sedang Diproses",
         'keterangan'=>"Tugas mulai diproses pada ".$today
@@ -200,7 +211,7 @@ class DVPController extends Controller
     }
 
     public function batal_selesai($id){
-      $today = Carbon::now();
+      $today = Carbon::now()->setTimezone('Asia/Jakarta');
       Manajer::where('id',$id)->update([
         'status_proker'=>"Konfirmasi Dibatalkan",
         'keterangan'=>"Konfirmasi Selesai dibatalkan pada ".$today
@@ -209,7 +220,7 @@ class DVPController extends Controller
     }
 
     public function selesai(Request $request,$id){
-      $today = Carbon::now();
+      $today = Carbon::now()->setTimezone('Asia/Jakarta');
       Manajer::where('id',$id)->update([
         'status_proker'=>"Konfirmasi Selesai",
         'keterangan'=>$request->keterangan

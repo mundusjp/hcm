@@ -28,9 +28,12 @@
             </div><!-- row -->
             <div class="form-layout-footer">
               <div class="justifier" style="text-align:right;">
-              <button type="submit" class="btn btn-outline-success">Tolak</button>
-              </div>
+              <button type="submit" class="btn btn-outline-warning">Tunda</button><br><br>
               </form>
+              <form action="{{route('home')}}" method="get">
+              <button type="submit" class="btn btn-outline-dark">Kembali</button>
+              </form>
+              </div>
             </div><!-- form-layout-footer -->
           </div><!-- form-layout -->
         </div> <!-- Wrapeer -->

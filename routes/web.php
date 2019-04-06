@@ -36,6 +36,8 @@ Route::resource('perusahaan', 'PerusahaanController');
 
 Route::resource('direksi', 'DireksiController');
 Route::post('get-divisi','DireksiController@get_divisi')->name('get-divisi');
+Route::get('direksi.edit-target/{id}/edit','DireksiController@edit_target')->name('direksi.edit-target');
+Route::match(['put', 'patch'], 'direksi.update-target/{id}','DireksiController@update_target')->name('direksi.update-target');
 // Route::get('direksi','GoalsettingController@index_direksi');
 // Route::post('direksi-insert','GoalsettingController@insert_misi_direksi')->name('direksi-insert');
 // Route::post('direksi-edit','GoalsettingController@edit_misi_direksi')->name('direksi-edit');

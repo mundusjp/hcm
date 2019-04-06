@@ -16,6 +16,7 @@ class Logbook extends Model
       'logbook',
       'status',
       'tanggal',
+      'hari',
       'minggu',
       'bulan',
       'tahun'

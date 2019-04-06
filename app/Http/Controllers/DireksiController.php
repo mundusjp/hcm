@@ -26,7 +26,7 @@ class DireksiController extends Controller
      */
     public function index()
     {
-      $now = Carbon::now();
+      $now = Carbon::now()->setTimezone('Asia/Jakarta');
       $nipp = Auth::user()->nipp;
       $nama = Auth::user()->nama;
       $divisi = Auth::user()->divisi;
@@ -75,6 +75,9 @@ class DireksiController extends Controller
       $tambah_proker->divisi = $request->divisi;
       $tambah_proker->mulai = $request->from;
       $tambah_proker->berakhir = $request->to;
+      $tambah_proker->tahun = Carbon::now()->year;
+      $tambah_proker->progres = 0;
+      $tambah_proker->status_proker = "Belum Direspon";
       $tambah_proker->save();
       return redirect('direksi')->with('success','Sukses menambah Program Direksi!');
     }
@@ -136,5 +139,19 @@ class DireksiController extends Controller
     {
       $divisi = User::where('nipp',$request->nipp)->first();
       return $divisi->divisi;
+    }
+
+    public function edit_target($id)
+    {
+      $program = Direksi::find($id);
+      return view('pages.dashboard.ubah.target',compact('program'));
+    }
+
+    public function update_target(Request $request, $id)
+    {
+      Direksi::where('id',$id)->update([
+        'target_bulanan'=> $request->target
+      ]);
+      return redirect('home')->with('success','Sukses Mengubah Target Program!');
     }
 }

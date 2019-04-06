@@ -31,43 +31,59 @@
          <!--                                UNTUK KELAS DIREKSI                                       -->
          <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
          @if(Auth::user()->kelas_jabatan <= 5)
-         <label class="section-title">Task List</label>
-         <p class="mg-b-20 mg-sm-b-40">Berikut adalah pekerjaan yang harus dilakukan hari ini</p>
-             <table class="table table-orange">
+         <label class="section-title">Status Program Kerja Anda</label>
+         @foreach($officer as $vp)
+            <label class="section-title tx-warning">{{$vp->sub_divisi}}</label>
+           <div class="table-responsive">
+             <table class="table table-hover mg-b-0">
                <thead>
-               <tr>
-                 <td>ID</td>
-                 <td>Task</td>
-                 <td>Target</td>
-                 <td>Deadline</td>
-                 <td>Action</td>
-               </tr>
+                 <tr>
+                   <th style="width:5%;">No.</th>
+                   <th style="width:50%;">Program Kerja</th>
+                   <th style="text-align:center;width:15%;">Status</th>
+                   <th style="text-align:center;width:15%;">Progres</th>
+                   <th style="text-align:center;width:5%;">Target</th>
+                   <th style="text-align:center;width:10%;">Aksi</th>
+                 </tr>
                </thead>
                <tbody>
-               <tr>
-                 <td>1</td>
-                 <td>Rapat dengan dewan direksi</td>
-                 <td>Mendapatkan approval project</td>
-                 <td>Hari ini, 18 Maret 2019</td>
-                 <td><a href="" class="text-success">Selesai</a>&nbsp;|&nbsp;<a href="" class="text-danger">Tunda</a></td>
-
+                 <?php $i=0; ?>
+                 @foreach($direksi as $programs)
+                 @if($programs->nipp_pj == $vp->nipp)
+                 <?php $i++; ?>
+                 <tr>
+                   <td>{{$i}}</td>
+                   <td>{{$programs->program_kerja}}</td>
+                   @if($programs->status_proker == "Belum Direspon" || $programs->status_proker == "Belum Disampaikan")
+                   <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$programs->status_proker}}</span></td>
+                   @elseif($programs->status_proker == "Sedang Diproses")
+                   <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$programs->status_proker}}</span></td>
+                   @elseif($programs->status_proker == "Terlambat" || $programs->status_proker == "Diperingatkan" || $programs->status_proker == "Ditunda" || $programs->status_proker == "Konfirmasi Dibatalkan")
+                   <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$programs->status_proker}}</span></td>
+                   @elseif($programs->status_proker == "Dibatalkan")
+                   <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$programs->status_proker}}</span></td>
+                   @else
+                   <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$programs->status_proker}}</span></td>
+                   @endif
+                   <td>
+                     <div class="progress mg-b-5">
+                       <div class="progress-bar progress-bar-lg bg-warning wd-{{$programs->progres}}p" role="progressbar" aria-valuenow="{{$programs->progres}}" aria-valuemin="0" aria-valuemax="100">{{$programs->progres}}%</div>
+                     </div>
+                   </td>
+                   <td style="text-align:center;">{{$programs->target_bulanan}}%</td>
+                   <form action="{{route('direksi.edit-target',$programs->id)}}" method="get">
+                     @csrf
+                   <td><button class="btn btn-outline-warning">Ubah Target</button></td>
+                  </form>
+                 </tr>
+                 @endif
+                 @endforeach
+               </tbody>
              </table>
-             <br>
-             <hr>
-             <label class="section-title">Daily Logbook</label>
-             <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahlogbook">Tambahkan </button>
-             <p class="mg-b-20 mg-sm-b-40">Tuliskan Pekerjaan Anda Hari Ini</p>
-
-             <table class="table table-orange">
-               <thead>
-               <tr>
-                 <td>ID</td>
-                 <td>Task</td>
-                 <td>Target</td>
-                 <td>Deadline</td>
-               </tr>
-               </thead>
-             </table>
+           </div>
+           <hr>
+         @endforeach
+        </div>
              <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
              <!--                               UNTUK KELAS VICE PRESIDENT                                 -->
              <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
@@ -147,6 +163,7 @@
                  @endforeach
                </tbody>
              </table>
+             {{$assigned_proker_vp->links()}}
              <hr>
              <!-- ///////////////////////////////////////STATUS DVP////////////////////////////////////////////////  -->
              <label class="section-title">Status Deputy Vice Director</label>

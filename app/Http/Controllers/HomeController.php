@@ -44,13 +44,15 @@ class HomeController extends Controller
         $kelas_jabatan = Auth::user()->kelas_jabatan;
         $jabatan = Auth::user()->jabatan;
         $now = Carbon::now();
-        $start = Carbon::now()->subDays(7);
-        $direksi = Direksi::where('divisi',$divisi)->get();
+        $now->setTimezone('Asia/Jakarta');
         $officer = User::where('supervisor_nipp',$nipp)->get();
         $company = Company::find(1);
         $performa_saya = Performa::where('nipp',$nipp)->get();
+        ############################ UNTUK DIREKSI ####################################
+        $direksi = Direksi::where('divisi',$divisi)->get();
+        ###############################################################################
         ############################### UNTUK VP ######################################
-        $assigned_proker_vp = Manajer::whereNotNull('nipp_pj')->paginate(10);
+        $assigned_proker_vp = Manajer::whereNotNull('nipp_pj')->latest('updated_at')->paginate(10);
         $proker_vp_tahunan = Manajer::where('nipp',$nipp)->where('kategori','Tahunan')->get();
         $proker_vp_settahunan = Manajer::where('nipp',$nipp)->where('kategori','1/2 Tahunan')->get();
         $proker_vp_bulanan = Manajer::where('nipp',$nipp)->where('kategori','Bulanan')->get();

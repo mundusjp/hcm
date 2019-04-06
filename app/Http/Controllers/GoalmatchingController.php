@@ -19,7 +19,7 @@ class GoalmatchingController extends Controller
     public function index()
     {
       $now = Carbon::now();
-      $start = Carbon::now()->subDays(7);
+      $now->setTimezone('Asia/Jakarta');
       $officer = User::where('supervisor_nipp',Auth::user()->nipp)->get();
       return view('pages.goalmatching.goalmatching', compact('now','officer'));
     }

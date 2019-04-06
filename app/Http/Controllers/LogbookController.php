@@ -50,6 +50,7 @@ class LogbookController extends Controller
     public function store(Request $request)
     {
         $now = Carbon::now();
+        $now->setTimezone('Asia/Jakarta');
         $insert = new Logbook;
         $insert->nipp = Auth::user()->nipp;
         $insert->supervisor_nipp = Auth::user()->supervisor_nipp;
@@ -115,6 +116,7 @@ class LogbookController extends Controller
 
     public function export_harian(){
       $today = Carbon::now()->format('Y-m-d');
+      $today->setTimezone('Asia/Jakarta');
       $company = Company::find(1);
       // Fetch all customers from database
       $data = Logbook::where('nipp',Auth::user()->nipp)->where('tanggal',$today)->get();
@@ -126,6 +128,7 @@ class LogbookController extends Controller
 
     public function export_mingguan(){
       $today = Carbon::now();
+      $today->setTimezone('Asia/Jakarta');
       $company = Company::find(1);
       // Fetch all customers from database
       $data = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->get();
@@ -136,9 +139,44 @@ class LogbookController extends Controller
     }
 
     public function logbook_harian(){
-      $today = Carbon::now()->format('Y-m-d');
+      $today = Carbon::now();
       $company = Company::find(1);
-      $data = Logbook::where('nipp',Auth::user()->nipp)->where('tanggal',$today)->get();
-      return view('logbook_harian',compact('today','company','data'));
+      $find = Logbook::where('nipp',Auth::user()->nipp)->where('bulan',$today->month)->first();
+      switch ($find->bulan) {
+        case 2:
+            $bulantahun = "Februari ".$find->tahun;
+            break;
+        case 3:
+            $bulantahun = "Maret ".$find->tahun;
+            break;
+        case 4:
+            $bulantahun = "April ".$find->tahun;
+            break;
+        case 5:
+            $bulantahun = "Mei ".$find->tahun;
+            break;
+        case 6:
+            $bulantahun = "Juni ".$find->tahun;
+            break;
+        case 7:
+            $bulantahun = "Juli ".$find->tahun;
+            break;
+        case 8:
+            $bulantahun = "Agustus ".$find->tahun;
+            break;
+        case 9:
+            $bulantahun = "September ".$find->tahun;
+            break;
+        case 10:
+            $bulantahun = "November ".$find->tahun;
+            break;
+        case 11:
+            $bulantahun = "Desember ".$find->tahun;
+            break;
+        default:
+            $bulantahun = "Januari";
+      }
+      $data = Logbook::where('nipp',Auth::user()->nipp)->where('bulan',$today->month)->get();
+      return view('logbook.coach.bulanan',compact('today','company','data','find','bulantahun'));
     }
 }

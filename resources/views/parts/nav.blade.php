@@ -9,7 +9,7 @@
       </li>
       <li class="nav-item with-sub">
         <a class="nav-link" href="">
-          <i class="icon ion-archive"></i>
+          <i class="icon fa fa-compass"></i>
           <span>Goalsetting</span>
         </a>
         <div class="sub-item">
@@ -33,13 +33,12 @@
             <li><a href="vice-president">Vice President</a></li>
             <li><a href="deputy-vice-president">DVP</a></li>
             @endif
-
           </ul>
         </div><!-- dropdown-menu -->
       </li>
       <li class="nav-item with-sub">
         <a class="nav-link" href="goalmatching">
-          <i class="icon ion-ios-gear"></i>
+          <i class="icon fa fa-exchange"></i>
           <span>Goalmatching</span>
         </a>
         <div class="sub-item">
@@ -48,6 +47,10 @@
             <li><a href="goalmatching-coach">Coach</a></li>
             <li><a href="goalmatching-evaluasi">Evaluasi</a></li>
             @elseif(Auth::user()->kelas_jabatan > 8 && Auth::user()->kelas_jabatan <=10)
+            <li><a href="goalmatching-coach">Coach</a></li>
+            <li><a href="goalmatching-coachee">Coachee</a></li>
+            <li><a href="goalmatching-evaluasi">Evaluasi</a></li>
+            @else
             <li><a href="goalmatching-coachee">Coachee</a></li>
             <li><a href="goalmatching-evaluasi">Evaluasi</a></li>
             @endif

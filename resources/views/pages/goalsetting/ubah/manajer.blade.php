@@ -36,8 +36,8 @@
                   <label class="form-control-label">Program Direksi Terkait <span class="tx-danger">*</span></label>
                   <select name="program_direksi" class="form-control select2-show-search" data-placeholder="Choose one">
                     <option value="{{$program->id_prodir}}">{{$program->program_direksi}}</option>
-                    @foreach($direksi as $program)
-                    <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                    @foreach($direksi as $programs)
+                    <option value="{{$program->id}}">{{$programs->program_kerja}}</option>
                     @endforeach
                   </select>
                 </div>
@@ -52,18 +52,18 @@
                     <option value="{{$program->id_prokerkait}}">{{$program->program_kerja_terkait}}</option>
                     @endif
                     <optgroup label="Program Tahunan">
-                      @foreach($proker_tahunan as $program)
-                      <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                      @foreach($proker_tahunan as $programs)
+                      <option value="{{$program->id}}">{{$programs->program_kerja}}</option>
                       @endforeach
                     </optgroup>
                     <optgroup label="Program 1/2 Tahunan">
-                      @foreach($proker_settahunan as $program)
-                      <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                      @foreach($proker_settahunan as $programs)
+                      <option value="{{$program->id}}">{{$programs->program_kerja}}</option>
                       @endforeach
                     </optgroup>
                     <optgroup label="Program Bulanan">
-                      @foreach($proker_bulanan as $program)
-                      <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                      @foreach($proker_bulanan as $programs)
+                      <option value="{{$program->id}}">{{$programs->program_kerja}}</option>
                       @endforeach
                     </optgroup>
 

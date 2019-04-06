@@ -33,6 +33,7 @@ class ManajerController extends Controller
       $kelas_jabatan = Auth::user()->kelas_jabatan;
       $jabatan = Auth::user()->jabatan;
       $now = Carbon::now();
+      $now->setTimezone('Asia/Jakarta');
       $all_vp = User::where('kelas_jabatan','<=','8')->get();
       $vp = User::where('supervisor_nipp',$nipp)->where('kelas_jabatan','<=','8')->where('kelas_jabatan','>=','6')->get();
       $direksi = Direksi::where('divisi',$divisi)->get();
@@ -78,6 +79,7 @@ class ManajerController extends Controller
     public function store(Request $request)
     {
       $now = Carbon::now();
+      $now->setTimezone('Asia/Jakarta');
       $insert = new Manajer;
       $id1 = $request->program_direksi;
       $prodir = Direksi::where('id',$id1)->first();
@@ -98,23 +100,25 @@ class ManajerController extends Controller
       $insert->berakhir = $request->to;
       $insert->status_proker = "Belum Disampaikan";
       $insert->keterangan = "Task belum diberikan kepada DVP terkait";
+      $start_date = Carbon::createFromFormat('Y-m-d', $request->from);
       $date = Carbon::createFromFormat('Y-m-d', $request->to);
-
-      if(($date->day == 31 && $date->month == 12)||$date->weekOfYear - $now->weekOfYear > 26){
+      $diff_between_dates = $date->diffInDays($start_date);
+      if(($date->day == 31 && $date->month == 12)||$diff_between_dates > 185){
         $insert->minggu = 52;
         $insert->kategori = "Tahunan";
-      }elseif($date->weekOfYear - $now->weekOfYear <= 26 && $date->weekOfYear - $now->weekOfYear >= 5){
+      }elseif($diff_between_dates <= 185 && $diff_between_dates >= 180){
         $insert->minggu = $date->weekOfYear;
         $insert->kategori = "1/2 Tahunan";
-      }elseif($date->weekOfYear - $now->weekOfYear < 5 && $date->weekOfYear - $now->weekOfYear > 1 ){
+      }elseif($diff_between_dates < 180 && $diff_between_dates > 28 ){
         $insert->minggu = $date->weekOfYear;
         $insert->kategori = "Bulanan";
       }else{
         $insert->minggu = $date->weekOfYear;
         $insert->kategori = "Mingguan";
       }
-      $insert->bulan = $date->month;
-      $insert->tahun = $date->year;
+      $insert->hari = $date->dayOfWeek;
+      $insert->bulan = $start_date->month;
+      $insert->tahun = $start_date->year;
       $insert->save();
       return redirect('vice-president')->with('success', 'Program Vice President Berhasil Ditambahkan!');
     }
@@ -145,12 +149,14 @@ class ManajerController extends Controller
       $kelas_jabatan = Auth::user()->kelas_jabatan;
       $jabatan = Auth::user()->jabatan;
       $now = Carbon::now();
-      $start = Carbon::now()->subDays(7);
+      $now->setTimezone('Asia/Jakarta');
       $direksi = Direksi::where('divisi',$divisi)->get();
-      $proker_tahunan = Manajer::where('nipp',$nipp)->where('kategori','Tahunan')->get();
-      $proker_settahunan = Manajer::where('nipp',$nipp)->where('kategori','1/2 Tahunan')->get();
-      $proker_bulanan = Manajer::where('nipp',$nipp)->where('kategori','Bulanan')->get();
-      return view('pages.goalsetting.ubah.manajer',compact('program','divisi','jabatan','nama','nipp','kelas_jabatan','now','direksi','proker_bulanan','proker_settahunan','proker_tahunan'));
+      $proker_mingguan = Manajer::where('sub_divisi',Auth::user()->sub_divisi)->where('kategori','Mingguan')->where('minggu',$now->weekOfYear)->get();
+      $proker_tahunan = Manajer::where('nipp',$nipp)->where('kategori','Tahunan')->where('tahun',$now->year)->get();
+      $proker_settahunan = Manajer::where('nipp',$nipp)->where('kategori','1/2 Tahunan')->where('tahun',$now->year)->get();
+      $proker_bulanan = Manajer::where('nipp',$nipp)->where('kategori','Bulanan')->where('bulan',$now->month)->get();
+      $program = Manajer::find($id);
+      return view('pages.goalsetting.ubah.manajer',compact('program','divisi','jabatan','nama','nipp','kelas_jabatan','now','direksi','proker_mingguan','proker_bulanan','proker_settahunan','proker_tahunan'));
     }
 
     /**
@@ -166,21 +172,26 @@ class ManajerController extends Controller
       $prodir = Direksi::where('id',$id1)->first();
       $date = Carbon::createFromFormat('Y-m-d', $request->to);
       $now = Carbon::now();
-      if(($date->day == 31 && $date->month == 12)||$date->weekOfYear - $now->weekOfYear > 26){
-        $minggu = 52;
+      $now->setTimezone('Asia/Jakarta');
+      $insert = new Manajer;
+      $start_date = Carbon::createFromFormat('Y-m-d', $request->from);
+      $diff_between_dates = $date->diffInDays($start_date);
+      if(($date->day == 31 && $date->month == 12)||$diff_between_dates > 185){
+        $minggu = '52';
         $kategori = "Tahunan";
-      }elseif($date->weekOfYear - $now->weekOfYear <= 26 && $date->weekOfYear - $now->weekOfYear >= 5){
+      }elseif($diff_between_dates <= 185 && $diff_between_dates >= 180){
         $minggu = $date->weekOfYear;
         $kategori = "1/2 Tahunan";
-      }elseif($date->weekOfYear - $now->weekOfYear < 5 && $date->weekOfYear - $now->weekOfYear > 1 ){
+      }elseif($diff_between_dates < 180 && $diff_between_dates > 28 ){
         $minggu = $date->weekOfYear;
         $kategori = "Bulanan";
       }else{
         $minggu = $date->weekOfYear;
         $kategori = "Mingguan";
-      };
-      $bulan = $date->month;
-      $tahun = $date->year;
+      }
+      $hari = $date->dayOfWeek;
+      $bulan = $start_date->month;
+      $tahun = $start_date->year;
       if(!empty($request->program_kerja_terkait)){
         $id2 = $request->program_kerja_terkait;
         $prokerkait = Manajer::where('id',$id2)->first();
@@ -192,6 +203,7 @@ class ManajerController extends Controller
           'program_kerja'=>$request->proker,
           'mulai'=>$request->from,
           'berakhir'=>$request->to,
+          'hari'=> $hari,
           'minggu'=> $minggu,
           'bulan'=> $bulan,
           'tahun'=> $tahun,
@@ -204,6 +216,7 @@ class ManajerController extends Controller
           'program_kerja'=>$request->proker,
           'mulai'=>$request->from,
           'berakhir'=>$request->to,
+          'hari'=> $hari,
           'minggu'=> $minggu,
           'bulan'=> $bulan,
           'tahun'=> $tahun,
@@ -240,6 +253,7 @@ class ManajerController extends Controller
     }
 
     public function konfirmasi($id){
+      $today = Carbon::now()->setTimezone('Asia/Jakarta');
       Manajer::where('id',$id)->update([
         'status_proker'=>"Selesai",
         'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today,
