@@ -119,7 +119,7 @@ class LogbookController extends Controller
     public function export_harian(){
       $today = Carbon::now()->format('Y-m-d');
       $now = Carbon::now()->setTimezone('Asia/Jakarta');
-      $find = Logbook::where('nipp',Auth::user()->nipp)->where('hari',$now->dayOfWeek)->first();
+      $find = Logbook::where('nipp',Auth::user()->nipp)->where('hari',$now->dayOfWeek)->where('minggu',$now->weekOfYear)->where('bulan',$now->month)->where('tahun',$now->year)->first();
       if(empty($find)){
         return redirect('home')->with('failed','Anda Belum mengisi logbook hari ini!');
       }
@@ -181,7 +181,7 @@ class LogbookController extends Controller
       }
       $company = Company::find(1);
       // Fetch all customers from database
-      $data = Logbook::where('nipp',Auth::user()->nipp)->where('hari',$now->dayOfWeek)->get();
+      $data = Logbook::where('nipp',Auth::user()->nipp)->where('hari',$now->dayOfWeek)->where('minggu',$now->weekOfYear)->where('bulan',$now->month)->where('tahun',$now->year)->get();
       // Finally, you can download the file using download function
       return view('logbook.coachee.harian',compact('today','company','data','find','bulantahun','hari'));
     }
@@ -189,6 +189,10 @@ class LogbookController extends Controller
     public function export_mingguan(){
       $today = Carbon::now()->setTimezone('Asia/Jakarta');
       $company = Company::find(1);
+      $find = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->where('bulan',$today->month)->where('tahun',$todaya->year)->first();
+      if(empty($find)){
+        return redirect('home')->with('failed','Anda Belum mengisi logbook minggu ini!');
+      }
       $list_hari = [
         '0'=>"Minggu",
         '1'=>"Senin",
@@ -198,7 +202,6 @@ class LogbookController extends Controller
         '5'=>"Jumat",
         '6'=>"Sabtu",
       ];
-      $find = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->first();
       switch ($find->bulan) {
         case 2:
             $bulantahun = "Februari ".$find->tahun;
@@ -234,7 +237,7 @@ class LogbookController extends Controller
             $bulantahun = "Januari";
       }
       // Fetch all customers from database
-      $data = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->get();
+      $data = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->where('bulan',$today->month)->where('tahun',$todaya->year)->get();
       // Finally, you can download the file using download function
       return view('logbook.coachee.mingguan',compact('today','company','data','find','bulantahun','list_hari'));
     }
@@ -242,7 +245,10 @@ class LogbookController extends Controller
     public function export_bulanan(){
       $today = Carbon::now()->setTimezone('Asia/Jakarta');
       $company = Company::find(1);
-      $find = Logbook::where('nipp',Auth::user()->nipp)->where('bulan',$today->month)->first();
+      $find = Logbook::where('nipp',Auth::user()->nipp)->where('bulan',$today->month)->where('tahun', $today->year)->first();
+      if(empty($find)){
+        return redirect('home')->with('failed','Anda Belum mengisi logbook bulan ini!');
+      }
       $list_hari = [
         '0'=>"Minggu",
         '1'=>"Senin",
@@ -287,7 +293,7 @@ class LogbookController extends Controller
             $bulantahun = "Januari";
       }
       // Fetch all customers from database
-      $data = Logbook::where('nipp',Auth::user()->nipp)->where('bulan',$today->month)->get();
+      $data = Logbook::where('nipp',Auth::user()->nipp)->where('bulan',$today->month)->where('tahun',$today->year)->get();
       // Finally, you can download the file using download function
       return view('logbook.coachee.bulanan',compact('today','company','data','find','bulantahun','list_hari'));
     }
@@ -296,7 +302,7 @@ class LogbookController extends Controller
       $today = Carbon::now()->format('Y-m-d');
       $now = Carbon::now()->setTimezone('Asia/Jakarta');
       $user = User::find($id);
-      $find = Logbook::where('nipp',$user->nipp)->where('hari',$now->dayOfWeek)->first();
+      $find = Logbook::where('nipp',$user->nipp)->where('hari',$now->dayOfWeek)->where('minggu',$now->weekOfYear)->where('bulan',$now->month)->where('tahun',$now->year)->first();
       if(empty($find)){
         return redirect('home')->with('failed','DVP / Officer Anda Belum mengisi logbook hari ini!');
       }
@@ -358,7 +364,7 @@ class LogbookController extends Controller
       }
       $company = Company::find(1);
       // Fetch all customers from database
-      $data = Logbook::where('nipp',$user->nipp)->where('hari',$now->dayOfWeek)->get();
+      $data = Logbook::where('nipp',$user->nipp)->where('hari',$now->dayOfWeek)->where('minggu',$now->weekOfYear)->where('bulan',$now->month)->where('tahun',$now->year)->get();
       // Finally, you can download the file using download function
       return view('logbook.coach.harian',compact('today','company','data','find','bulantahun','hari','user'));
     }
@@ -376,7 +382,7 @@ class LogbookController extends Controller
         '5'=>"Jumat",
         '6'=>"Sabtu",
       ];
-      $find = Logbook::where('nipp',$user->nipp)->where('minggu',$today->weekOfYear)->first();
+      $find = Logbook::where('nipp',$user->nipp)->where('minggu',$today->weekOfYear)->where('bulan',$today->month)->where('tahun',$today->year)->first();
       if(empty($find)){
         return redirect('home')->with('failed','DVP / Officer anda belum mengisi log pada minggu ini');
       }
@@ -415,7 +421,7 @@ class LogbookController extends Controller
             $bulantahun = "Januari";
       }
       // Fetch all customers from database
-      $data = Logbook::where('nipp',$user->nipp)->where('minggu',$today->weekOfYear)->get();
+      $data = Logbook::where('nipp',$user->nipp)->where('minggu',$today->weekOfYear)->where('bulan',$today->month)->where('tahun',$today->year)->get();
       // Finally, you can download the file using download function
       return view('logbook.coach.mingguan',compact('today','company','data','find','bulantahun','list_hari','user'));
     }
@@ -424,7 +430,7 @@ class LogbookController extends Controller
       $today = Carbon::now()->setTimezone('Asia/Jakarta');
       $company = Company::find(1);
       $user = User::find($id);
-      $find = Logbook::where('nipp',$user->nipp)->where('bulan',$today->month)->first();
+      $find = Logbook::where('nipp',$user->nipp)->where('bulan',$today->month)->where('tahun',$today->year)->first();
       if(empty($find)){
         return redirect('home')->with('failed','DVP / Officer anda belum mengisi log pada bulan ini');
       }
@@ -472,7 +478,7 @@ class LogbookController extends Controller
             $bulantahun = "Januari";
       }
       // Fetch all customers from database
-      $data = Logbook::where('nipp',$user->nipp)->where('bulan',$today->month)->get();
+      $data = Logbook::where('nipp',$user->nipp)->where('bulan',$today->month)->where('tahun',$today->year)->get();
       // Finally, you can download the file using download function
       return view('logbook.coach.bulanan',compact('today','company','data','find','bulantahun','user','list_hari'));
     }

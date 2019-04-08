@@ -28,9 +28,14 @@
          </div><!-- alert -->
          @endif
          <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+         <!--                                UNTUK KELAS Superadmin                                    -->
+         <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+         @if(Auth::user()->kelas_jabatan == 1)
+         <label class="section-title">Superadmin</label>
+         <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
          <!--                                UNTUK KELAS DIREKSI                                       -->
          <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
-         @if(Auth::user()->kelas_jabatan <= 5)
+         @elseif(Auth::user()->kelas_jabatan <= 5)
          <label class="section-title">Status Program Kerja Anda</label>
          @foreach($officer as $vp)
             <label class="section-title tx-warning">{{$vp->sub_divisi}} - {{$vp->nama}}</label>
@@ -220,6 +225,16 @@
                               @csrf
                              <label class="form-control-label">Program Kerja Anda <span class="tx-danger">*</span></label>
                              <select name="id" class="form-control select2" data-placeholder="Choose one">
+                               <optgroup label="Program Mingguan">
+                                 @foreach($proker_vp_mingguan as $program)
+                                 <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                 @endforeach
+                               </optgroup>
+                               <optgroup label="Program Bulanan">
+                                 @foreach($proker_vp_bulanan as $program)
+                                 <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                 @endforeach
+                               </optgroup>
                                <optgroup label="Program Tahunan">
                                  @foreach($proker_vp_tahunan as $program)
                                  <option value="{{$program->id}}">{{$program->program_kerja}}</option>
@@ -230,11 +245,7 @@
                                  <option value="{{$program->id}}">{{$program->program_kerja}}</option>
                                  @endforeach
                                </optgroup>
-                               <optgroup label="Program Bulanan">
-                                 @foreach($proker_vp_bulanan as $program)
-                                 <option value="{{$program->id}}">{{$program->program_kerja}}</option>
-                                 @endforeach
-                               </optgroup>
+
 
                              </select>
                            </div>
@@ -392,27 +403,27 @@
                    @if($program->status_task == "Belum Direspon" || $program->status_task == "Sedang Diproses" || $program->status_task == "Diperingatkan")
                    <td><button disabled class="btn btn-outline-success">Konfirmasi</button></td>
                    <td><button disabled class="btn btn-outline-warning">Tolak</button></td>
-                   <form method="get" action="{{route('vice-president.batalkan-page',$program->id)}}">
+                   <form method="get" action="{{route('deputy-vice-president.batalkan-page',$program->id)}}">
                      @csrf
                    <td><button class="btn btn-outline-danger">Batalkan</button></td>
                   </form>
                    @elseif($program->status_task == "Terlambat" || $program->status_task == "Ditunda" || $program->status_task == "Konfirmasi Dibatalkan")
                    <td><button disabled class="btn btn-outline-success">Konfirmasi</button></td>
-                   <form method="get" action="{{route('vice-president.peringatkan-page',$program->id)}}">
+                   <form method="get" action="{{route('deputy-vice-president.peringatkan-page',$program->id)}}">
                      @csrf
                    <td><button class="btn btn-outline-warning">Peringatkan</button></td>
                   </form>
-                   <form method="get" action="{{route('vice-president.batalkan-page',$program->id)}}">
+                   <form method="get" action="{{route('deputy-vice-president.batalkan-page',$program->id)}}">
                      @csrf
                    <td><button class="btn btn-outline-danger">Batalkan</button></td>
                   </form>
                    @elseif($program->status_task == "Konfirmasi Selesai")
-                   <form method="post" action="{{route('vice-president.konfirmasi',$program->id)}}">
+                   <form method="post" action="{{route('deputy-vice-president.konfirmasi',$program->id)}}">
                      @method('PATCH')
                      @csrf
                    <td><button class="btn btn-outline-success">Konfirmasi</button></td>
                   </form>
-                  <form method="get" action="{{route('vice-president.reject-page',$program->id)}}">
+                  <form method="get" action="{{route('deputy-vice-president.reject-page',$program->id)}}">
                     @csrf
                    <td><button class="btn btn-outline-warning">Tolak</button></td>
                   </form>
@@ -465,18 +476,19 @@
                <div class="col-6">
                  <label class="section-title">Performa Anda</label>
                  <hr>
+                 @if(!empty($performa_saya))
                  <ul class="list-group">
                   <li class="list-group-item">
-                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">8</span></p>
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">{{$performa_saya->jumlah_task_minggu_ini}}</span></p>
                   </li>
                   <li class="list-group-item">
-                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Terlambat Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">1</span></p>
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Terlambat Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">{{$performa_saya->jumlah_task_pending_minggu_ini}}</span></p>
                   </li>
                   <li class="list-group-item">
-                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Minggu ini:</strong><br> <span class="tx-success align-right">87.5%</span></p>
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Minggu ini:</strong><br> <span class="tx-success align-right">{{$performa_saya->performa_minggu_ini}}</span></p>
                   </li>
                   <li class="list-group-item">
-                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Bulan ini:</strong><br> <span class="text-success align-right">87.5%</span></p>
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Bulan ini:</strong><br> <span class="text-success align-right">{{$performa_saya->performa_bulan_ini}}</span></p>
                   </li>
                   <li class="list-group-item">
                     <p class="mg-b-0"><strong class="tx-inverse tx-medium">Lihat Logbook:</strong><br> <span class="text-muted"><a href="{{url('logbook-harian')}}">Harian</a></span> <span class="text-muted">|
@@ -484,6 +496,27 @@
                       <a href="{{url('logbook-bulanan')}}">Bulanan</a></p>
                   </li>
                 </ul>
+                @else
+                <ul class="list-group">
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">Belum ada Data!</span></p>
+                 </li>
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Terlambat Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">Belum ada Data!</span></p>
+                 </li>
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Minggu ini:</strong><br> <span class="align-right">Belum ada Data!</span></p>
+                 </li>
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Bulan ini:</strong><br> <span class="align-right">Belum ada Data!</span></p>
+                 </li>
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Lihat Logbook:</strong><br> <span style="display:none;" class="text-muted"><a href="{{url('logbook-harian')}}">Harian</a></span>
+                     <span style="display:none;" class="text-muted"> | <a style="display:none;" href="{{url('logbook-mingguan')}}"> Mingguan </a></span>
+                     <span style="display:none;" class="text-muted"> | <a style="display:none;" href="{{url('logbook-bulanan')}}">Bulanan</a></span></p>
+                 </li>
+               </ul>
+                @endif
                </div>
              </div>
              <!-- ################## MODAL 1 ###################### -->
@@ -543,51 +576,167 @@
              <!--                               UNTUK KELAS OFFICER & TNO                                  -->
              <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
              @else
-             <label class="section-title">Daily Logbook</label>
-             <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahlogbook">Tambahkan </button>
+             <label class="section-title">Log Harian</label>
+             <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahlogbookofficer">Tambahkan </button>
              <p class="mg-b-20 mg-sm-b-40">Tuliskan Pekerjaan Anda Hari Ini</p>
-
              <table class="table table-orange">
                <thead>
-               <tr>
-                 <td>ID</td>
-                 <td>Task</td>
-                 <td>Target</td>
-                 <td>Deadline</td>
-               </tr>
+                 <tr>
+                   <th>No.</th>
+                   <th>Program Kerja Terkait</th>
+                   <th>Target</th>
+                   <th>Log Hari Ini</th>
+                   <th>Status</th>
+                 </tr>
                </thead>
+               <tbody>
+                 <?php $i=0;?>
+                 @foreach($logbook_harian as $log)
+                 <?php $i++;?>
+                 <tr>
+                   <td>{{$i}}</td>
+                   <td>{{$log->program_kerja_terkait}}</td>
+                   <td>{{$log->target}}</td>
+                   <td>{{$log->logbook}}</td>
+                   @if($log->status == "Selesai")
+                   <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$log->status}}</span></td>
+                   @elseif($log->status = "Ditunda")
+                   <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$log->status}}</span></td>
+                   @else
+                   <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$log->status}}</span></td>
+                   @endif
+                 </tr>
+                 @endforeach
+               </tbody>
              </table>
              <br>
              <hr>
              <div class="row">
-               <div class="col">
-                 <label class="section-title">Upcoming Task</label>
+               <div class="col-12">
+                 @if(!empty($exist_proker_dari_dvp))
+                 <label class="section-title">List Tugas Anda</label>
                  <table class="table table-orange">
                    <thead>
                    <tr>
-                     <td>ID</td>
-                     <td>Task</td>
-                     <td>Target</td>
-                     <td>Deadline</td>
+                     <td style="width:25px;">ID</td>
+                     <td style="width:300px;text-align:center;">Program Kerja</td>
+                     <td style="width:25px;text-align:center;">Status</td>
+                     <td style="width:200px;text-align:center;">Keterangan</td>
+                     <td style="width:25px;text-align:center;">Proses</td>
+                     <td style="width:25px;text-align:center;">Tunda</td>
+                     <td style="width:25px;text-align:center;">Selesai</td>
                    </tr>
                    </thead>
+                   <tbody>
+                     <?php $i=0;?>
+                     @foreach($proker_dari_dvp as $program)
+                     <?php $i++;?>
+                     <tr>
+                       <td>{{$i}}</td>
+                       <td>{{$program->program_kerja}}</td>
+                       @if($program->status_task == "Belum Disampaikan" || $program->status_task == "Belum Direspon")
+                       <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_task}}</span></td>
+                       @elseif($program->status_task == "Sedang Diproses")
+                       <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_task}}</span></td>
+                       @elseif($program->status_task == "Terlambat" || $program->status_task == "Diperingatkan" || $program->status_task == "Ditunda" || $program->status_task == "Konfirmasi Dibatalkan")
+                       <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_task}}</span></td>
+                       @elseif($program->status_task == "Dibatalkan")
+                       <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_task}}</span></td>
+                       @else
+                       <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_task}}</span></td>
+                       @endif
+                       <td>{{$program->keterangan}}</td>
+                       @if($program->status_task == "Belum Direspon" || $program->status_task == "Diperingatkan" || $program->status_task == "Ditolak")
+                       <form method="post" action="{{route('officer.proses',$program->id)}}">
+                         @method('PATCH')
+                         @csrf
+                       <td style="width:15px;text-align:center;"><button class="btn btn-outline-info">Proses</button></td>
+                      </form>
+                       <td style="width:15px;text-align:center;"><button disabled class="btn btn-outline-warning">Tunda</button></td>
+                       <td style="width:15px;text-align:center;"><button disabled class="btn btn-outline-success">Selesai</button></td>
+                       @elseif($program->status_task == "Terlambat" || $program->status_task == "Sedang Diproses" || $program->status_task == "Ditunda" || $program->status_task == "Konfirmasi Dibatalkan" )
+                       <td style="width:15px;text-align:center;"><button disabled class="btn btn-outline-info">Proses</button></td>
+                       <form method="get" action="{{route('officer.tunda-page',$program->id)}}">
+                         @csrf
+                       <td style="width:15px;text-align:center;"><button class="btn btn-outline-warning">Tunda</button></td>
+                      </form>
+                       <form method="get" action="{{route('officer.selesai-page',$program->id)}}">
+                         @csrf
+                       <td style="width:15px;text-align:center;"><button class="btn btn-outline-success">Selesai</button></td>
+                      </form>
+                       @elseif($program->status_task == "Konfirmasi Selesai")
+                       <td style="width:15px;text-align:center;"><button disabled class="btn btn-outline-info">Proses</button></td>
+                       <form method="post" action="{{route('officer.batal-selesai',$program->id)}}">
+                         @csrf
+                         @method('PATCH')
+                       <td style="width:15px;text-align:center;"><button class="btn btn-outline-warning">Batal Selesai</button></td>
+                      </form>
+                       <td style="width:15px;text-align:center;"><button disabled class="btn btn-outline-success">Selesai</button></td>
+                       @elseif($program->status_task == "Selesai" || $program->status_task == "Dibatalkan")
+                       <td style="width:15px;text-align:center;"><button disabled class="btn btn-outline-info">Proses</button></td>
+                       <td style="width:15px;text-align:center;"><button disabled class="btn btn-outline-warning">Tunda</button></td>
+                       <td style="width:15px;text-align:center;"><button disabled class="btn btn-outline-success">Selesai</button></td>
+                       @endif
+                     </tr>
+                     @endforeach
+                   </tbody>
                  </table>
+                 @else
+                 <div class="alert alert-warning" role="alert">
+                   <strong> Belum ada pekerjaan untuk hari ini! </strong>
+                 </div><!-- alert -->
+                 @endif
                </div>
-               <div class="col">
-                 <label class="section-title">Pending Tasks</label>
-                 <table class="table table-orange">
-                   <thead>
-                   <tr>
-                     <td>ID</td>
-                     <td>Task</td>
-                     <td>Target</td>
-                     <td>Deadline</td>
-                   </tr>
-                   </thead>
-                 </table>
+               <div class="col-4">
+                 <label class="section-title">Performa Anda</label>
+                 <hr>
+                 @if(!empty($performa_saya))
+                 <ul class="list-group">
+                  <li class="list-group-item">
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">{{$performa_saya->jumlah_task_minggu_ini}}</span></p>
+                  </li>
+                  <li class="list-group-item">
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Terlambat Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">{{$performa_saya->jumlah_task_pending_minggu_ini}}</span></p>
+                  </li>
+                  <li class="list-group-item">
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Minggu ini:</strong><br> <span class="tx-success align-right">{{$performa_saya->performa_minggu_ini}}</span></p>
+                  </li>
+                  <li class="list-group-item">
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Bulan ini:</strong><br> <span class="text-success align-right">{{$performa_saya->performa_bulan_ini}}</span></p>
+                  </li>
+                  <li class="list-group-item">
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Lihat Logbook:</strong><br> <span class="text-muted"><a href="{{url('logbook-harian')}}">Harian</a></span> <span class="text-muted">|
+                      <a href="{{url('logbook-mingguan')}}"> Mingguan </a></span>|
+                      <a href="{{url('logbook-bulanan')}}">Bulanan</a></p>
+                  </li>
+                </ul>
+                @else
+                <ul class="list-group">
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">Belum ada Data!</span></p>
+                 </li>
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Terlambat Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">Belum ada Data!</span></p>
+                 </li>
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Minggu ini:</strong><br> <span class="align-right">Belum ada Data!</span></p>
+                 </li>
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Bulan ini:</strong><br> <span class="align-right">Belum ada Data!</span></p>
+                 </li>
+                 <li class="list-group-item">
+                   <p class="mg-b-0"><strong class="tx-inverse tx-medium">Lihat Logbook:</strong><br> <span style="display:none;" class="text-muted"><a href="{{url('logbook-harian')}}">Harian</a></span>
+                     <span style="display:none;" class="text-muted"> | <a style="display:none;" href="{{url('logbook-mingguan')}}"> Mingguan </a></span>
+                     <span style="display:none;" class="text-muted"> | <a style="display:none;" href="{{url('logbook-bulanan')}}">Bulanan</a></span></p>
+                 </li>
+               </ul>
+                @endif
                </div>
              </div>
              @endif
+             <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
+             <!--                                         MODALS                                           -->
+             <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
                    <div class="modal fade" id="tambahlogbook" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
                      <div class="modal-dialog modal-lg">
                        <div class="modal-content">
@@ -600,7 +749,7 @@
                          <div class="modal-body">
                            <div class="form-layout">
                              <div class="row mg-b-25">
-                               <div class="col-12">
+                               <div class="col-6">
                                  <div class="form-group">
                                    <form method="post" action="{{route('logbook.store')}}">
                                     @csrf
@@ -612,23 +761,24 @@
                                    </select>
                                  </div>
                                </div>
-                               <div class="col-12">
+                               <div class="col-6">
                                  <div class="form-group">
                                    <label class="form-control-label">Target: <span class="tx-danger">*</span></label>
-                                   <textarea class="form-control" type="text" name="target"></textarea>
+                                   <input class="form-control" type="text" name="target">
                                  </div>
                                </div>
-                               <div class="col-12">
+                               <div class="col-9">
                                  <div class="form-group">
                                    <label class="form-control-label">Log Hari ini: <span class="tx-danger">*</span></label>
                                    <textarea class="form-control" type="text" name="log"></textarea>
                                  </div>
                                </div>
-                               <div class="col-12">
+                               <div class="col-3">
                                  <div class="form-group">
                                    <label class="form-control-label">Status <span class="tx-danger">*</span></label>
                                    <select name="status" class="form-control select2" data-placeholder="Choose one">
                                      <option>Selesai</option>
+                                     <option>Tidak Selesai</option>
                                      <option>Ditunda</option>
                                      <option>Dibatalkan</option>
                                    </select>
@@ -638,7 +788,76 @@
                            </div>
                          </div>
                          <div class="modal-footer" style="text-align:right;">
+                           @if(empty($program))
+                           <span class="tx-danger"><strong>Belum ada Task yang diamanahkan!</strong></span>
+                           <button type="submit" class="btn btn-primary bd-0" disabled>Tambahkan</button><br>
+                           @else
                            <button type="submit" class="btn btn-primary bd-0">Tambahkan</button>
+                           @endif
+                           <button type="button" class="btn btn-secondary" class="close" data-dismiss="modal">Cancel</button>
+                            </form>
+                           <!-- <button type="submit" class="btn btn-primary">Update</button> -->
+                         </div>
+                       </div>
+                     </div><!-- modal-dialog -->
+                   </div><!-- modal -->
+                   <div class="modal fade" id="tambahlogbookofficer" tabindex="-1" role="dialog" aria-labelledby="ConfigUpdateLabel" aria-hidden="true">
+                     <div class="modal-dialog modal-lg">
+                       <div class="modal-content">
+                         <div class="modal-header">
+                           <h6 class="modal-title" id="ConfigUpdateLabel">Tambahkan Logbook Harian</h6>
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                           </button>
+                         </div>
+                         <div class="modal-body">
+                           <div class="form-layout">
+                             <div class="row mg-b-25">
+                               <div class="col-6">
+                                 <div class="form-group">
+                                   <form method="post" action="{{route('logbook.store')}}">
+                                    @csrf
+                                   <label class="form-control-label">Program Kerja Terkait <span class="tx-danger">*</span></label>
+                                   <select name="id" class="form-control select2" data-placeholder="Choose one">
+                                     @foreach($proker_dari_dvp as $program)
+                                     <option value="{{$program->id}}">{{$program->program_kerja}}</option>
+                                     @endforeach
+                                   </select>
+                                 </div>
+                               </div>
+                               <div class="col-6">
+                                 <div class="form-group">
+                                   <label class="form-control-label">Target: <span class="tx-danger">*</span></label>
+                                   <input class="form-control" type="text" name="target">
+                                 </div>
+                               </div>
+                               <div class="col-9">
+                                 <div class="form-group">
+                                   <label class="form-control-label">Log Hari ini: <span class="tx-danger">*</span></label>
+                                   <textarea class="form-control" type="text" name="log"></textarea>
+                                 </div>
+                               </div>
+                               <div class="col-3">
+                                 <div class="form-group">
+                                   <label class="form-control-label">Status <span class="tx-danger">*</span></label>
+                                   <select name="status" class="form-control select2" data-placeholder="Choose one">
+                                     <option>Selesai</option>
+                                     <option>Tidak Selesai</option>
+                                     <option>Ditunda</option>
+                                     <option>Dibatalkan</option>
+                                   </select>
+                                 </div>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                         <div class="modal-footer" style="text-align:right;">
+                           @if(empty($program))
+                           <span class="tx-danger"><strong>Belum ada Task yang diamanahkan!</strong></span>
+                           <button type="submit" class="btn btn-primary bd-0" disabled>Tambahkan</button><br>
+                           @else
+                           <button type="submit" class="btn btn-primary bd-0">Tambahkan</button>
+                           @endif
                            <button type="button" class="btn btn-secondary" class="close" data-dismiss="modal">Cancel</button>
                             </form>
                            <!-- <button type="submit" class="btn btn-primary">Update</button> -->

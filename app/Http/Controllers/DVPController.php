@@ -11,6 +11,7 @@ use App\Logbook;
 use App\Divisi;
 use App\Manajer;
 use Carbon\Carbon;
+use App\Performa;
 use Illuminate\Support\Facades\Auth;
 
 class DVPController extends Controller
@@ -32,6 +33,18 @@ class DVPController extends Controller
       $sub_divisi = Auth::user()->sub_divisi;
       $kelas_jabatan = Auth::user()->kelas_jabatan;
       $jabatan = Auth::user()->jabatan;
+      $all = Task::all();
+      // foreach($all as $program){
+      //   if($program->progres != 0 || $program->progres != 100 ){
+      //     Task::where('id',$program->id)->update([
+      //       'status_task'=>"Sedang Diproses"
+      //     ]);
+      //   }elseif($program->progres == 100){
+      //     Task::where('id',$program->id)->update([
+      //       'status_task'=>"Selesai"
+      //     ]);
+      //   };
+      // }
       $nipp = Auth::user()->nipp;
       $program_vp = Manajer::where('nipp_pj',$nipp)->where('status_proker','Sedang Diproses')->get();
       $semua_dpv = User::where('supervisor_nipp',$nipp)->get();
@@ -100,6 +113,7 @@ class DVPController extends Controller
       $insert->hari = $date->dayOfWeek;
       $insert->bulan = $start_date->month;
       $insert->tahun = $start_date->year;
+      $insert->bobot = $request->bobot;
       $insert->save();
       return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Ditambahkan!');
     }
@@ -239,11 +253,17 @@ class DVPController extends Controller
         'due_date'=>$request->due_date,
         'keterangan'=>$request->keterangan
       ]);
-        return redirect('home')->with('success','Sukses Memperingatkan Tugas DVP dan diberikan keterangan!');
+        return redirect('home')->with('success','Sukses Menunda Tugas VP dan diberikan keterangan!');
     }
 
     public function assign_task(Request $request)
     {
+      $program = Task::where('id',$request->id)->first();
+      if(!empty($program->id_prokerkait)){
+        Task::where('id', $program->id_prokerkait)->update([
+          'status_task'=>"Sedang Diproses"
+        ]);
+      };
       Task::where('id',$request->id)->update([
         'target'=>$request->target,
         'nipp_pj'=>$request->nipp_pj,
@@ -251,5 +271,113 @@ class DVPController extends Controller
         'keterangan'=>"Proker Belum Direspon oleh Officer Terkait"
       ]);
       return redirect('home')->with('success','Sukses Memberikan Tugas ke Officer!');
+    }
+
+    public function konfirmasi($id){
+      $today = Carbon::now()->setTimezone('Asia/Jakarta');
+      $program = Task::find($id);
+      if(!empty($program->id_prokerkait)){
+      $program_terkait = Task::find($program->id_prokerkait);
+      $program_vp_terkait = Manajer::find($program_terkait->id_provp);
+        $progres = $program_terkait->progres + $program->bobot;
+        if($progres == 100){
+          Task::where('id',$program->id_prokerkait)->update([
+            'progres' => $progres,
+            'status_task'=> "Selesai",
+            'keterangan'=>"Program Kerja sudah selesai pada ".$today,
+            'selesai_pada'=>$today
+          ]);
+        }else{
+          Task::where('id',$program->id_prokerkait)->update([
+            'progres' => $progres,
+            'keterangan'=>"Update progres pada ".$today,
+          ]);
+        };
+        Task::where('id',$id)->update([
+          'status_task'=>"Selesai",
+          'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today,
+          'selesai_pada'=>$today,
+        ]);
+        if($program_terkait->status_proker == "Selesai"){
+          $progres = $program_vp_terkait->progres + $program_terkait->bobot;
+          if($progres == 100){
+            Manajer::where('id',$program_terkait->id_provp)->update([
+              'progres' => $progres,
+              'status_proker'=> "Selesai",
+              'keterangan'=>"Program Kerja sudah selesai pada ".$today,
+              'selesai_pada'=>$today
+            ]);
+          }else{
+            Manajer::where('id',$program_terkait->id_provp)->update([
+              'progres' => $progres,
+              'keterangan'=>"Update progres pada Sebesar".$program_terkait->bobot." pada ".$today,
+            ]);
+          };
+        }
+      }else{
+        Task::where('id',$id)->update([
+          'status_task'=>"Selesai",
+          'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today,
+          'progres'=>"100",
+          'selesai_pada'=>$today,
+        ]);
+      };
+      $performa = Performa::where('nipp',$program->nipp_pj)->first();
+      if(empty($performa)){
+        $insert = new Performa;
+        $insert->nipp = $program->nipp_pj;
+        $insert->supervisor_nipp = Auth::user()->nipp;
+        $insert->save();
+      };
+      // $update_performa_mingguan = $performa->jumlah_task_sukses_minggu_ini + 1;
+      // $update_performa_bulanan = $performa->jumlah_task_sukses_bulan_ini + 1;
+      // $update_performa_tahunan = $performa->jumlah_task_sukses_tahun_ini + 1;
+      // Performa::where('nipp',$program->nipp_pj)->update([
+      //   'minggu'=>$today->weekOfYear,
+      //   'jumlah_task_sukses_minggu_ini'=>$update_performa_mingguan,
+      //   'bulan'=>$today->month,
+      //   'jumlah_task_sukses_bulan_ini'=>$update_performa_bulanan,
+      //   'tahun'=>$today->year,
+      //   'jumlah_task_sukses_tahun_ini'=>$update_performa_tahunan
+      // ]);
+      return redirect('home')->with('success','Sukses Mengkonfirmasi Tugas Officer!');
+    }
+
+    public function reject_page($id){
+      $program = Task::find($id);
+      return view('pages.dashboard.reject.dvp', compact('program'));
+    }
+    public function reject_task(Request $request, $id){
+      Task::where('id',$id)->update([
+        'status_task'=>"Ditolak",
+        'keterangan'=>$request->keterangan
+      ]);
+        return redirect('home')->with('success','Sukses Menolak Tugas Officer dan diberikan keterangan!');
+    }
+
+    public function batalkan_page($id){
+      $program = Task::find($id);
+      return view('pages.dashboard.batalkan.dvp', compact('program'));
+    }
+
+    public function batalkan_task(Request $request, $id){
+      Task::where('id',$id)->update([
+        'status_task'=>"Dibatalkan",
+        'keterangan'=>$request->keterangan
+      ]);
+        return redirect('home')->with('success','Sukses Membatalkan Tugas Officer dan diberikan keterangan!');
+    }
+
+    public function peringatkan_page($id){
+      $program = Task::find($id);
+      return view('pages.dashboard.peringatkan.dvp', compact('program'));
+    }
+
+    public function peringatkan_task(Request $request, $id){
+      Task::where('id',$id)->update([
+        'status_task'=>"Diperingatkan",
+        'keterangan'=>$request->keterangan
+      ]);
+        return redirect('home')->with('success','Sukses Memperingatkan Tugas Officer dan diberikan keterangan!');
     }
 }

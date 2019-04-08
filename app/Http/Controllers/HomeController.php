@@ -47,7 +47,7 @@ class HomeController extends Controller
         $now->setTimezone('Asia/Jakarta');
         $officer = User::where('supervisor_nipp',$nipp)->get();
         $company = Company::find(1);
-        $performa_saya = Performa::where('nipp',$nipp)->get();
+        $performa_saya = Performa::where('nipp',$nipp)->first();
         ############################ UNTUK DIREKSI ####################################
         $direksi = Direksi::where('divisi',$divisi)->get();
         ###############################################################################
@@ -64,8 +64,11 @@ class HomeController extends Controller
         $proker_dari_vp = Manajer::where('nipp_pj',$nipp)->get();
         $proker_dvp = Task::where('nipp',$nipp)->get();
         $today = Carbon::now()->format('Y-m-d');
-        $logbook_harian = Logbook::where('nipp',Auth::user()->nipp)->where('hari',$now->dayOfWeek)->get();
+        $logbook_harian = Logbook::where('nipp',Auth::user()->nipp)->where('hari',$now->dayOfWeek)->where('minggu',$now->weekOfYear)->where('bulan',$now->month)->where('tahun',$now->year)->get();
         ###############################################################################
+        ############################### UNTUK Officer #################################
+        $proker_dari_dvp = Task::where('nipp_pj',$nipp)->get();
+        $exist_proker_dari_dvp = Task::where('nipp_pj',$nipp)->first();
         return view('pages.dashboard',compact(
           'performa_saya',
           'performa_dvp',
@@ -83,6 +86,8 @@ class HomeController extends Controller
           'proker_vp_settahunan',
           'proker_vp_tahunan',
           'proker_dari_vp',
+          'proker_dari_dvp',
+          'exist_proker_dari_dvp',
           'proker_dvp',
           'logbook_harian',
           'company'

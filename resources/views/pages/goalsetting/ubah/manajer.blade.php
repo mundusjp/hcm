@@ -70,10 +70,16 @@
                   </select>
                 </div>
               </div><!-- col-6 -->
-              <div class="col-lg-12">
+              <div class="col-lg-10">
                 <div class="form-group">
                   <label class="form-control-label">Program Kerja <span class="tx-danger">*</span></label>
                   <textarea required name="proker" class="form-control" type="text">{{$program->program_kerja}}</textarea>
+                </div>
+              </div><!-- col-9 -->
+              <div class="col-lg-2">
+                <div class="form-group">
+                  <label class="form-control-label">Bobot <span class="tx-danger">*</span></label>
+                  <input required name="bobot" class="form-control" type="number" max="100" min="1" value="1">
                 </div>
               </div><!-- col-9 -->
               <div class="col-lg-6">

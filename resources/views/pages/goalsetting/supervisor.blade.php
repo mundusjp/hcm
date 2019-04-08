@@ -37,9 +37,11 @@
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td style="width:30px">No</td>
-                  <td style="width:500px">Program Kerja</td>
-
+                  <th style="width:30px">No</th>
+                  <th style="width:500px">Program Kerja</th>
+                  <th style="width:50px">Deadline</th>
+                  <th style="width:150px">Progres</th>
+                  <th style="width:150px">Status</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -50,7 +52,24 @@
                   <?php $i++;?>
                   <tr>
                   <th scope="row">{{$i}}</th>
-                  <td>{{$program->program_kerja}}</td>
+                  <td style="width:500px">{{$program->program_kerja}}</td>
+                  <td>{{$program->due_date}}</td>
+                  <td >
+                    <div class="progress mg-b-5">
+                      <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                    </div>
+                  </td>
+                  @if($program->status_task == "Belum Direspon" || $program->status_task == "Belum Disampaikan")
+                  <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_task}}</span></td>
+                  @elseif($program->status_task == "Sedang Diproses")
+                  <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_task}}</span></td>
+                  @elseif($program->status_task == "Terlambat" || $program->status_task == "Diperingatkan" || $program->status_task == "Ditunda" || $program->status_task == "Konfirmasi Dibatalkan")
+                  <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_task}}</span></td>
+                  @elseif($program->status_task == "Dibatalkan")
+                  <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_task}}</span></td>
+                  @else
+                  <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_task}}</span></td>
+                  @endif
                 </tr>
                 @endforeach
               </table>
@@ -76,14 +95,13 @@
               <table class="table table-orange">
                 <thead>
                 <tr>
-                  <td>No</td>
-                  <td>Program Kerja</td>
-                  @if(($kelas_jabatan > 8 && $kelas_jabatan != "TNO")||($jabatan == "Superadmin"))
-                  <td>Mulai</td>
-                  <td>Berakhir</td>
-                  <td>Ubah</td>
-                  <td>Hapus</td>
-                  @endif
+                  <th style="width:30px">No</th>
+                  <th style="width:500px">Program Kerja</th>
+                  <th style="width:50px">Deadline</th>
+                  <th style="width:150px">Progres</th>
+                  <th style="width:150px">Status</th>
+                  <th>Ubah</th>
+                  <th>Hapus</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -91,11 +109,25 @@
                   @foreach($tugas as $program)
                   <?php $i++;?>
                   <tr>
-                  <th style="width:30px" scope="row">{{$i}}</th>
-                  <td style="width:500px">{{$program->program_kerja}}</td>
-                  @if(($kelas_jabatan > 8 && $kelas_jabatan != "TNO")||($jabatan == "Superadmin"))
-                  <td style="width:150px">{{$program->mulai}}</td>
-                  <td style="width:150px">{{$program->berakhir}}</td>
+                    <th scope="row">{{$i}}</th>
+                    <td style="width:500px">{{$program->program_kerja}}</td>
+                    <td>{{$program->due_date}}</td>
+                    <td >
+                      <div class="progress mg-b-5">
+                        <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                      </div>
+                    </td>
+                    @if($program->status_task == "Belum Direspon" || $program->status_task == "Belum Disampaikan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_task}}</span></td>
+                    @elseif($program->status_task == "Sedang Diproses")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_task}}</span></td>
+                    @elseif($program->status_task == "Terlambat" || $program->status_task == "Diperingatkan" || $program->status_task == "Ditunda" || $program->status_task == "Konfirmasi Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_task}}</span></td>
+                    @elseif($program->status_task == "Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_task}}</span></td>
+                    @else
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_task}}</span></td>
+                    @endif
                   <td>
                     <form id="edit" action="{{route('deputy-vice-president.edit',$program->id)}}" method="get">
                     @csrf
@@ -109,7 +141,6 @@
                     <button class="btn btn-outline-danger" type="submit">Hapus</button>
                   </td>
                   </form>
-                  @endif
                 </tr>
                 @endforeach
               </table>
@@ -118,6 +149,45 @@
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               @else
                 <label class="section-title">Program Kerja Deputy Vice Director {{Auth::user()->sub_subdivisi}}</label>
+                <table class="table table-orange">
+                  <thead>
+                  <tr>
+                    <th style="width:30px">No</th>
+                    <th style="width:500px">Program Kerja</th>
+                    <th style="width:50px">Deadline</th>
+                    <th style="width:150px">Progres</th>
+                    <th style="width:150px">Status</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <?php $i=0;
+                    $proker_dvp = App\Task::where('nipp_pj',Auth::user()->nipp)->get();
+                    ?>
+                    @foreach($proker_dvp as $program)
+                    <?php $i++;?>
+                    <tr>
+                    <th scope="row">{{$i}}</th>
+                    <td style="width:500px">{{$program->program_kerja}}</td>
+                    <td>{{$program->due_date}}</td>
+                    <td >
+                      <div class="progress mg-b-5">
+                        <div class="progress-bar progress-bar-lg bg-warning wd-{{$program->progres}}p" role="progressbar" aria-valuenow="{{$program->progres}}" aria-valuemin="0" aria-valuemax="100">{{$program->progres}}%</div>
+                      </div>
+                    </td>
+                    @if($program->status_task == "Belum Direspon" || $program->status_task == "Belum Disampaikan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-dark">{{$program->status_task}}</span></td>
+                    @elseif($program->status_task == "Sedang Diproses")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-info">{{$program->status_task}}</span></td>
+                    @elseif($program->status_task == "Terlambat" || $program->status_task == "Diperingatkan" || $program->status_task == "Ditunda" || $program->status_task == "Konfirmasi Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-warning">{{$program->status_task}}</span></td>
+                    @elseif($program->status_task == "Dibatalkan")
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_task}}</span></td>
+                    @else
+                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_task}}</span></td>
+                    @endif
+                  </tr>
+                  @endforeach
+                </table>
               @endif
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               <!--                                             MODALS                                                          -->
@@ -169,10 +239,16 @@
                                       </select>
                                     </div>
                                   </div><!-- col-12 -->
-                                  <div class="col-lg-12">
+                                  <div class="col-lg-10">
                                     <div class="form-group">
                                       <label class="form-control-label">Program Kerja <span class="tx-danger">*</span></label>
                                       <textarea required name="proker" class="form-control" type="text"></textarea>
+                                    </div>
+                                  </div><!-- col-9 -->
+                                  <div class="col-lg-2">
+                                    <div class="form-group">
+                                      <label class="form-control-label">Bobot <span class="tx-danger">*</span></label>
+                                      <input required name="bobot" class="form-control" type="number" min="1" max="100" value="1">
                                     </div>
                                   </div><!-- col-9 -->
                                   <div class="col-lg-6">

@@ -26,6 +26,17 @@ class DireksiController extends Controller
      */
     public function index()
     {
+      function update_status(){
+        $all = Direksi::all();
+        foreach($all as $program){
+          if($program->status_proker == "Belum Diproses"){
+            $check = Manajer::where('id_prodir', $program->id)->first();
+            if(!empty($check)){
+              Direksi::where('id',$program->id)->update(['status_proker'=>"Sedang Diproses"]);
+            };
+          };
+        }
+      }
       $now = Carbon::now()->setTimezone('Asia/Jakarta');
       $nipp = Auth::user()->nipp;
       $nama = Auth::user()->nama;
@@ -36,6 +47,7 @@ class DireksiController extends Controller
       $seluruh_divisi = Divisi::all();
       $direksi = Direksi::where('divisi',$divisi)->get();
       $program_direksi_utama = Direksi::where('divisi','Utama')->get();
+      update_status();
       return view('pages.goalsetting.direksi',compact(
         'now',
         'nipp',

@@ -38,6 +38,7 @@ Route::resource('direksi', 'DireksiController');
 Route::post('get-divisi','DireksiController@get_divisi')->name('get-divisi');
 Route::get('direksi.edit-target/{id}/edit','DireksiController@edit_target')->name('direksi.edit-target');
 Route::match(['put', 'patch'], 'direksi.update-target/{id}','DireksiController@update_target')->name('direksi.update-target');
+Route::get('update-program','DireksiController@update_status')->name('update-program');
 // Route::get('direksi','GoalsettingController@index_direksi');
 // Route::post('direksi-insert','GoalsettingController@insert_misi_direksi')->name('direksi-insert');
 // Route::post('direksi-edit','GoalsettingController@edit_misi_direksi')->name('direksi-edit');
@@ -73,12 +74,27 @@ Route::get('deputy-vice-president.selesai-page/{id}', 'DVPController@selesai_pag
 Route::match(['put', 'patch'], 'deputy-vice-president.selesai/{id}','DVPController@selesai')->name('deputy-vice-president.selesai');
 Route::get('deputy-vice-president.tunda-page/{id}', 'DVPController@tunda_page')->name('deputy-vice-president.tunda-page');
 Route::match(['put', 'patch'], 'deputy-vice-president.tunda/{id}','DVPController@tunda_task')->name('deputy-vice-president.tunda');
+Route::get('deputy-vice-president.reject-page/{id}', 'DVPController@reject_page')->name('deputy-vice-president.reject-page');
+Route::match(['put', 'patch'], 'deputy-vice-president.reject/{id}','DVPController@reject_task')->name('deputy-vice-president.reject');
+Route::get('deputy-vice-president.peringatkan-page/{id}', 'DVPController@peringatkan_page')->name('deputy-vice-president.peringatkan-page');
+Route::match(['put', 'patch'], 'deputy-vice-president.peringatkan/{id}','DVPController@peringatkan_task')->name('deputy-vice-president.peringatkan');
+Route::get('deputy-vice-president.batalkan-page/{id}', 'DVPController@batalkan_page')->name('deputy-vice-president.batalkan-page');
+Route::match(['put', 'patch'], 'deputy-vice-president.batalkan/{id}','DVPController@batalkan_task')->name('deputy-vice-president.batalkan');
+Route::get('deputy-vice-president.peringatkan-page/{id}', 'DVPController@peringatkan_page')->name('deputy-vice-president.peringatkan-page');
+Route::match(['put', 'patch'], 'deputy-vice-president.konfirmasi/{id}','DVPController@konfirmasi')->name('deputy-vice-president.konfirmasi');
 // Route::get('supervisor','GoalsettingController@index_supervisor');
 // Route::post('supervisor-insert','GoalsettingController@insert_misi_supervisor')->name('supervisor-insert');
 // Route::post('supervisor-edit','GoalsettingController@edit_misi_supervisor')->name('supervisor-edit');
 // Route::post('supervisor-update','GoalsettingController@update_misi_supervisor')->name('supervisor-update');
 // Route::post('supervisor-delete','GoalsettingController@delete_misi_supervisor')->name('supervisor-delete');
-
+// -------------------------------------------------------------------------------
+//                                 Officer & TNO
+Route::match(['put', 'patch'], 'officer.proses/{id}','OfficerController@proses')->name('officer.proses');
+Route::match(['put', 'patch'], 'officer.batal-selesai/{id}','OfficerController@batal_selesai')->name('officer.batal-selesai');
+Route::get('officer.selesai-page/{id}', 'OfficerController@selesai_page')->name('officer.selesai-page');
+Route::match(['put', 'patch'], 'officer.selesai/{id}','OfficerController@selesai')->name('officer.selesai');
+Route::get('officer.tunda-page/{id}', 'OfficerController@tunda_page')->name('officer.tunda-page');
+Route::match(['put', 'patch'], 'officer.tunda/{id}','OfficerController@tunda_task')->name('officer.tunda');
 // -------------------------------------------------------------------------------
 //                                 USER ROUTES
 // -------------------------------------------------------------------------------

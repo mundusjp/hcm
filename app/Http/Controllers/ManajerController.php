@@ -11,6 +11,7 @@ use App\Logbook;
 use App\Divisi;
 use App\Manajer;
 use Carbon\Carbon;
+use App\Performa;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,6 +34,18 @@ class ManajerController extends Controller
       $kelas_jabatan = Auth::user()->kelas_jabatan;
       $jabatan = Auth::user()->jabatan;
       $now = Carbon::now();
+      $all = Manajer::all();
+      // foreach($all as $program){
+      //   if($program->progres != 0 || $program->progres != 100 ){
+      //     Manajer::where('id',$program->id)->update([
+      //       'status_proker'=>"Sedang Diproses"
+      //     ]);
+      //   }elseif($program->progres == 100){
+      //     Manajer::where('id',$program->id)->update([
+      //       'status_task'=>"Selesai"
+      //     ]);
+      //   };;
+      // }
       $now->setTimezone('Asia/Jakarta');
       $all_vp = User::where('kelas_jabatan','<=','8')->get();
       $vp = User::where('supervisor_nipp',$nipp)->where('kelas_jabatan','<=','8')->where('kelas_jabatan','>=','6')->get();
@@ -78,7 +91,7 @@ class ManajerController extends Controller
      */
     public function store(Request $request)
     {
-      $now = Carbon::now(); 
+      $now = Carbon::now();
       $now->setTimezone('Asia/Jakarta');
       $insert = new Manajer;
       $id1 = $request->program_direksi;
@@ -119,6 +132,7 @@ class ManajerController extends Controller
       $insert->hari = $date->dayOfWeek;
       $insert->bulan = $start_date->month;
       $insert->tahun = $start_date->year;
+      $insert->bobot = $request->bobot;
       $insert->save();
       return redirect('vice-president')->with('success', 'Program Vice President Berhasil Ditambahkan!');
     }
@@ -243,6 +257,12 @@ class ManajerController extends Controller
 
     public function assign_task(Request $request)
     {
+      $program = Manajer::where('id',$request->id)->first();
+      if(!empty($program->id_prokerkait)){
+        Manajer::where('id', $program->id_prokerkait)->update([
+          'status_proker'=>"Sedang Diproses"
+        ]);
+      };
       Manajer::where('id',$request->id)->update([
         'target'=>$request->target,
         'nipp_pj'=>$request->nipp_pj,
@@ -254,12 +274,70 @@ class ManajerController extends Controller
 
     public function konfirmasi($id){
       $today = Carbon::now()->setTimezone('Asia/Jakarta');
-      Manajer::where('id',$id)->update([
-        'status_proker'=>"Selesai",
-        'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today,
-        'selesai_pada'=>$today
-      ]);
-        return redirect('home')->with('success','Sukses Menolak Tugas DVP dan diberikan keterangan!');
+      $program = Manajer::find($id);
+      if(!empty($program->id_prokerkait)){
+      $program_terkait = Manajer::find($program->id_prokerkait);
+      $program_direksi_terkait = Direksi::find($program_terkait->id_prodir);
+        $progres = $program_terkait->progres + $program->bobot;
+        Manajer::where('id',$id)->update(['progres'=>"100"]);
+        if($progres == 100){
+          Manajer::where('id',$program->id_prokerkait)->update([
+            'progres' => $progres,
+            'status_proker'=> "Selesai",
+            'keterangan'=>"Program Kerja sudah selesai pada ".$today,
+            'selesai_pada'=>$today
+          ]);
+        }else{
+          Manajer::where('id',$program->id_prokerkait)->update([
+            'progres' => $progres,
+            'keterangan'=>"Update progres pada ".$today,
+          ]);
+        };
+        Manajer::where('id',$id)->update([
+          'status_proker'=>"Selesai",
+          'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today,
+          'selesai_pada'=>$today,
+        ]);
+        if($program_terkait->status_proker == "Selesai"){
+          $progres = $program_direksi_terkait->progres + $program_terkait->bobot;
+          if($progres == 100){
+            Direksi::where('id',$program_terkait->id_prodir)->update([
+              'progres' => $progres,
+              'status_proker'=> "Selesai",
+              'keterangan'=>"Program Kerja sudah selesai pada ".$today,
+              'selesai_pada'=>$today
+            ]);
+          }else{
+            Direksi::where('id',$program_terkait->id_prodir)->update([
+              'progres' => $progres,
+              'keterangan'=>"Update progres pada Sebesar".$program_terkait->bobot." pada ".$today,
+            ]);
+          };
+        }
+      }else{
+        Manajer::where('id',$id)->update([
+          'status_proker'=>"Selesai",
+          'keterangan'=>"Tugas sudah selesai dan dikonfirmasi pada ".$today,
+          'progres'=>"100",
+          'selesai_pada'=>$today,
+        ]);
+      };
+      $performa = Performa::where('nipp',$program->nipp_pj)->first();
+      if(empty($performa)){
+        $insert = new Performa;
+        $insert->nipp = $program->nipp_pj;
+        $insert->supervisor_nipp = Auth::user()->nipp;
+        $insert->save();
+      };
+      // $update_performa_mingguan = $performa->jumlah_task_sukses_minggu_ini + 1;
+      // $update_performa_bulanan = $performa->jumlah_task_sukses_bulan_ini + 1;
+      // $update_performa_tahunan = $performa->jumlah_task_sukses_tahun_ini + 1;
+      // Performa::where('nipp',$program->nipp_pj)->update([
+      //   'jumlah_task_sukses_minggu_ini'=>$update_performa_mingguan,
+      //   'jumlah_task_sukses_bulan_ini'=>$update_performa_bulanan,
+      //   'jumlah_task_sukses_tahun_ini'=>$update_performa_tahunan
+      // ]);
+      return redirect('home')->with('success','Sukses Mengkonfirmasi Tugas DVP!');
     }
 
     public function reject_page($id){
