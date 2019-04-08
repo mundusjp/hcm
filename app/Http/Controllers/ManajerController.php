@@ -78,7 +78,7 @@ class ManajerController extends Controller
      */
     public function store(Request $request)
     {
-      $now = Carbon::now();
+      $now = Carbon::now(); 
       $now->setTimezone('Asia/Jakarta');
       $insert = new Manajer;
       $id1 = $request->program_direksi;
