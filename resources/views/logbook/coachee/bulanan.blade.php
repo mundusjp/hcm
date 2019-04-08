@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>HTML to API - Invoice</title>
+	<title>PT Indonesia Kendaraan Terminal, Tbk. - Logbook Bulanan {{Auth::user()->nipp}} - {{Carbon\Carbon::now()->format('Y-m-d')}}</title>
 	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 	<!-- <link rel="stylesheet" href="sass/main.css" media="screen" charset="utf-8"/> -->
 	<meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -45,6 +45,14 @@
 			text-align: left;
 			font-weight: normal;
 			vertical-align: middle;
+		}
+
+		img {
+			max-width: 100%;
+		}
+		img.thumbnail {
+			width: 100px;
+			height: 70px;
 		}
 
 		q, blockquote {
@@ -117,7 +125,9 @@
 			text-align: center;
 		}
 		header figure img {
-			margin-top: 13px;
+			width: 45px;
+			height: 45px;
+			margin-top: 5px;
 		}
 		header .company-address {
 			float: left;
@@ -188,11 +198,21 @@
 			border-spacing: 0;
 			font-size: 0.9166em;
 		}
-		section table .qty, section table .unit, section table .total {
+		section table .qty, section table .unit {
+			width: 10%;
+		}
+		section table .total {
 			width: 15%;
 		}
-		section table .desc {
-			width: 55%;
+
+		section table .trgt{
+			width:20%;
+		}
+		section table .lgbk {
+			width: 40%;
+		}
+		section table .no {
+			width: 5%;
 		}
 		section table thead {
 			display: table-header-group;
@@ -212,10 +232,17 @@
 		section table thead th:last-child {
 			border-right: none;
 		}
+		section table thead .no {
+			text-align: center;
+		}
 		section table thead .desc {
 			text-align: left;
 		}
 		section table thead .qty {
+			text-align: center;
+		}
+
+		section table thead .trgt {
 			text-align: center;
 		}
 		section table tbody td {
@@ -234,6 +261,10 @@
 			color: #f27510;
 			font-weight: 600;
 		}
+		section table tbody .no {
+			text-align: center;
+		}
+
 		section table tbody .desc {
 			text-align: left;
 		}
@@ -282,7 +313,7 @@
 	<header class="clearfix">
 		<div class="container">
 			<figure>
-				<img class="logo" src="data:image/svg+xml;charset=utf-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjM5cHgiIGhlaWdodD0iMzFweCIgdmlld0JveD0iMCAwIDM5IDMxIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggMy40LjEgKDE1NjgxKSAtIGh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaCAtLT4KICAgIDx0aXRsZT5ob21lNDwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggU2tldGNoLjwvZGVzYz4KICAgIDxkZWZzPjwvZGVmcz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHNrZXRjaDp0eXBlPSJNU1BhZ2UiPgogICAgICAgIDxnIGlkPSJJTlZPSUNFLTEiIHNrZXRjaDp0eXBlPSJNU0FydGJvYXJkR3JvdXAiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC00Mi4wMDAwMDAsIC00NS4wMDAwMDApIiBmaWxsPSIjRkZGRkZGIj4KICAgICAgICAgICAgPGcgaWQ9IlpBR0xBVkxKRSIgc2tldGNoOnR5cGU9Ik1TTGF5ZXJHcm91cCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMzAuMDAwMDAwLCAxNS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxnIGlkPSJob21lNCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTIuMDAwMDAwLCAzMC4wMDAwMDApIiBza2V0Y2g6dHlwZT0iTVNTaGFwZUdyb3VwIj4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMzguMjc5MzM1LDE0LjAzOTk1MiBMMzIuMzc5MDM3OCw5LjAxMjMzODM1IEwzMi4zNzkwMzc4LDMuMjA0MzM2NzQgQzMyLjM3OTAzNzgsMi4xNTQ0MTY1MyAzMS4zODA1NTkyLDEuMzAzMjk3MjggMzAuMTQ2MDE3NiwxLjMwMzI5NzI4IEMyOC45MTQ2MTk2LDEuMzAzMjk3MjggMjcuOTE2MTQxMSwyLjE1NDQxNjUzIDI3LjkxNjE0MTEsMy4yMDQzMzY3NCBMMjcuOTE2MTQxMSw1LjIwOTMzODY1IEwyMy41MjI2OTc3LDEuNDY1NzY5OTggQzIxLjM1MDM4NzksLTAuMzgzODc0MjAyIDE3LjU3MzY3NTEsLTAuMzgwNjA5NjggMTUuNDA2NjcsMS40NjkwMzQ1IEwwLjY1MzA3ODA4NiwxNC4wMzk5NTIgQy0wLjIxNzU5NDQ1OCwxNC43ODM1MDk1IC0wLjIxNzU5NDQ1OCwxNS45ODY3Nzg1IDAuNjUzMDc4MDg2LDE2LjcyODk5NjYgQzEuNTI0NjM0NzYsMTcuNDcyNTU0MSAyLjkzOTQ0MDgxLDE3LjQ3MjU1NDEgMy44MTAxMTMzNSwxNi43Mjg5OTY2IEwxOC41NjIxMzM1LDQuMTU4MDc5MTUgQzE5LjA0MzAwMjUsMy43NTA2ODM2NSAxOS44ODk5MDE4LDMuNzUwNjgzNjUgMjAuMzY4MDIwMiw0LjE1NjgyMzU2IEwzNS4xMjIyOTk3LDE2LjcyODk5NjYgQzM1LjU2MDE0MTEsMTcuMTAwNzMzNSAzNi4xMzA0MDU1LDE3LjI4NTgwNjcgMzYuNzAwNjcsMTcuMjg1ODA2NyBDMzcuMjcyMDE1MSwxNy4yODU4MDY3IDM3Ljg0MzQ1ODQsMTcuMTAwNzMzNSAzOC4yNzk3MjgsMTYuNzI4OTk2NiBDMzkuMTUwNzkzNSwxNS45ODY3Nzg1IDM5LjE1MDc5MzUsMTQuNzgzNTA5NSAzOC4yNzkzMzUsMTQuMDM5OTUyIEwzOC4yNzkzMzUsMTQuMDM5OTUyIFoiIGlkPSJGaWxsLTEiPjwvcGF0aD4KICAgICAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMjAuMjQxMzkyOSw3Ljc2Njk2NTM5IEMxOS44MTI3ODU5LDcuNDAyMDA4NjcgMTkuMTE4OTM5NSw3LjQwMjAwODY3IDE4LjY5MTUxMTMsNy43NjY5NjUzOSBMNS43MTQyMzY3OCwxOC44MjEzMDM2IEM1LjUwOTMxNDg2LDE4Ljk5NTU3ODggNS4zOTMzOTU0NywxOS4yMzM5NzI1IDUuMzkzMzk1NDcsMTkuNDgyNDEwOSBMNS4zOTMzOTU0NywyNy41NDUzNTk2IEM1LjM5MzM5NTQ3LDI5LjQzNzE5MTQgNy4xOTM1ODQzOCwzMC45NzEwMTQxIDkuNDEzODMzNzUsMzAuOTcxMDE0MSBMMTUuODM4NzE1NCwzMC45NzEwMTQxIEwxNS44Mzg3MTU0LDIyLjQ5MjU1MDUgTDIzLjA5MjUxODksMjIuNDkyNTUwNSBMMjMuMDkyNTE4OSwzMC45NzEwMTQxIEwyOS41MTc4OTE3LDMwLjk3MTAxNDEgQzMxLjczODE0MTEsMzAuOTcxMDE0MSAzMy41MzgyMzE3LDI5LjQzNzE5MTQgMzMuNTM4MjMxNywyNy41NDUzNTk2IEwzMy41MzgyMzE3LDE5LjQ4MjQxMDkgQzMzLjUzODIzMTcsMTkuMjMzOTcyNSAzMy40MjMwOTgyLDE4Ljk5NTU3ODggMzMuMjE3NDg4NywxOC44MjEzMDM2IEwyMC4yNDEzOTI5LDcuNzY2OTY1MzkgWiIgaWQ9IkZpbGwtMyI+PC9wYXRoPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4=" alt="">
+				<img class="logo" src="{{asset('img/logos/weshine.png')}}">
 			</figure>
 			<div class="company-address">
 				<h2 class="title">{{$company->nama}}</h2>
@@ -311,14 +342,16 @@
 				<div class="client left">
 					<p>Logbook Milik:</p>
 					<h4 class="name">{{Auth::user()->nama}}</h4>
+					<p>NIPP: {{Auth::user()->nipp}}</p>
 					<p>{{Auth::user()->jabatan}}</p>
-					<a href="mailto:john@example.com">john@example.com</a>
+					<a href="mailto:{{Auth::user()->email}}">{{Auth::user()->email}}</a>
 				</div>
 				<div class="data right">
-					<div class="title">Invoice 3-2-1</div>
+					<div class="title">Logbook Bulanan</div>
 					<div class="date">
-						Date of Invoice: 01/06/2014<br>
-						Due Date: 30/06/2014
+						<p><strong style="font-weight:600;">Tanggal percetakan:</strong> {{Carbon\Carbon::now()->format('Y-m-d')}}</p>
+						<p><strong style="font-weight:600;">Untuk Bulan &emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;:</strong>&nbsp;&nbsp;&nbsp; {{$bulantahun}}</p>
+						<p><strong style="font-weight:600;">Jumlah Log&emsp;&emsp;&emsp;&nbsp;&nbsp;:</strong>&emsp;&emsp;&emsp;&emsp; {{$data->count()}}</p>
 					</div>
 				</div>
 			</div>
@@ -326,67 +359,76 @@
 			<table border="0" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
-						<th class="desc">Description</th>
-						<th class="qty">Quantity</th>
-						<th class="unit">Unit price</th>
-						<th class="total">Total</th>
+						<th class="no">No.</th>
+						<th class="desc">Log</th>
+						<th class="trgt">Target</th>
+						<th class="qty">Status</th>
+						<th class="unit">Hari</th>
+						<th class="total">Tanggal</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td class="desc"><h3>Website Design</h3>Creating a recognizable design solution based on the company's existing visual identity</td>
-						<td class="qty">30</td>
-						<td class="unit">$40.00</td>
-						<td class="total">$1,200.00</td>
-					</tr>
-					<tr>
-						<td class="desc"><h3>Website Development</h3>Developing a Content Management System-based Website</td>
-						<td class="qty">80</td>
-						<td class="unit">$40.00</td>
-						<td class="total">$3,200.00</td>
-					</tr>
-					<tr>
-						<td class="desc"><h3>Search Engines Optimization</h3>Optimize the site for search engines (SEO)</td>
-						<td class="qty">20</td>
-						<td class="unit">$40.00</td>
-						<td class="total">$800.00</td>
-					</tr>
+					<?php $i=0; ?>
+					<?php
+					$date_start = Carbon\Carbon::now()->setTimezone('Asia/Jakarta')->startOfMonth()->format('Y-m-d');
+					$start = Carbon\Carbon::createFromFormat('Y-m-d',$date_start)->weekOfYear;
+					for($j=1;$j<5;$j++){
+							$minggu =
+							"<tr>
+								<th colspan=\"6\"><h3>MINGGU KE-".$j."</h3></th>
+							</tr>
+							";
+							echo $minggu;
+							for($k=1;$k<6;$k++){
+									$hari =
+									"<tr>
+										<th colspan=\"6\"><h3>".$list_hari[$k]."</h3></th>
+									</tr>
+									";
+									echo $hari;
+									?>
+									@foreach($data as $log)
+									@if($log->hari == $k && $log->minggu == $start)
+										<?php $i++; ?>
+									<tr>
+										<td class="no">{{$i}}</td>
+										<td class="desc"><h3>{{$log->program_kerja_terkait}}</h3>{{$log->logbook}}</td>
+										<td class="trgt">{{$log->target}}</td>
+										<td class="qty">{{$log->status}}</td>
+										<td class="unit">{{$log->hari}}</td>
+										<td class="total">{{$log->tanggal}}</td>
+									</tr>
+									@endif
+									@endforeach
+									<?php
+							}
+							$start++;
+						}
+						?>
 				</tbody>
 			</table>
-			<div class="no-break">
-				<table class="grand-total">
-					<tbody>
-						<tr>
-							<td class="desc"></td>
-							<td class="qty"></td>
-							<td class="unit">SUBTOTAL:</td>
-							<td class="total">$5,200.00</td>
-						</tr>
-						<tr>
-							<td class="desc"></td>
-							<td class="qty"></td>
-							<td class="unit">TAX 25%:</td>
-							<td class="total">$1,300.00</td>
-						</tr>
-						<tr>
-							<td class="desc"></td>
-							<td class="unit" colspan="2">GRAND TOTAL:</td>
-							<td class="total">$6,500.00</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
 		</div>
 	</section>
 
 	<footer>
 		<div class="container">
-			<div class="thanks">Thank you!</div>
-			<div class="notice">
-				<div>NOTICE:</div>
-				<div>A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+			<br><br><br>
+			<div class="justifier" style="text-align:right;">
+			<h5 style="margin-right:30px">Mengetahui,</h5><br><br><br><br><br>
+			<div class="thanks" style="margin-right:30px">{{App\User::where('nipp',Auth::user()->supervisor_nipp)->first()->nama}}<br>
+				<strong style="color:black;">{{App\User::where('nipp',Auth::user()->supervisor_nipp)->first()->jabatan}}</strong>
 			</div>
-			<div class="end">Invoice was created on a computer and is valid without the signature and seal.</div>
+
+			</div>
+			<div class="notice">
+				<div>Perhatian:</div>
+				<div>Mohon berikan logbook ini secara rutin kepada atasan anda!</div>
+			</div>
+			<div class="end">Logbook ini diciptakan melalui applikasi human capital management system.<br><br>
+				<form>
+					<input class="btn btn-outline-warning" type="button" value="Print / Download Logbook" onClick="window.print()">
+				</form>
+			</div>
 		</div>
 	</footer>
 

@@ -96,11 +96,12 @@ Route::resource('tasks', 'TaskController');
 // -------------------------------------------------------------------------------
 
 Route::resource('logbook','LogbookController');
-Route::get('download-logbook-harian','LogbookController@export_harian')->name('download-logbook-harian');
-Route::get('download-logbook-mingguan','LogbookController@export_mingguan')->name('download-logbook-mingguan');
-Route::get('download-logbook-bulanan','LogbookController@export_bulanan')->name('download-logbook-bulanan');
-Route::get('logbook-harian','LogbookController@logbook_harian');
-
+Route::get('logbook-harian','LogbookController@export_harian')->name('logbook-harian');
+Route::get('logbook-mingguan','LogbookController@export_mingguan')->name('logbook-mingguan');
+Route::get('logbook-bulanan','LogbookController@export_bulanan')->name('logbook-bulanan');
+Route::get('logbook-harian/{id}','LogbookController@export_harian_coachee')->name('logbook-harian-coachee');
+Route::get('logbook-mingguan/{id}','LogbookController@export_mingguan_coachee')->name('logbook-mingguan-coachee');
+Route::get('logbook-bulanan/{id}','LogbookController@export_bulanan_coachee')->name('logbook-bulanan-coachee');
 // -------------------------------------------------------------------------------
 //                               GOALMATCHING ROUTES
 // -------------------------------------------------------------------------------

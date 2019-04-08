@@ -64,7 +64,7 @@ class HomeController extends Controller
         $proker_dari_vp = Manajer::where('nipp_pj',$nipp)->get();
         $proker_dvp = Task::where('nipp',$nipp)->get();
         $today = Carbon::now()->format('Y-m-d');
-        $logbook_harian = Logbook::where('nipp',Auth::user()->nipp)->where('tanggal',$today)->get();
+        $logbook_harian = Logbook::where('nipp',Auth::user()->nipp)->where('hari',$now->dayOfWeek)->get();
         ###############################################################################
         return view('pages.dashboard',compact(
           'performa_saya',

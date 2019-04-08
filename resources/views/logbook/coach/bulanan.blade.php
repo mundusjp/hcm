@@ -47,6 +47,14 @@
 			vertical-align: middle;
 		}
 
+		img {
+			max-width: 100%;
+		}
+		img.thumbnail {
+			width: 100px;
+			height: 70px;
+		}
+
 		q, blockquote {
 			quotes: none;
 		}
@@ -117,7 +125,9 @@
 			text-align: center;
 		}
 		header figure img {
-			margin-top: 13px;
+			width: 45px;
+			height: 45px;
+			margin-top: 5px;
 		}
 		header .company-address {
 			float: left;
@@ -188,11 +198,18 @@
 			border-spacing: 0;
 			font-size: 0.9166em;
 		}
-		section table .qty, section table .unit, section table .total {
+		section table .qty, section table .unit {
 			width: 10%;
 		}
+		section table .total {
+			width: 15%;
+		}
+
+		section table .trgt{
+			width:20%;
+		}
 		section table .lgbk {
-			width: 55%;
+			width: 40%;
 		}
 		section table .no {
 			width: 5%;
@@ -222,6 +239,10 @@
 			text-align: left;
 		}
 		section table thead .qty {
+			text-align: center;
+		}
+
+		section table thead .trgt {
 			text-align: center;
 		}
 		section table tbody td {
@@ -292,7 +313,7 @@
 	<header class="clearfix">
 		<div class="container">
 			<figure>
-				<img class="logo" src="{{asset('img/ikt-logo.png')}}">
+				<img class="logo" src="{{asset('img/logos/weshine.png')}}">
 			</figure>
 			<div class="company-address">
 				<h2 class="title">{{$company->nama}}</h2>
@@ -320,15 +341,17 @@
 			<div class="details clearfix">
 				<div class="client left">
 					<p>Logbook Milik:</p>
-					<h4 class="name">{{Auth::user()->nama}}</h4>
-					<p>{{Auth::user()->jabatan}}</p>
-					<a href="mailto:{{Auth::user()->email}}">{{Auth::user()->email}}</a>
+					<h4 class="name">{{$user->nama}}</h4>
+					<p>NIPP: {{$user->nipp}}</p>
+					<p>{{$user->jabatan}}</p>
+					<a href="mailto:{{Auth::user()->email}}">{{$user->email}}</a>
 				</div>
 				<div class="data right">
-					<div class="title">Logbook {{Auth::user()->nipp}}</div>
+					<div class="title">Logbook Bulanan</div>
 					<div class="date">
-						Tanggal percetakan: {{Carbon\Carbon::now()->format('Y-m-d')}}<br>
-						Untuk Bulan: {{$bulantahun}}
+						<p><strong style="font-weight:600;">Tanggal percetakan:</strong> {{Carbon\Carbon::now()->format('Y-m-d')}}</p>
+						<p><strong style="font-weight:600;">Untuk Bulan &emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;:</strong>&nbsp;&nbsp;&nbsp; {{$bulantahun}}</p>
+						<p><strong style="font-weight:600;">Jumlah Log&emsp;&emsp;&emsp;&nbsp;&nbsp;:</strong>&emsp;&emsp;&emsp;&emsp; {{$data->count()}}</p>
 					</div>
 				</div>
 			</div>
@@ -337,24 +360,51 @@
 				<thead>
 					<tr>
 						<th class="no">No.</th>
-						<th class="desc">Description</th>
-						<th class="qty">Quantity</th>
-						<th class="unit">Unit price</th>
-						<th class="total">Total</th>
+						<th class="desc">Log</th>
+						<th class="trgt">Target</th>
+						<th class="qty">Status</th>
+						<th class="unit">Hari</th>
+						<th class="total">Tanggal</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php $i=0; ?>
-					@foreach($data as $log)
-						<?php $i++; ?>
-					<tr>
-						<td class="no">{{$i}}</td>
-						<td class="desc"><h3>Website Design</h3>Creating a recognizable design solution based on the company's existing visual identity</td>
-						<td class="qty">30</td>
-						<td class="unit">$40.00</td>
-						<td class="total">$1,200.00</td>
-					</tr>
-					@endforeach
+					<?php
+					$date_start = Carbon\Carbon::now()->setTimezone('Asia/Jakarta')->startOfMonth()->format('Y-m-d');
+					$start = Carbon\Carbon::createFromFormat('Y-m-d',$date_start)->weekOfYear;
+					for($j=1;$j<5;$j++){
+							$minggu =
+							"<tr>
+								<th colspan=\"6\"><h3>MINGGU KE-".$j."</h3></th>
+							</tr>
+							";
+							echo $minggu;
+							for($k=1;$k<6;$k++){
+									$hari =
+									"<tr>
+										<th colspan=\"6\"><h3>".$list_hari[$k]."</h3></th>
+									</tr>
+									";
+									echo $hari;
+									?>
+									@foreach($data as $log)
+									@if($log->hari == $k && $log->minggu == $start)
+										<?php $i++; ?>
+									<tr>
+										<td class="no">{{$i}}</td>
+										<td class="desc"><h3>{{$log->program_kerja_terkait}}</h3>{{$log->logbook}}</td>
+										<td class="trgt">{{$log->target}}</td>
+										<td class="qty">{{$log->status}}</td>
+										<td class="unit">{{$log->hari}}</td>
+										<td class="total">{{$log->tanggal}}</td>
+									</tr>
+									@endif
+									@endforeach
+									<?php
+							}
+							$start++;
+						}
+						?>
 				</tbody>
 			</table>
 		</div>
@@ -362,12 +412,23 @@
 
 	<footer>
 		<div class="container">
-			<div class="thanks">Thank you!</div>
-			<div class="notice">
-				<div>NOTICE:</div>
-				<div>A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+			<br><br><br>
+			<div class="justifier" style="text-align:right;">
+			<h5 style="margin-right:30px">Mengetahui,</h5><br><br><br><br><br>
+			<div class="thanks" style="margin-right:30px">{{App\User::where('nipp',$user->supervisor_nipp)->first()->nama}}<br>
+				<strong style="color:black;">{{App\User::where('nipp',$user->supervisor_nipp)->first()->jabatan}}</strong>
 			</div>
-			<div class="end">Invoice was created on a computer and is valid without the signature and seal.</div>
+
+			</div>
+			<div class="notice">
+				<div>Perhatian:</div>
+				<div>Mohon berikan logbook ini secara rutin kepada atasan anda!</div>
+			</div>
+			<div class="end">Logbook ini diciptakan melalui applikasi human capital management system.<br><br>
+				<form>
+					<input class="btn btn-outline-warning" type="button" value="Print / Download Logbook" onClick="window.print()">
+				</form>
+			</div>
 		</div>
 	</footer>
 

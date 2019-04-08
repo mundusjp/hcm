@@ -188,7 +188,10 @@
                     <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Bulan ini:</strong><br> <span class="text-muted align-right">{{$performa->performa_bulan_ini}}%</span></p>
                   </li>
                   <li class="list-group-item">
-                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Lihat Logbook:</strong><br> <span class="text-muted"><a href="">Harian</a></span> <span class="text-muted">| <a href="">Mingguan</a></span><span class="text-muted">| <a href="">Bulanan</a></span></p>
+                    <p class="mg-b-0"><strong class="tx-inverse tx-medium">Lihat Logbook:</strong><br>
+                      <span class="text-muted"><a href="{{route('logbook-harian-coachee',$user->id)}}">Harian</a></span>
+                      <span class="text-muted"> | <a href="{{route('logbook-mingguan-coachee',$user->id)}}">Mingguan</a></span>
+                      <span class="text-muted"> | <a href="{{route('logbook-bulanan-coachee',$user->id)}}">Bulanan</a></span></p>
                   </li>
                 </ul>
                 @endif
@@ -477,8 +480,8 @@
                   </li>
                   <li class="list-group-item">
                     <p class="mg-b-0"><strong class="tx-inverse tx-medium">Lihat Logbook:</strong><br> <span class="text-muted"><a href="{{url('logbook-harian')}}">Harian</a></span> <span class="text-muted">|
-                      <a href="{{url('download-logbook-mingguan')}}">Mingguan</a></span>|
-                      <a href="{{url('download-logbook-bulanan')}}">Bulanan</a></p>
+                      <a href="{{url('logbook-mingguan')}}"> Mingguan </a></span>|
+                      <a href="{{url('logbook-bulanan')}}">Bulanan</a></p>
                   </li>
                 </ul>
                </div>
