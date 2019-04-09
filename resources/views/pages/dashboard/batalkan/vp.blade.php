@@ -25,6 +25,19 @@
                   <textarea class="form-control" type="text" name="keterangan"></textarea>
                 </div>
               </div><!-- col-6 -->
+              <div class="col-7">
+                <span> &nbsp; </span>
+              </div>
+              <div class="col-lg-5">
+                <label for="kurangi" class="col-md-12 col-form-label text-md-left">Apakah Anda ingin Mengurangi Performa DVP anda?</label>
+                &emsp;
+                <label class="checkbox">
+                  <input type="checkbox" name="kurangi" class="form-control" value="yes"> Yes
+                </label>&emsp;
+                <label class="checkbox">
+                  <input type="checkbox" name="kurangi" class="form-control" value="no"> No
+                </label>
+              </div>
             </div><!-- row -->
             <div class="form-layout-footer">
               <div class="justifier" style="text-align:right;">

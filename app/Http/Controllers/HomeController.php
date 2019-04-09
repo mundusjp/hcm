@@ -44,6 +44,7 @@ class HomeController extends Controller
         $kelas_jabatan = Auth::user()->kelas_jabatan;
         $jabatan = Auth::user()->jabatan;
         $now = Carbon::now();
+        $all_user = User::all();
         $now->setTimezone('Asia/Jakarta');
         $officer = User::where('supervisor_nipp',$nipp)->get();
         $company = Company::find(1);

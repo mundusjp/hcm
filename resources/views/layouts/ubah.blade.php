@@ -10,10 +10,13 @@
     <div class="container">
       <ul class="nav">
         <li class="nav-item">
-          <a class="nav-link" href="home">
+          <form id="back" action="{{route('back')}}" method="get">
+            @csrf
+          <a href="javascript:;" onclick="document.getElementById('back').submit();" class="nav-link">
             <i class="icon ion-home"></i>
             <span>Home</span>
           </a>
+          </form>
         </li>
       </ul>
     </div><!-- container -->

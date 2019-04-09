@@ -279,6 +279,7 @@ class DVPController extends Controller
       if(!empty($program->id_prokerkait)){
       $program_terkait = Task::find($program->id_prokerkait);
       $program_vp_terkait = Manajer::find($program_terkait->id_provp);
+        Task::where('id',$id)->update(['progres'=>$program->bobot]);
         $progres = $program_terkait->progres + $program->bobot;
         if($progres == 100){
           Task::where('id',$program->id_prokerkait)->update([
@@ -329,17 +330,17 @@ class DVPController extends Controller
         $insert->supervisor_nipp = Auth::user()->nipp;
         $insert->save();
       };
-      // $update_performa_mingguan = $performa->jumlah_task_sukses_minggu_ini + 1;
-      // $update_performa_bulanan = $performa->jumlah_task_sukses_bulan_ini + 1;
-      // $update_performa_tahunan = $performa->jumlah_task_sukses_tahun_ini + 1;
-      // Performa::where('nipp',$program->nipp_pj)->update([
-      //   'minggu'=>$today->weekOfYear,
-      //   'jumlah_task_sukses_minggu_ini'=>$update_performa_mingguan,
-      //   'bulan'=>$today->month,
-      //   'jumlah_task_sukses_bulan_ini'=>$update_performa_bulanan,
-      //   'tahun'=>$today->year,
-      //   'jumlah_task_sukses_tahun_ini'=>$update_performa_tahunan
-      // ]);
+      $update_performa_mingguan = $performa->jumlah_task_sukses_minggu_ini + 1;
+      $update_performa_bulanan = $performa->jumlah_task_sukses_bulan_ini + 1;
+      $update_performa_tahunan = $performa->jumlah_task_sukses_tahun_ini + 1;
+      Performa::where('nipp',$program->nipp_pj)->update([
+        'minggu'=>$today->weekOfYear,
+        'jumlah_task_sukses_minggu_ini'=>$update_performa_mingguan,
+        'bulan'=>$today->month,
+        'jumlah_task_sukses_bulan_ini'=>$update_performa_bulanan,
+        'tahun'=>$today->year,
+        'jumlah_task_sukses_tahun_ini'=>$update_performa_tahunan
+      ]);
       return redirect('home')->with('success','Sukses Mengkonfirmasi Tugas Officer!');
     }
 
@@ -361,6 +362,22 @@ class DVPController extends Controller
     }
 
     public function batalkan_task(Request $request, $id){
+      if($request->kurangi == "yes"){
+        $now = Carbon::now()->setTimezone('Asia/Jakarta');
+        $program = Manajer::find($id);
+        $user = Performa::where('nipp',$program->nipp_pj)->first();
+        $jumlah_task_gagal_minggu_ini = $user->jumlah_task_gagal_minggu_ini + 1;
+        $jumlah_task_gagal_bulan_ini = $user->jumlah_task_gagal_bulan_ini + 1;
+        $jumlah_task_gagal_tahun_ini = $user->jumlah_task_gagal_tahun_ini + 1;
+        Performa::where('nipp',$program->nipp_pj)->update([
+          'jumlah_task_gagal_minggu_ini'=>$jumlah_task_gagal_minggu_ini,
+          'minggu'=>$now->weekOfYear,
+          'jumlah_task_gagal_bulan_ini'=>$jumlah_task_gagal_bulan_ini,
+          'bulan'=>$now->month,
+          'jumlah_task_gagal_tahun_ini'=>$jumlah_task_gagal_tahun_ini,
+          'tahun'=>$now->year,
+        ]);
+      };
       Task::where('id',$id)->update([
         'status_task'=>"Dibatalkan",
         'keterangan'=>$request->keterangan

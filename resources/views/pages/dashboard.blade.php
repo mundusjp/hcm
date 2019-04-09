@@ -35,7 +35,7 @@
          <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
          <!--                                UNTUK KELAS DIREKSI                                       -->
          <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
-         @elseif(Auth::user()->kelas_jabatan <= 5)
+         @elseif(Auth::user()->kelas_jabatan <= 5 && Auth::user()->kelas_jabatan != "TNO")
          <label class="section-title">Status Program Kerja Anda</label>
          @foreach($officer as $vp)
             <label class="section-title tx-warning">{{$vp->sub_divisi}} - {{$vp->nama}}</label>
@@ -575,7 +575,7 @@
              <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
              <!--                               UNTUK KELAS OFFICER & TNO                                  -->
              <!-- ///////////////////////////////////////////////////////////////////////////////////////  -->
-             @else
+             @elseif(Auth::user()->kelas_jabatan >= 11 || Auth::user()->kelas_jabatan == "TNO")
              <label class="section-title">Log Harian</label>
              <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahlogbookofficer">Tambahkan </button>
              <p class="mg-b-20 mg-sm-b-40">Tuliskan Pekerjaan Anda Hari Ini</p>

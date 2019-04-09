@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -96,6 +98,55 @@ class UserController extends Controller
     return redirect('/users')->with('success', 'User telah diperbaharui');
     }
 
+    public function myprofile($id){
+      $user = User::find($id);
+      return view('pages.profil.profil',compact('user'));
+    }
+
+    public function editprofile($id){
+      $user = User::find($id);
+      return view('pages.profil.edit',compact('user'));
+    }
+
+    public function updateprofile(Request $request, $id){
+      $request->validate([
+        'nama'=>'required',
+        'email'=> 'required|email',
+        'komentar' => 'string'
+      ]);
+      $user = User::find($id);
+      $user->nama = $request->get('nama');
+      $user->email = $request->get('email');
+      $user->komentar = $request->get('komentar');
+      $user->save();
+
+      return redirect('home')->with('success','Sukses Mengupdate Profile Anda!');
+    }
+
+    public function editpassword($id){
+      $user = User::find($id);
+      return view('pages.profil.edit',compact('user'));
+    }
+
+    public function updatepassword(Request $request, $id){
+      $request->validate([
+        'password' => ['required', 'string', 'min:8', 'confirmed']
+      ]);
+      $user = User::find($id);
+      $user->password = Hash::make($request->get('password'));
+      $user->save();
+
+      return redirect('home')->with('success','Sukses Mengubah Password!');
+    }
+
+    public function uploadpp(Request $request){
+      $path = $request->file('file')->storeAs('/public/profiles/',Auth::user()->nipp.'.jpg');
+      $filename = "http://localhost:8000/storage/profiles/".Auth::user()->nipp.".jpg";
+      User::where('nipp',Auth::user()->nipp)->update([
+        'avatar'=> $filename
+      ]);
+      return redirect('home')->with('success','Sukses mengubah Profile Picture!');
+    }
     /**
      * Remove the specified resource from storage.
      *

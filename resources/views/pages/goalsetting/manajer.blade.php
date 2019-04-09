@@ -7,8 +7,8 @@
             <div class="slim-pageheader">
               <ol class="breadcrumb slim-breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Form Layouts</li>
+                <li class="breadcrumb-item"><a href="#">Goal Setting</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Program Manajer</li>
               </ol>
               <h6 class="slim-pagetitle">Program Vice President</h6>
             </div><!-- slim-pageheader -->
@@ -32,7 +32,7 @@
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               <!--                                              Kelas VP                                                       -->
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-              @if($kelas_jabatan <=8 && $kelas_jabatan > 5)
+              @if($kelas_jabatan <=8 && $kelas_jabatan > 5 && $kelas_jabatan != "TNO")
               <button type="button"class="btn float-right" data-toggle="modal" data-target="#tambahmanajer">Tambahkan </button>
               <label class="section-title">Program Anda Sebagai Vice President of {{Auth::user()->sub_divisi}}</label>
               <label class="section-title tx-orange">Mingguan</label>
@@ -260,7 +260,7 @@
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               <!--                                            Kelas Superadmin                                                 -->
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-              @elseif($kelas_jabatan <=1)
+              @elseif($kelas_jabatan <=1 && $kelas_jabatan != "TNO")
               @foreach($all_vp as $user)
                 <label class="section-title">Program Vice President of {{$user->sub_divisi}}</label>
                 <table class="table table-orange">
@@ -287,7 +287,7 @@
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               <!--                                            Kelas Direksi                                                    -->
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-              @elseif($kelas_jabatan <=5)
+              @elseif($kelas_jabatan <=5 && $kelas_jabatan != "TNO")
                 @foreach($vp as $user)
                   <label class="section-title">Program Vice President of {{$user->sub_divisi}}</label>
                   <table class="table table-orange">
@@ -334,7 +334,7 @@
                 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
                 <!--                                            Kelas lainnya                                                    -->
                 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-              @else
+              @elseif($kelas_jabatan >= 11 || $kelas_jabatan == "TNO")
               <label class="section-title">Program Vice President of {{Auth::user()->sub_divisi}}</label>
               <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
               <!-- //////////////////////////////////////////////////////////////////////////////////////// -->
@@ -583,7 +583,7 @@
                                   <div class="col-lg-2">
                                     <div class="form-group">
                                       <label class="form-control-label">Bobot <span class="tx-danger">*</span></label>
-                                      <input required name="bobot" class="form-control" type="number" max="100" min="1" value="1">
+                                      <input required name="bobot" class="form-control" type="number" max="100" min="1" value="100">
                                     </div>
                                   </div><!-- col-9 -->
                                   <div class="col-lg-6">

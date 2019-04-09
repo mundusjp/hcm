@@ -58,7 +58,7 @@ class GoalmatchingController extends Controller
      */
     public function index_coachee()
     {
-      if(Auth::user()->kelas_jabatan <=8){
+      if(Auth::user()->kelas_jabatan <=8 && Auth::user()->kelas_jabatan != "TNO"){
         return redirect('goalmatching')->with('failed','Anda tidak dapat mengakses halaman tersebut');
       }
       $now = Carbon::now();

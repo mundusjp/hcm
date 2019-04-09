@@ -19,6 +19,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('goal-matching','GoalsettingController@goal_matching')->name('goal-matching');
+Route::get('back', function () {
+    return redirect('home');
+})->name('back');
 // -------------------------------------------------------------------------------
 //                               CRUD GOALSETTING
 // -------------------------------------------------------------------------------
@@ -100,12 +103,16 @@ Route::match(['put', 'patch'], 'officer.tunda/{id}','OfficerController@tunda_tas
 // -------------------------------------------------------------------------------
 
 Route::resource('users', 'UserController');
+Route::get('profile/{id}','UserController@myprofile')->name('profile');
+Route::get('edit-password/{id}','UserController@editpassword')->name('edit-password');
+Route::post('upload-pp','UserController@uploadpp')->name('upload-pp');
+Route::match(['put', 'patch'], 'update-password/{id}','UserController@updatepassword')->name('update-password');
+Route::match(['put', 'patch'], 'update-profile/{id}','UserController@updateprofile')->name('update-profile');
 
 // -------------------------------------------------------------------------------
 //                                TASKS ROUTES
 // -------------------------------------------------------------------------------
 
-Route::resource('tasks', 'TaskController');
 
 // -------------------------------------------------------------------------------
 //                               LOGBOOK ROUTES

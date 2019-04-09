@@ -35,17 +35,6 @@ class ManajerController extends Controller
       $jabatan = Auth::user()->jabatan;
       $now = Carbon::now();
       $all = Manajer::all();
-      // foreach($all as $program){
-      //   if($program->progres != 0 || $program->progres != 100 ){
-      //     Manajer::where('id',$program->id)->update([
-      //       'status_proker'=>"Sedang Diproses"
-      //     ]);
-      //   }elseif($program->progres == 100){
-      //     Manajer::where('id',$program->id)->update([
-      //       'status_task'=>"Selesai"
-      //     ]);
-      //   };;
-      // }
       $now->setTimezone('Asia/Jakarta');
       $all_vp = User::where('kelas_jabatan','<=','8')->get();
       $vp = User::where('supervisor_nipp',$nipp)->where('kelas_jabatan','<=','8')->where('kelas_jabatan','>=','6')->get();
@@ -279,7 +268,7 @@ class ManajerController extends Controller
       $program_terkait = Manajer::find($program->id_prokerkait);
       $program_direksi_terkait = Direksi::find($program_terkait->id_prodir);
         $progres = $program_terkait->progres + $program->bobot;
-        Manajer::where('id',$id)->update(['progres'=>"100"]);
+        Manajer::where('id',$id)->update(['progres'=>$program->bobot]);
         if($progres == 100){
           Manajer::where('id',$program->id_prokerkait)->update([
             'progres' => $progres,
@@ -358,6 +347,22 @@ class ManajerController extends Controller
     }
 
     public function batalkan_task(Request $request, $id){
+      if($request->kurangi == "yes"){
+        $now = Carbon::now()->setTimezone('Asia/Jakarta');
+        $program = Manajer::find($id);
+        $user = Performa::where('nipp',$program->nipp_pj)->first();
+        $jumlah_task_gagal_minggu_ini = $user->jumlah_task_gagal_minggu_ini + 1;
+        $jumlah_task_gagal_bulan_ini = $user->jumlah_task_gagal_bulan_ini + 1;
+        $jumlah_task_gagal_tahun_ini = $user->jumlah_task_gagal_tahun_ini + 1;
+        Performa::where('nipp',$program->nipp_pj)->update([
+          'jumlah_task_gagal_minggu_ini'=>$jumlah_task_gagal_minggu_ini,
+          'minggu'=>$now->weekOfYear,
+          'jumlah_task_gagal_bulan_ini'=>$jumlah_task_gagal_bulan_ini,
+          'bulan'=>$now->month,
+          'jumlah_task_gagal_tahun_ini'=>$jumlah_task_gagal_tahun_ini,
+          'tahun'=>$now->year,
+        ]);
+      };
       Manajer::where('id',$id)->update([
         'status_proker'=>"Dibatalkan",
         'keterangan'=>$request->keterangan

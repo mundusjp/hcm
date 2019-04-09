@@ -7,8 +7,8 @@
             <div class="slim-pageheader">
               <ol class="breadcrumb slim-breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Form Layouts</li>
+                <li class="breadcrumb-item"><a href="#">Goal Setting</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Program DVP</li>
               </ol>
               <h6 class="slim-pagetitle">Program Deputy Vice Director of {{Auth::user()->sub_subdivisi}}</h6>
             </div><!-- slim-pageheader -->
@@ -248,7 +248,7 @@
                                   <div class="col-lg-2">
                                     <div class="form-group">
                                       <label class="form-control-label">Bobot <span class="tx-danger">*</span></label>
-                                      <input required name="bobot" class="form-control" type="number" min="1" max="100" value="1">
+                                      <input required name="bobot" class="form-control" type="number" min="1" max="100" value="100">
                                     </div>
                                   </div><!-- col-9 -->
                                   <div class="col-lg-6">

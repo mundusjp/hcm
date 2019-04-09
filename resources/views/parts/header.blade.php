@@ -17,7 +17,10 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right">
           <nav class="nav">
-            <a href="#" class="nav-link"><i class="icon ion-ios-gear"></i> Profil</a>
+            <form id="profil" action="{{route('profile',Auth::user()->id)}}" method="get">
+              @csrf
+              <a href="javascript:;" onclick="document.getElementById('profil').submit();" class="nav-link"><i class="icon ion-ios-gear"></i> Profil</a>
+            </form>
             <form id="logout" action="{{route('logout')}}" method="post">
               @csrf
               <a href="javascript:;" onclick="document.getElementById('logout').submit();" class="nav-link"><i class="icon ion-forward"></i> Sign Out</a>

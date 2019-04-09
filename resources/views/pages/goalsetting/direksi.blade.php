@@ -7,8 +7,8 @@
             <div class="slim-pageheader">
               <ol class="breadcrumb slim-breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Forms</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Form Layouts</li>
+                <li class="breadcrumb-item"><a href="#">Goal Setting</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Program Direksi</li>
               </ol>
               <h6 class="slim-pagetitle">Program Kerja Direksi</h6>
             </div><!-- slim-pageheader -->
@@ -150,7 +150,7 @@
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
               <!--                                            DIREKSI LAIN                                                     -->
               <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-              @elseif(Auth::user()->kelas_jabatan <= 5 && $divisi != "Utama")
+              @elseif(Auth::user()->kelas_jabatan <= 5 && $divisi != "Utama" && $kelas_jabatan != "TNO")
               <button type="button"class="btn btn-outline-warning float-right" data-toggle="modal" data-target="#tambahdireksi">Tambahkan </button>
               <label class="section-title">Program Direktur {{$divisi}}</label>
               <table class="table table-orange">
