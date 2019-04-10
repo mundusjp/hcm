@@ -518,6 +518,42 @@
                </ul>
                 @endif
                </div>
+               <div class="col-12">
+                 <hr>
+                 <label class="section-title">Performa Officer Anda</label>
+                 <p>Berikut adalah status dan performa dari seluruh DVP anda</p>
+                 <div class="row">
+                   @foreach($officer as $user)
+                   <div class="col">
+                     <h6 class="tx-orange"><strong>{{$user->nama}}</strong></h6>
+                     @foreach($performa_dvp as $performa)
+                     @if($performa->nipp == $user->nipp)
+                     <ul class="list-group">
+                      <li class="list-group-item">
+                        <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">{{$performa->jumlah_task_minggu_ini}}</span></p>
+                      </li>
+                      <li class="list-group-item">
+                        <p class="mg-b-0"><strong class="tx-inverse tx-medium">Jumlah Pekerjaan Gagal Minggu ini:</strong><br> <span class="text-muted" style="text-align:right;">{{$performa->jumlah_task_gagal_minggu_ini}}</span></p>
+                      </li>
+                      <li class="list-group-item">
+                        <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Minggu ini:</strong><br> <span class="text-muted align-right">{{$performa->performa_minggu_ini}}%</span></p>
+                      </li>
+                      <li class="list-group-item">
+                        <p class="mg-b-0"><strong class="tx-inverse tx-medium">Performa Bulan ini:</strong><br> <span class="text-muted align-right">{{$performa->performa_bulan_ini}}%</span></p>
+                      </li>
+                      <li class="list-group-item">
+                        <p class="mg-b-0"><strong class="tx-inverse tx-medium">Lihat Logbook:</strong><br>
+                          <span class="text-muted"><a href="{{route('logbook-harian-coachee',$user->id)}}">Harian</a></span>
+                          <span class="text-muted"> | <a href="{{route('logbook-mingguan-coachee',$user->id)}}">Mingguan</a></span>
+                          <span class="text-muted"> | <a href="{{route('logbook-bulanan-coachee',$user->id)}}">Bulanan</a></span></p>
+                      </li>
+                    </ul>
+                    @endif
+                    @endforeach
+                   </div>
+                   @endforeach
+                 </div>
+               </div>
              </div>
              <!-- ################## MODAL 1 ###################### -->
              <div class="modal fade" id="assigntasktoofficer" tabindex="-1" role="dialog" aria-labelledby="assigntask" aria-hidden="true">

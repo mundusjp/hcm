@@ -72,6 +72,21 @@
                     @else
                     <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
                     @endif
+                    @if($program->status_proker == "Selesai")
+                    <td>
+                      <form id="edit" action="{{route('vice-president.edit',$program->id)}}" method="get">
+                      @csrf
+                      <button disabled class="btn btn-outline-success" type="submit">Ubah</button>
+                      </form>
+                    </td>
+                    <td>
+                      <form id="hapus" action="{{route('vice-president.destroy',$program->id)}}" method="post">
+                      @csrf
+                      @method('DELETE')
+                      <button disabled class="btn btn-outline-danger" type="submit">Hapus</button>
+                    </td>
+                    </form>
+                    @else
                     <td>
                       <form id="edit" action="{{route('vice-president.edit',$program->id)}}" method="get">
                       @csrf
@@ -85,6 +100,7 @@
                       <button class="btn btn-outline-danger" type="submit">Hapus</button>
                     </td>
                     </form>
+                    @endif
                 </tr>
                 @endforeach
               </table>
