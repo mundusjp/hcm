@@ -306,7 +306,7 @@
                  @foreach($proker_dari_vp as $program)
                  <?php $i++;
                  $now = Carbon\Carbon::now();
-                 $date = Carbon\Carbon::parse($program->due_date);
+                 $date = Carbon\Carbon::parse($program->berakhir);
                  $due_date = $date->diffInDays($now);
                  ?>
                  <tr>

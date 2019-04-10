@@ -86,6 +86,9 @@ class DireksiController extends Controller
       $tambah_proker->program_kerja = $request->proker;
       $tambah_proker->divisi = $request->divisi;
       $tambah_proker->mulai = $request->from;
+      if(Auth::user()->divisi == "Utama"){
+        $tambah_proker->nipp_pj = $request->direksi;
+      }
       $tambah_proker->berakhir = $request->to;
       $tambah_proker->tahun = Carbon::now()->year;
       $tambah_proker->progres = 0;

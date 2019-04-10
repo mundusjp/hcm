@@ -189,7 +189,7 @@ class LogbookController extends Controller
     public function export_mingguan(){
       $today = Carbon::now()->setTimezone('Asia/Jakarta');
       $company = Company::find(1);
-      $find = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->where('bulan',$today->month)->where('tahun',$todaya->year)->first();
+      $find = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->where('bulan',$today->month)->where('tahun',$today->year)->first();
       if(empty($find)){
         return redirect('home')->with('failed','Anda Belum mengisi logbook minggu ini!');
       }
@@ -237,7 +237,7 @@ class LogbookController extends Controller
             $bulantahun = "Januari";
       }
       // Fetch all customers from database
-      $data = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->where('bulan',$today->month)->where('tahun',$todaya->year)->get();
+      $data = Logbook::where('nipp',Auth::user()->nipp)->where('minggu',$today->weekOfYear)->where('bulan',$today->month)->where('tahun',$today->year)->get();
       // Finally, you can download the file using download function
       return view('logbook.coachee.mingguan',compact('today','company','data','find','bulantahun','list_hari'));
     }

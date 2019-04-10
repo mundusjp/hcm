@@ -397,6 +397,18 @@
                                       <input id="nipp" class="form-control" type="text" readonly name="nipp" value="{{$nipp}}">
                                     </div>
                                   </div><!-- col-3 -->
+                                  @if(Auth::user()->divisi == "Utama" || Auth::user()->kelas_jabatan == 1)
+                                  <div class="col-lg-12">
+                                    <div class="form-group">
+                                      <label class="form-control-label">Direksi Terkait <span class="tx-danger">*</span></label>
+                                      <select required name="direksi" class="form-control">
+                                        @foreach($seluruh_direksi as $direksi)
+                                        <option value="{{$direksi->nipp}}">{{$direksi->nama}} - {{$direksi->jabatan}}</option>
+                                        @endforeach
+                                      </select>
+                                    </div>
+                                  </div><!-- col-3 -->
+                                  @endif
                                   <div class="col-lg-12">
                                     <div class="form-group">
                                       <label class="form-control-label">Program Kerja <span class="tx-danger">*</span></label>
