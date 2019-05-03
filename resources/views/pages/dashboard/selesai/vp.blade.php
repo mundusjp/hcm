@@ -8,7 +8,7 @@
           <h6 class="slim-pagetitle">Konfirmasi Selesai Program Kerja Vice President</h6>
         </div><!-- slim-pageheader -->
         <div class="section-wrapper">
-          <form action="{{route('deputy-vice-president.selesai',$program->id)}}" method="post">
+          <form action="{{route('deputy-vice-president.selesai',$program->id)}}" method="post" enctype="multipart/form-data">
           @method('PATCH')
           {{ csrf_field() }}
           <div class="form-layout">
@@ -22,9 +22,15 @@
               <div class="col-lg-12">
                 <div class="form-group">
                   <label class="form-control-label">Bukti Penyelesaian <span class="tx-danger">*</span></label>
-                  <textarea class="form-control" type="text" name="keterangan"></textarea>
+                  <textarea required class="form-control" type="text" name="keterangan"></textarea>
                 </div>
               </div><!-- col-6 -->
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <label class="form-control-label">File Penyelesaian <span class="tx-danger">*</span></label>
+                  <input required accept="application/pdf,application/vnd.ms-excel,application/msword,image/jpeg,image/x-png" type="file" class="form-control" name="file">
+                </div>
+              </div>
             </div><!-- row -->
             <div class="form-layout-footer">
               <div class="justifier" style="text-align:right;">

@@ -57,6 +57,12 @@ class OfficerController extends Controller
       'due_date'=>$request->due_date,
       'keterangan'=>$request->keterangan
     ]);
+    $performa = Performa::where('nipp', Auth::user()->nipp)->first();
+    Performa::where('nipp', Auth::user()->nipp)->update([
+      'jumlah_task_pending_minggu_ini'=>$performa->jumlah_task_pending_minggu_ini + 1,
+      'jumlah_task_pending_bulan_ini'=>$performa->jumlah_task_pending_bulan_ini + 1,
+      'jumlah_task_pending_tahun_ini'=>$performa->jumlah_task_pending_tahun_ini + 1
+    ]);
       return redirect('home')->with('success','Sukses Menunda Tugas DVP dan diberikan keterangan!');
   }
 }

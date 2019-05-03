@@ -48,7 +48,39 @@ class HomeController extends Controller
         $now->setTimezone('Asia/Jakarta');
         $officer = User::where('supervisor_nipp',$nipp)->get();
         $company = Company::find(1);
-        $performa_saya = Performa::where('nipp',$nipp)->first();
+        $check = Performa::where('nipp',$nipp)->first();
+        if(!empty($check)){
+          if($check->tahun != $now->year){
+            Performa::where('nipp',$nipp)->update([
+              'jumlah_task_tahun_ini'=> 0,
+              'jumlah_task_sukses_tahun_ini'=> 0,
+              'jumlah_task_gagal_tahun_ini'=> 0,
+              'jumlah_task_pending_tahun_ini'=> 0,
+              'performa_tahun_ini'=>0,
+              'tahun'=>$now->year
+            ]);
+          }elseif($check->bulan != $now->month){
+            Performa::where('nipp',$nipp)->update([
+              'jumlah_task_bulan_ini'=> 0,
+              'jumlah_task_sukses_bulan_ini'=> 0,
+              'jumlah_task_gagal_bulan_ini'=> 0,
+              'jumlah_task_pending_bulan_ini'=> 0,
+              'performa_bulan_ini'=>0,
+              'bulan'=>$now->month
+            ]);
+          }elseif($check->minggu != $now->weekOfYear){
+            Performa::where('nipp',$nipp)->update([
+              'jumlah_task_minggu_ini'=> 0,
+              'jumlah_task_sukses_minggu_ini'=> 0,
+              'jumlah_task_gagal_minggu_ini'=> 0,
+              'jumlah_task_pending_minggu_ini'=> 0,
+              'performa_minggu_ini'=>0,
+              'minggu'=>$now->weekOfYear
+            ]);
+          };
+        }
+
+        $performa_saya = Performa::where('nipp',$nipp)->where('minggu',$now->weekOfYear)->first();
         ############################ UNTUK DIREKSI ####################################
         $direksi = Direksi::where('divisi',$divisi)->get();
         ###############################################################################
@@ -58,7 +90,44 @@ class HomeController extends Controller
         $proker_vp_settahunan = Manajer::where('nipp',$nipp)->where('kategori','1/2 Tahunan')->get();
         $proker_vp_bulanan = Manajer::where('nipp',$nipp)->where('kategori','Bulanan')->get();
         $proker_vp_mingguan = Manajer::where('nipp',$nipp)->where('kategori','Mingguan')->get();
-        $performa_dvp = Performa::where('supervisor_nipp',$nipp)->get();
+        $check2 = Performa::where('supervisor_nipp',$nipp)->get();
+        if(!empty($check2)){
+          foreach($check2 as $data){
+            if($data->tahun != $now->year){
+              Performa::where('supervisor_nipp',$nipp)->update([
+                'jumlah_task_tahun_ini'=> 0,
+                'jumlah_task_sukses_tahun_ini'=> 0,
+                'jumlah_task_gagal_tahun_ini'=> 0,
+                'jumlah_task_pending_tahun_ini'=> 0,
+                'performa_tahun_ini'=>0,
+                'tahun'=>$now->year
+              ]);
+            }elseif($data->bulan != $now->month){
+              Performa::where('supervisor_nipp',$nipp)->update([
+                'jumlah_task_tahun_ini'=> $data->jumlah,
+                'jumlah_task_sukses_tahun_ini'=> 0,
+                'jumlah_task_gagal_tahun_ini'=> 0,
+                'jumlah_task_pending_tahun_ini'=> 0,
+                'jumlah_task_bulan_ini'=> 0,
+                'jumlah_task_sukses_bulan_ini'=> 0,
+                'jumlah_task_gagal_bulan_ini'=> 0,
+                'jumlah_task_pending_bulan_ini'=> 0,
+                'performa_bulan_ini'=>0,
+                'bulan'=>$now->month
+              ]);
+            }elseif($data->minggu != $now->weekOfYear){
+              Performa::where('supervisor_nipp',$nipp)->update([
+                'jumlah_task_minggu_ini'=> 0,
+                'jumlah_task_sukses_minggu_ini'=> 0,
+                'jumlah_task_gagal_minggu_ini'=> 0,
+                'jumlah_task_pending_minggu_ini'=> 0,
+                'performa_minggu_ini'=>0,
+                'minggu'=>$now->weekOfYear
+              ]);
+            };
+          }
+        }
+        $performa_dvp = Performa::where('supervisor_nipp',$nipp)->where('minggu',$now->weekOfYear)->get();
         ###############################################################################
         ############################### UNTUK DVP #####################################
         $officer_dvp = User::where('supervisor_nipp',$nipp)->get();

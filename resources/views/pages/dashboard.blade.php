@@ -106,6 +106,7 @@
                  <td style="width:50px;text-align:center;">Penanggung Jawab</td>
                  <td style="width:25px;text-align:center;">Status</td>
                  <td style="width:200px;text-align:center;">Keterangan</td>
+                 <td style="width:100px;text-align:center">Bukti</td>
                  <td style="width:25px;text-align:center;">Konfirmasi</td>
                  <td style="width:25px;text-align:center;">Tolak</td>
                  <td style="width:25px;text-align:center;">Batalkan</td>
@@ -131,6 +132,13 @@
                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
                    @endif
                    <td>{{$program->keterangan}}</td>
+                   @if(!empty($program->bukti_penyelesaian))
+                   <td><a href="{{$program->bukti_penyelesaian}}" target="_blank">File</a></td>
+                   @elseif($program->status_proker == "Selesai")
+                   <td>Tanpa Bukti</td>
+                   @else
+                   <td>Belum Ada</td>
+                   @endif
                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Sedang Diproses" || $program->status_proker == "Diperingatkan")
                    <td><button disabled class="btn btn-outline-success">Konfirmasi</button></td>
                    <td><button disabled class="btn btn-outline-warning">Tolak</button></td>
@@ -305,8 +313,8 @@
                  <?php $i=0;?>
                  @foreach($proker_dari_vp as $program)
                  <?php $i++;
-                 $now = Carbon\Carbon::now();
-                 $date = Carbon\Carbon::parse($program->berakhir);
+                 $now = Carbon\Carbon::now()->setTimezone('Asia/Jakarta');
+                 $date = Carbon\Carbon::parse($program->due_date);
                  $due_date = $date->diffInDays($now);
                  ?>
                  <tr>
@@ -324,10 +332,14 @@
                    @else
                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
                    @endif
-                   @if($due_date <=3)
+                   @if($program->status_proker == "Selesai")
+                   <td><strong class="tx-success">Selesai</strong></td>
+                   @elseif($due_date > 3)
+                   <td><div class="tx-success"><strong>{{$due_date}} Days</strong></div></td>
+                   @elseif($due_date <=3 && $due_date >0)
                    <td><div class="tx-danger"><strong>{{$due_date}} Days</strong></div></td>
                    @else
-                   <td><div class="tx-success"><strong>{{$due_date}} Days</strong></div></td>
+                   <td><strong class="tx-danger">Terlambat</strong></td>
                    @endif
                    <td>{{$program->keterangan}}</td>
                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Diperingatkan" || $program->status_proker == "Ditolak")

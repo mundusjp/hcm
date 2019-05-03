@@ -235,8 +235,12 @@ class DVPController extends Controller
 
     public function selesai(Request $request,$id){
       $today = Carbon::now()->setTimezone('Asia/Jakarta');
+      $ext =  $request->file('file')->getClientOriginalExtension();
+      $path = $request->file('file')->storeAs('/public/bukti/',"bukti-".Auth::user()->nipp."-".$today->format('d-m-Y').".".$ext);
+      $filename = "http://localhost:8000/storage/bukti/"."bukti-".Auth::user()->nipp."-".$today->format('d-m-Y').".".$ext;
       Manajer::where('id',$id)->update([
         'status_proker'=>"Konfirmasi Selesai",
+        'bukti_penyelesaian'=> $filename,
         'keterangan'=>$request->keterangan
       ]);
         return redirect('home')->with('success','Sukses Request Konfirmasi Penyelesaian Tugas!');
@@ -252,6 +256,12 @@ class DVPController extends Controller
         'status_proker'=>"Ditunda",
         'due_date'=>$request->due_date,
         'keterangan'=>$request->keterangan
+      ]);
+      $performa = Performa::where('nipp', Auth::user()->nipp)->first();
+      Performa::where('nipp', Auth::user()->nipp)->update([
+        'jumlah_task_pending_minggu_ini'=>$performa->jumlah_task_pending_minggu_ini + 1,
+        'jumlah_task_pending_bulan_ini'=>$performa->jumlah_task_pending_bulan_ini + 1,
+        'jumlah_task_pending_tahun_ini'=>$performa->jumlah_task_pending_tahun_ini + 1
       ]);
         return redirect('home')->with('success','Sukses Menunda Tugas VP dan diberikan keterangan!');
     }
@@ -330,17 +340,19 @@ class DVPController extends Controller
         $insert->supervisor_nipp = Auth::user()->nipp;
         $insert->save();
       };
-      $update_performa_mingguan = $performa->jumlah_task_sukses_minggu_ini + 1;
-      $update_performa_bulanan = $performa->jumlah_task_sukses_bulan_ini + 1;
-      $update_performa_tahunan = $performa->jumlah_task_sukses_tahun_ini + 1;
-      Performa::where('nipp',$program->nipp_pj)->update([
-        'minggu'=>$today->weekOfYear,
-        'jumlah_task_sukses_minggu_ini'=>$update_performa_mingguan,
-        'bulan'=>$today->month,
-        'jumlah_task_sukses_bulan_ini'=>$update_performa_bulanan,
-        'tahun'=>$today->year,
-        'jumlah_task_sukses_tahun_ini'=>$update_performa_tahunan
-      ]);
+      if(!empty($performa)){
+        $update_performa_mingguan = $performa->jumlah_task_sukses_minggu_ini + 1;
+        $update_performa_bulanan = $performa->jumlah_task_sukses_bulan_ini + 1;
+        $update_performa_tahunan = $performa->jumlah_task_sukses_tahun_ini + 1;
+        Performa::where('nipp',$program->nipp_pj)->update([
+          'minggu'=>$today->weekOfYear,
+          'jumlah_task_sukses_minggu_ini'=>$update_performa_mingguan,
+          'bulan'=>$today->month,
+          'jumlah_task_sukses_bulan_ini'=>$update_performa_bulanan,
+          'tahun'=>$today->year,
+          'jumlah_task_sukses_tahun_ini'=>$update_performa_tahunan
+        ]);
+      };
       return redirect('home')->with('success','Sukses Mengkonfirmasi Tugas Officer!');
     }
 

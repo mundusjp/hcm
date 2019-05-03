@@ -98,8 +98,6 @@
                   <th style="width:50px;text-align:center;">Tahun</th>
                   <th style="width:150px;text-align:center;">Progres</th>
                   <th style="width:150px;text-align:center;">Status</th>
-                  <td>Ubah</td>
-                  <td>Hapus</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -128,19 +126,6 @@
                     @else
                     <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
                     @endif
-                    <td>
-                      <form id="edit" action="{{route('direksi.edit',$program->id)}}" method="get">
-                      @csrf
-                      <button type="submit" class="btn btn-outline-success">Ubah</button>
-                      </form>
-                    </td>
-                    <td>
-                      <form id="hapus" action="{{route('direksi.destroy',$program->id)}}" method="post">
-                      @method('DELETE')
-                      @csrf
-                      <button class="btn btn-outline-danger" type="delete">Hapus</a>
-                      </form>
-                    </td>
                 </tr>
                 @endforeach
               </table>

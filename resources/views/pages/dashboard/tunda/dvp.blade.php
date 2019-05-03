@@ -22,7 +22,7 @@
               <div class="col-lg-12">
                 <div class="form-group">
                   <label class="form-control-label">Alasan Penundaan <span class="tx-danger">*</span></label>
-                  <textarea class="form-control" type="text" name="keterangan"></textarea>
+                  <textarea required class="form-control" type="text" name="keterangan"></textarea>
                 </div>
               </div><!-- col-6 -->
             </div><!-- row -->

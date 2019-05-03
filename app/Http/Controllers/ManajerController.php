@@ -318,14 +318,16 @@ class ManajerController extends Controller
         $insert->supervisor_nipp = Auth::user()->nipp;
         $insert->save();
       };
-      // $update_performa_mingguan = $performa->jumlah_task_sukses_minggu_ini + 1;
-      // $update_performa_bulanan = $performa->jumlah_task_sukses_bulan_ini + 1;
-      // $update_performa_tahunan = $performa->jumlah_task_sukses_tahun_ini + 1;
-      // Performa::where('nipp',$program->nipp_pj)->update([
-      //   'jumlah_task_sukses_minggu_ini'=>$update_performa_mingguan,
-      //   'jumlah_task_sukses_bulan_ini'=>$update_performa_bulanan,
-      //   'jumlah_task_sukses_tahun_ini'=>$update_performa_tahunan
-      // ]);
+      if(!empty($performa)){
+        $update_performa_mingguan = $performa->jumlah_task_sukses_minggu_ini + 1;
+        $update_performa_bulanan = $performa->jumlah_task_sukses_bulan_ini + 1;
+        $update_performa_tahunan = $performa->jumlah_task_sukses_tahun_ini + 1;
+        Performa::where('nipp',$program->nipp_pj)->update([
+          'jumlah_task_sukses_minggu_ini'=>$update_performa_mingguan,
+          'jumlah_task_sukses_bulan_ini'=>$update_performa_bulanan,
+          'jumlah_task_sukses_tahun_ini'=>$update_performa_tahunan
+        ]);
+      }
       return redirect('home')->with('success','Sukses Mengkonfirmasi Tugas DVP!');
     }
 

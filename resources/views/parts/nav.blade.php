@@ -46,14 +46,14 @@
           <ul>
             @if(Auth::user()->kelas_jabatan >5 && Auth::user()->kelas_jabatan <= 8 )
             <li><a href="goalmatching-coach">Coach</a></li>
-            <li><a href="goalmatching-evaluasi">Evaluasi</a></li>
+            <!-- <li><a href="goalmatching-evaluasi">Evaluasi</a></li> -->
             @elseif(Auth::user()->kelas_jabatan > 8 && Auth::user()->kelas_jabatan <=10)
             <li><a href="goalmatching-coach">Coach</a></li>
             <li><a href="goalmatching-coachee">Coachee</a></li>
-            <li><a href="goalmatching-evaluasi">Evaluasi</a></li>
+            <!-- <li><a href="goalmatching-evaluasi">Evaluasi</a></li> -->
             @else
             <li><a href="goalmatching-coachee">Coachee</a></li>
-            <li><a href="goalmatching-evaluasi">Evaluasi</a></li>
+            <!-- <li><a href="goalmatching-evaluasi">Evaluasi</a></li> -->
             @endif
           </ul>
         </div><!-- dropdown-menu -->

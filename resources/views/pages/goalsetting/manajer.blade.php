@@ -44,6 +44,7 @@
                   <th style="width:50px">Minggu</th>
                   <th style="width:150px">Progres</th>
                   <th style="width:150px">Status</th>
+                  <th style="width:100x">Bukti</th>
                   <th>Ubah</th>
                   <th>Hapus</th>
                 </tr>
@@ -71,6 +72,13 @@
                     <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_proker}}</span></td>
                     @else
                     <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
+                    @endif
+                    @if(!empty($program->bukti_penyelesaian))
+                    <td><a href="{{$program->bukti_penyelesaian}}">Link</a></td>
+                    @elseif($program->status_proker == "Selesai")
+                    <td>Tanpa Bukti</td>
+                    @else
+                    <td>Tidak ada</td>
                     @endif
                     @if($program->status_proker == "Selesai")
                     <td>
@@ -116,6 +124,7 @@
                   <th style="width:50px;text-align:center;">Bulan</th>
                   <th style="width:150px;text-align:center;">Progres</th>
                   <th style="width:150px;text-align:center;">Status</th>
+                  <th style="width:100x">Bukti</th>
                   <th>Ubah</th>
                   <th>Hapus</th>
                 </tr>
@@ -143,6 +152,13 @@
                     <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-danger">{{$program->status_proker}}</span></td>
                     @else
                     <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_proker}}</span></td>
+                    @endif
+                    @if(!empty($program->bukti_penyelesaian))
+                    <td><a href="{{$program->bukti_penyelesaian}}">Link</a></td>
+                    @elseif($program->status_proker == "Selesai")
+                    <td>Tanpa Bukti</td>
+                    @else
+                    <td>Tidak ada</td>
                     @endif
                     <td>
                       <form id="edit" action="{{route('vice-president.edit',$program->id)}}" method="get">
