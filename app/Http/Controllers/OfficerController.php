@@ -39,9 +39,13 @@ class OfficerController extends Controller
 
   public function selesai(Request $request,$id){
     $today = Carbon::now()->setTimezone('Asia/Jakarta');
+    $ext =  $request->file('file')->getClientOriginalExtension();
+    $path = $request->file('file')->storeAs('/public/bukti/',"bukti-".Auth::user()->nipp."-".$today->format('d-m-Y').".".$ext);
+    $filename =base_path('storage/bukti/')."bukti-".Auth::user()->nipp."-".$today->format('d-m-Y').".".$ext;
     Task::where('id',$id)->update([
       'status_task'=>"Konfirmasi Selesai",
-      'keterangan'=>$request->keterangan
+      'keterangan'=>$request->keterangan,
+      'bukti_penyelesaian'=>$filename
     ]);
       return redirect('home')->with('success','Sukses Request Konfirmasi Penyelesaian Tugas!');
   }

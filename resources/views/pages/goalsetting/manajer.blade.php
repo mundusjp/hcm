@@ -551,7 +551,7 @@
                             <div class="col-12">
                               <form id="tambahmanajer" action="{{route('vice-president.store')}}" method="post">
                               {{ csrf_field() }}
-                              <label class="section-title">Tambahkan Program Kerja Direktur {{$divisi}}</label>
+                              <label class="section-title">Tambahkan Program Kerja VP {{$divisi}}</label>
                               <p class="mg-b-20 mg-sm-b-40">Untuk tahun {{date('Y')}}</p>
                               <div class="form-layout">
                                 <div class="row mg-b-25">

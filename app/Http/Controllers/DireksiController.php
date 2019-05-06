@@ -80,7 +80,6 @@ class DireksiController extends Controller
      */
     public function store(Request $request)
     {
-      $nipp = Auth::user()->nipp;
       $tambah_proker = new Direksi;
       $tambah_proker->nipp = $request->nipp;
       $tambah_proker->program_kerja = $request->proker;
@@ -94,7 +93,12 @@ class DireksiController extends Controller
       $tambah_proker->progres = 0;
       $tambah_proker->status_proker = "Belum Direspon";
       $tambah_proker->save();
-      return redirect('direksi')->with('success','Sukses menambah Program Direksi!');
+      $user = User::where('nipp',$request->nipp)->first();
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.direksi.detail',$user->id))->with('success','Sukses menambah Program Direksi!');
+      }else{
+        return redirect('direksi')->with('success','Sukses menambah Program Direksi!');
+      };
     }
 
     /**
@@ -129,12 +133,19 @@ class DireksiController extends Controller
      */
     public function update(Request $request, $id)
     {
+      $nipp = Direksi::find($id);
+      $user = User::where('nipp',$nipp->nipp)->first();
       Direksi::where('id',$request->id)->update([
         'program_kerja'=>$request->proker,
         'mulai'=>$request->from,
         'berakhir'=>$request->to
       ]);
-      return redirect('direksi')->with('success','Sukses mengubah Program Direksi!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.direksi.detail',$user->id))->with('success','Sukses mengubah program direksi!');
+      }else{
+        return redirect('direksi')->with('success','Sukses mengubah Program Direksi!');
+      };
+
     }
 
     /**
@@ -146,8 +157,13 @@ class DireksiController extends Controller
     public function destroy($id)
     {
       $cari = Direksi::find($id);
+      $user = User::where('nipp',$cari->nipp)->first();
       $cari->delete();
-      return redirect('direksi')->with('success', 'Program Direksi Berhasil Dihapus!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.direksi.detail',$user->id))->with('success','Program Direksi Berhasil Dihapus!');
+      }else{
+        return redirect('direksi')->with('success','Program Direksi Berhasil Dihapus!');
+      };
     }
 
     public function get_divisi(Request $request)

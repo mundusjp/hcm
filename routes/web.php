@@ -137,4 +137,25 @@ Route::get('goalmatching-evaluasi','goalmatchingController@index_evaluasi')->nam
 // -------------------------------------------------------------------------------
 
 Route::resource('superadmin','SuperadminController');
-Route::get('user','SuperadminController@user_index');
+Route::get('superadmin-user','SuperadminController@user_index')->name('superadmin.user');
+Route::get('superadmin-user-add','SuperadminController@user_tambah')->name('superadmin.user.add');
+Route::get('superadmin-perusahaan','SuperadminController@perusahaan_index')->name('superadmin.perusahaan');
+Route::get('superadmin-perusahaan','SuperadminController@perusahaan_index')->name('superadmin.perusahaan');
+Route::get('superadmin-perusahaan/{id}/edit','SuperadminController@perusahaan_edit')->name('superadmin.perusahaan.edit');
+Route::get('superadmin-direksi','SuperadminController@direksi_index')->name('superadmin.direksi');
+Route::get('superadmin-direksi/{id}/detail','SuperadminController@direksi_detail')->name('superadmin.direksi.detail');
+Route::get('superadmin-direksi/proker/{id}/edit','SuperadminController@direksi_edit')->name('superadmin.direksi.edit');
+Route::get('superadmin-vp','SuperadminController@vp_index')->name('superadmin.vp');
+Route::get('superadmin-vp/{id}/detail','SuperadminController@vp_detail')->name('superadmin.vp.detail');
+Route::get('superadmin-vp/proker/{id}/edit','SuperadminController@vp_edit')->name('superadmin.vp.edit');
+Route::get('superadmin-dvp','SuperadminController@dvp_index')->name('superadmin.dvp');
+Route::get('superadmin-dvp/{id}/detail','SuperadminController@dvp_detail')->name('superadmin.dvp.detail');
+Route::get('superadmin-dvp/proker/{id}/edit','SuperadminController@dvp_edit')->name('superadmin.dvp.edit');
+Route::get('superadmin-log-dvp','SuperadminController@dvp_log_index')->name('superadmin.log.dvp');
+Route::get('superadmin-log-dvp/harian/user/{id}','SuperadminController@dvp_log_harian')->name('superadmin.log.harian.dvp');
+Route::get('superadmin-log-dvp/mingguan/user/{id}','SuperadminController@dvp_log_mingguan')->name('superadmin.log.mingguan.dvp');
+Route::get('superadmin-log-dvp/bulanan/user/{id}','SuperadminController@dvp_log_bulanan')->name('superadmin.log.bulanan.dvp');
+Route::get('superadmin-log-officer','SuperadminController@officer_log_index')->name('superadmin.log.officer');
+Route::get('superadmin-log-officer/harian/user/{id}','SuperadminController@officer_log_harian')->name('superadmin.log.harian.officer');
+Route::get('superadmin-log-officer/mingguan/user/{id}','SuperadminController@officer_log_mingguan')->name('superadmin.log.mingguan.officer');
+Route::get('superadmin-log-officer/bulanan/user/{id}','SuperadminController@officer_log_bulanan')->name('superadmin.log.bulanan.officer');

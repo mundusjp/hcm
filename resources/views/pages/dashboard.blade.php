@@ -304,6 +304,7 @@
                  <td style="width:25px;text-align:center;">Status</td>
                  <td style="width:40px;text-align:center;">Deadline</td>
                  <td style="width:200px;text-align:center;">Keterangan</td>
+                 <td style="width:100px;text-align:center">Bukti</td>
                  <td style="width:15px;text-align:center;">Proses</td>
                  <td style="width:15px;text-align:center;">Tunda</td>
                  <td style="width:15px;text-align:center;">Selesai</td>
@@ -342,6 +343,13 @@
                    <td><strong class="tx-danger">Terlambat</strong></td>
                    @endif
                    <td>{{$program->keterangan}}</td>
+                   @if(!empty($program->bukti_penyelesaian))
+                   <td><a href="{{$program->bukti_penyelesaian}}" target="_blank">File</a></td>
+                   @elseif($program->status_proker == "Selesai")
+                   <td>Tanpa Bukti</td>
+                   @else
+                   <td>Belum Ada</td>
+                   @endif
                    @if($program->status_proker == "Belum Direspon" || $program->status_proker == "Diperingatkan" || $program->status_proker == "Ditolak")
                    <form method="post" action="{{route('deputy-vice-president.proses',$program->id)}}">
                      @method('PATCH')
@@ -388,6 +396,7 @@
                  <td style="width:25px;text-align:center;">Status</td>
                  <td style="width:200px;text-align:center;">Keterangan</td>
                  <td style="width:25px;text-align:center;">Konfirmasi</td>
+                 <td style="width:100px;text-align:center">Bukti</td>
                  <td style="width:25px;text-align:center;">Tolak</td>
                  <td style="width:25px;text-align:center;">Batalkan</td>
                </tr>
@@ -412,6 +421,13 @@
                    <td style="width:25px;text-align:center;"><span class="badge badge-pill badge-success">{{$program->status_task}}</span></td>
                    @endif
                    <td>{{$program->keterangan}}</td>
+                   @if(!empty($program->bukti_penyelesaian))
+                   <td><a href="{{$program->bukti_penyelesaian}}" target="_blank">File</a></td>
+                   @elseif($program->status_proker == "Selesai")
+                   <td>Tanpa Bukti</td>
+                   @else
+                   <td>Belum Ada</td>
+                   @endif
                    @if($program->status_task == "Belum Direspon" || $program->status_task == "Sedang Diproses" || $program->status_task == "Diperingatkan")
                    <td><button disabled class="btn btn-outline-success">Konfirmasi</button></td>
                    <td><button disabled class="btn btn-outline-warning">Tolak</button></td>

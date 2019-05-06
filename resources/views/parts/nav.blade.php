@@ -31,16 +31,10 @@
         @endif
         <div class="sub-item">
           <ul>
-            @if(Auth::user()->kelas_jabatan <= 1)
+            @if(Auth::user()->kelas_jabatan <= 5 && Auth::user()->divisi == "Utama")
             <li><a href="perusahaan">Perusahaan</a></li>
             <li><a href="direksi">Direksi</a></li>
-            <li><a href="vice-president">Vice President</a></li>
-            <li><a href="deputy-vice-president">DVP</a></li>
-            <li><a href="users">User Control</a></li>
-            @elseif(Auth::user()->kelas_jabatan <= 5 && Auth::user()->divisi == "Utama")
-            <li><a href="perusahaan">Perusahaan</a></li>
-            <li><a href="direksi">Direksi</a></li>
-            @elseif(Auth::user()->kelas_jabatan <= 5)
+            @elseif(Auth::user()->kelas_jabatan <= 5 && Auth::user()->kelas_jabatan != "TNO")
             <li><a href="perusahaan">Perusahaan</a></li>
             <li><a href="direksi">Direksi</a></li>
             <li><a href="vice-president">Vice President</a></li>

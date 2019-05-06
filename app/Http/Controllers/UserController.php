@@ -7,6 +7,9 @@ use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\File;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -47,7 +50,25 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+        'nipp' => ['required', 'string', 'max:255'],
+        'nama' => ['required', 'string', 'max:255'],
+        'jabatan' => ['required', 'string', 'max:255'],
+        'divisi' => ['required', 'string', 'max:255'],
+        'kelas_jabatan' => ['required', 'int', 'max:255'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'password' => ['required', 'string', 'min:8', 'confirmed']
+      ]);
+        User::create([
+            'nipp' => $request->nipp,
+            'nama' => $request->nama,
+            'jabatan' => $request->jabatan,
+            'divisi' => $request->divisi,
+            'kelas_jabatan' => $request->kelas_jabatan,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+      return redirect(route('superadmin.user'))->with('success','Sukses Menambahkan User!');
     }
 
     /**
@@ -70,7 +91,6 @@ class UserController extends Controller
     public function edit($id)
     {
       $user_detail = User::find($id);
-
       return view('admin.user.edit', compact('user_detail'));
     }
 
@@ -88,7 +108,7 @@ class UserController extends Controller
         'email'=> 'required|email',
       ]);
       $path = $request->file('file')->storeAs('/public/profiles/',Auth::user()->nipp.'.jpg');
-      $filename = "http://localhost:8000/storage/profiles/".Auth::user()->nipp.".jpg";
+      $filename = base_path('storage/profiles/').Auth::user()->nipp.".jpg";
       $user = User::find($id);
       $user->nama = $request->get('nama');
       $user->email = $request->get('email');
@@ -144,7 +164,7 @@ class UserController extends Controller
 
     public function uploadpp(Request $request){
       $path = $request->file('file')->storeAs('/public/profiles/',Auth::user()->nipp.'.jpg');
-      $filename = "http://localhost:8000/storage/profiles/".Auth::user()->nipp.".jpg";
+      $filename = base_path('storage/profiles/').Auth::user()->nipp.".jpg";
       User::where('nipp',Auth::user()->nipp)->update([
         'avatar'=> $filename
       ]);

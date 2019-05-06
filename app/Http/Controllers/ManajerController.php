@@ -80,6 +80,7 @@ class ManajerController extends Controller
      */
     public function store(Request $request)
     {
+      $user = User::where('nipp',$request->nipp)->first();
       $now = Carbon::now();
       $now->setTimezone('Asia/Jakarta');
       $insert = new Manajer;
@@ -123,7 +124,11 @@ class ManajerController extends Controller
       $insert->tahun = $start_date->year;
       $insert->bobot = $request->bobot;
       $insert->save();
-      return redirect('vice-president')->with('success', 'Program Vice President Berhasil Ditambahkan!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.vp.detail',$user->id))->with('success', 'Sukses mengubah Program Vice President!');
+      }else{
+        return redirect('vice-president')->with('success', 'Program Vice President Berhasil Ditambahkan!');
+      };
     }
 
     /**
@@ -171,6 +176,8 @@ class ManajerController extends Controller
      */
     public function update(Request $request, $id)
     {
+      $cari = Manajer::find($id);
+      $user = User::where('nipp',$cari->nipp)->first();
       $id1 = $request->program_direksi;
       $prodir = Direksi::where('id',$id1)->first();
       $date = Carbon::createFromFormat('Y-m-d', $request->to);
@@ -227,8 +234,11 @@ class ManajerController extends Controller
           'kategori'=> $kategori
         ]);
       };
-
-      return redirect('vice-president')->with('success','Sukses mengubah Program Vice President!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.vp.detail',$user->id))->with('success', 'Sukses mengubah Program Vice President!');
+      }else{
+        return redirect('vice-president')->with('success','Sukses mengubah Program Vice President!');
+      };
     }
 
     /**
@@ -240,8 +250,13 @@ class ManajerController extends Controller
     public function destroy($id)
     {
       $cari = Manajer::find($id);
+      $user = User::where('nipp',$cari->nipp)->first();
       $cari->delete();
-      return redirect('vice-president')->with('success', 'Program Vice President Berhasil Dihapuskan!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.vp.detail',$user->id))->with('success', 'Program Vice President Berhasil Dihapuskan!');
+      }else{
+        return redirect('vice-president')->with('success', 'Program Vice President Berhasil Dihapuskan!');
+      };
     }
 
     public function assign_task(Request $request)

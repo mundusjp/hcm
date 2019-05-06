@@ -67,7 +67,12 @@ class PerusahaanController extends Controller
         $tambah_misi->save();
         session()->flash('success', 'Sukses Menambahkan Misi Perusahaan');
       };
-      return redirect('perusahaan');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.perusahaan'));
+      }else{
+        return redirect('perusahaan');
+      };
+
     }
 
     /**
@@ -121,7 +126,12 @@ class PerusahaanController extends Controller
         $visi->tahun = $request->get('tahun');
         $visi->save();
       };
-      return redirect('perusahaan')->with('success', 'Visi / Misi berhasil diubah!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.perusahaan'))->with('success', 'Visi / Misi berhasil diubah!');
+      }else{
+        return redirect('perusahaan')->with('success', 'Visi / Misi berhasil diubah!');
+      };
+
     }
 
     /**
@@ -134,6 +144,11 @@ class PerusahaanController extends Controller
     {
       $cari = Perusahaan::find($id);
       $cari->delete();
-      return redirect('perusahaan')->with('success', 'Visi / Misi berhasil dihapus!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.perusahaan'))->with('success', 'Visi / Misi berhasil dihapus!');
+      }else{
+        return redirect('perusahaan')->with('success', 'Visi / Misi berhasil dihapus!');
+      };
+
     }
 }

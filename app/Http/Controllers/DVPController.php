@@ -80,12 +80,15 @@ class DVPController extends Controller
     {
       $now = Carbon::now();
       $now->setTimezone('Asia/Jakarta');
+      $user = User::where('nipp',$request->nipp)->first();
       $insert = new Task;
       $insert->nipp = $request->nipp;
       $id1 = $request->program_vp;
       $program_vp = Manajer::where('id',$id1)->first();
       $insert->id_provp = $request->program_vp;
-      $insert->program_vp = $program_vp->program_kerja;
+      if(!empty($program_vp->program_kerja)){
+        $insert->program_vp = $program_vp->program_kerja;
+      };
       $insert->program_kerja = $request->proker;
       $insert->sub_divisi = Auth::user()->sub_divisi;
       $insert->sub_subdivisi = Auth::user()->sub_subdivisi;
@@ -115,7 +118,11 @@ class DVPController extends Controller
       $insert->tahun = $start_date->year;
       $insert->bobot = $request->bobot;
       $insert->save();
-      return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Ditambahkan!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.dvp.detail',$user->id))->with('success','Program Deputy Vice President Berhasil Ditambahkan!');
+      }else{
+        return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Ditambahkan!');
+      };
     }
 
     /**
@@ -164,23 +171,25 @@ class DVPController extends Controller
      */
     public function update(Request $request, $id)
     {
+      $cari = Task::find($id);
+      $user = User::where('nipp',$cari->nipp)->first();
       $date = Carbon::createFromFormat('Y-m-d', $request->to);
       $now = Carbon::now();
       $now->setTimezone('Asia/Jakarta');
       $start_date = Carbon::createFromFormat('Y-m-d', $request->from);
       $diff_between_dates = $date->diffInDays($start_date);
       if(($date->day == 31 && $date->month == 12)||$diff_between_dates > 185){
-        $insert->minggu = 52;
-        $insert->kategori = "Tahunan";
+        $minggu = 52;
+        $kategori = "Tahunan";
       }elseif($diff_between_dates <= 185 && $diff_between_dates >= 180){
-        $insert->minggu = $date->weekOfYear;
-        $insert->kategori = "1/2 Tahunan";
+        $minggu = $date->weekOfYear;
+        $kategori = "1/2 Tahunan";
       }elseif($diff_between_dates < 180 && $diff_between_dates > 28 ){
-        $insert->minggu = $date->weekOfYear;
-        $insert->kategori = "Bulanan";
+        $minggu = $date->weekOfYear;
+        $kategori = "Bulanan";
       }else{
-        $insert->minggu = $date->weekOfYear;
-        $insert->kategori = "Mingguan";
+        $minggu = $date->weekOfYear;
+        $kategori = "Mingguan";
       }
       $hari = $date->dayOfWeek;
       $bulan = $start_date->month;
@@ -196,7 +205,11 @@ class DVPController extends Controller
         'due_date'=>$request->to,
         'kategori'=> $kategori
       ]);
-      return redirect('deputy-vice-president')->with('success','Sukses mengubah Program Deputy Vice President!');
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.dvp.detail',$user->id))->with('success','Sukses mengubah Program Deputy Vice President!');
+      }else{
+        return redirect('deputy-vice-president')->with('success','Sukses mengubah Program Deputy Vice President!');
+      };
     }
 
     /**
@@ -208,8 +221,15 @@ class DVPController extends Controller
     public function destroy($id)
     {
       $cari = Task::find($id);
+      $user = User::where('nipp',$cari->nipp)->first();
       $cari->delete();
-      return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Dihapuskan!');
+
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect(route('superadmin.dvp.detail',$user->id))->with('success','Program Deputy Vice President Berhasil Dihapuskan!');
+      }else{
+        return redirect('deputy-vice-president')->with('success', 'Program Deputy Vice President Berhasil Dihapuskan!');
+      };
+
     }
     public function proses($id){
       $today = Carbon::now()->setTimezone('Asia/Jakarta');
@@ -237,7 +257,7 @@ class DVPController extends Controller
       $today = Carbon::now()->setTimezone('Asia/Jakarta');
       $ext =  $request->file('file')->getClientOriginalExtension();
       $path = $request->file('file')->storeAs('/public/bukti/',"bukti-".Auth::user()->nipp."-".$today->format('d-m-Y').".".$ext);
-      $filename = "http://localhost:8000/storage/bukti/"."bukti-".Auth::user()->nipp."-".$today->format('d-m-Y').".".$ext;
+      $filename =base_path('storage/bukti/')."bukti-".Auth::user()->nipp."-".$today->format('d-m-Y').".".$ext;
       Manajer::where('id',$id)->update([
         'status_proker'=>"Konfirmasi Selesai",
         'bukti_penyelesaian'=> $filename,
