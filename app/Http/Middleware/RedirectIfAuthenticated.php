@@ -17,10 +17,20 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+        if($request != null){
+          switch ($request->identity) {
+              case 'superadmin@system.com':
+                if (Auth::guard($guard)->check()) {
+                  return redirect()->route('superadmin');
+                }
+                break;
+              default:
+                if (Auth::guard($guard)->check()) {
+                    return redirect('/home');
+                }
+                break;
+            }
         }
-
         return $next($request);
     }
 }

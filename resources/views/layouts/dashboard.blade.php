@@ -10,5 +10,6 @@
   @yield('content')
   @include('parts.footer')
   @include('parts.footer-scripts')
+
 </body>
 </html>

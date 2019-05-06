@@ -27,7 +27,7 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-
+    
     /**
      * Show the application dashboard.
      *
@@ -35,6 +35,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+      if(Auth::user()->kelas_jabatan == 1){
+        return redirect('superadmin');
+      }
         $page = $_SERVER['PHP_SELF'];
         $sec = "180";
         header("Refresh: $sec; url=$page");

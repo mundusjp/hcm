@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'WelcomeController@index');
 
 Auth::routes();
 
@@ -133,3 +131,10 @@ Route::resource('goalmatching','goalmatchingController');
 Route::get('goalmatching-coach','goalmatchingController@index_coach')->name('goalmatching-coach');
 Route::get('goalmatching-coachee','goalmatchingController@index_coachee')->name('goalmatching-coachee');
 Route::get('goalmatching-evaluasi','goalmatchingController@index_evaluasi')->name('goalmatching-evaluasi');
+
+// -------------------------------------------------------------------------------
+//                               SUPERADMIN ROUTES
+// -------------------------------------------------------------------------------
+
+Route::resource('superadmin','SuperadminController');
+Route::get('user','SuperadminController@user_index');

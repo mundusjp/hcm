@@ -71,7 +71,7 @@ class UserController extends Controller
     {
       $user_detail = User::find($id);
 
-      return view('pages.user.edit', compact('user_detail'));
+      return view('admin.user.edit', compact('user_detail'));
     }
 
     /**
@@ -84,18 +84,21 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
       $request->validate([
-      'nama'=>'required',
-      'email'=> 'required|email',
-      'password' => 'required'
-    ]);
+        'nama'=>'required',
+        'email'=> 'required|email',
+      ]);
+      $path = $request->file('file')->storeAs('/public/profiles/',Auth::user()->nipp.'.jpg');
+      $filename = "http://localhost:8000/storage/profiles/".Auth::user()->nipp.".jpg";
+      $user = User::find($id);
+      $user->nama = $request->get('nama');
+      $user->email = $request->get('email');
+      if(!empty($request->password)){
+        $user->password = Hash::make($request->get('password'));
+      };
+      $user->avatar = $filename;
+      $user->save();
 
-    $user = User::find($id);
-    $user->nama = $request->get('nama');
-    $user->email = $request->get('email');
-    $user->password = Hash::make($request->get('password'));
-    $user->save();
-
-    return redirect('/users')->with('success', 'User telah diperbaharui');
+      return redirect('user')->with('success', 'User telah diperbaharui');
     }
 
     public function myprofile($id){
